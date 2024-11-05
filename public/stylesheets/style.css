@@ -141,3 +141,89 @@ a {
   border-color: #8a8a8a;
   cursor: not-allowed;
 }
+
+.light {
+  color: #8a8a8a;
+  margin-top: 1em;
+}
+
+.light a {
+  color: inherit;
+  text-decoration: none;
+}
+
+.light a:hover {
+  text-decoration: underline;
+}
+
+hr {
+  width: 142px;
+  margin: 2.55em auto;
+  font-size: 18px;
+  border: none;
+  border-top: 0 solid #000;
+  display: block
+}
+
+hr.full {
+  color: #000;
+  margin: 3em 0 3em 1em;
+  height: 1;
+  width: 100%;
+  text-align: center;
+  border: none;
+  letter-spacing: 2em
+}
+
+hr.full:after {
+  content: "··•··"
+}
+
+hr.footnote-seperator {
+  margin: 4em 0 1em;
+  width: 8em
+}
+
+.clickable-image {
+  cursor: pointer;
+  transition: opacity 0.3s ease;
+}
+
+.clickable-image:hover {
+  opacity: 0.8;
+}
+
+.image-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.9);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.overlay-content {
+  max-width: 90%;
+  max-height: 90%;
+  position: relative;
+}
+
+.overlay-content img {
+  max-width: 100%;
+  max-height: 90vh;
+  object-fit: contain;
+}
+
+.overlay-content button {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background-color: white;
+  border: none;
+  padding: 5px 10px;
+  cursor: pointer;
+}

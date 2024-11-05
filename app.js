@@ -1,22 +1,22 @@
 const fs = require('fs').promises;
-var createError = require('http-errors');
-var express = require('express');
-var path = require('path');
-var cookieParser = require('cookie-parser');
-var logger = require('morgan');
+const createError = require('http-errors');
+const express = require('express');
+const path = require('path');
+const cookieParser = require('cookie-parser');
+const logger = require('morgan');
 
-var indexRouter = require('./routes/index');
-var usersRouter = require('./routes/users');
+const indexRouter = require('./routes/index');
+const usersRouter = require('./routes/users');
 
-var app = express();
+const app = express();
 
-// view engine setup
+// View engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'jade');
 
 // Conditionally enable logging with Morgan
 if (process.env.LOGGING === 'true') {
-  app.use(logger('dev'));
+    app.use(logger('dev'));
 }
 
 app.use(express.json());
@@ -27,79 +27,110 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
 
-// Helper function to get all post dates
-async function getAllPostDates() {
+// Helper function to get the latest 5 post files
+async function findLatestPost() {
   const postsDir = path.join(__dirname, 'posts');
-  const years = await fs.readdir(postsDir);
-  let allDates = [];
+  let latestPostDate = null;
+  let latestPostPath = '';
 
-  for (const year of years) {
-    const monthsDir = path.join(postsDir, year);
-    const months = await fs.readdir(monthsDir);
-    for (const month of months) {
-      const daysDir = path.join(monthsDir, month);
-      const days = await fs.readdir(daysDir);
-      allDates = allDates.concat(days.map(day => `${year}-${month}-${day.replace('.md', '')}`));
-    }
+  try {
+      const years = await fs.readdir(postsDir);
+      
+      for (const year of years) {
+          const monthsDir = path.join(postsDir, year);
+          const months = await fs.readdir(monthsDir);
+          
+          for (const month of months) {
+              const daysDir = path.join(monthsDir, month);
+              const days = await fs.readdir(daysDir);
+
+              for (const day of days) {
+                  const postPath = path.join(year, month, day);
+                  const dateParts = postPath.split('/');
+                  const postDate = new Date(`${dateParts[0]}-${dateParts[1]}-${dateParts[2].replace('.md', '')}`);
+
+                  // Check if this post is more recent than the current latest
+                  if (!latestPostDate || postDate > latestPostDate) {
+                      latestPostDate = postDate;
+                      latestPostPath = postPath; // Store the path of the latest post
+                  }
+              }
+          }
+      }
+      
+      return { latestPostPath, latestPostDate };
+  } catch (error) {
+      console.error('Error reading post files:', error);
+      throw new Error('Could not retrieve post files');
   }
-
-  return allDates.sort().reverse(); // Sort in descending order
 }
 
-// Endpoint to get paginated post dates
-app.get('/post-dates', async (req, res) => {
+// Endpoint to get the latest 5 posts
+app.get('/api/posts', async (req, res) => {
   try {
-    const page = parseInt(req.query.page) || 1;
-    const limit = 5;
-    const allDates = await getAllPostDates();
-    const startIndex = (page - 1) * limit;
-    const endIndex = page * limit;
+      const { latestPostPath, latestPostDate } = await findLatestPost();
+     
+      if (!latestPostPath) {
+          return res.status(404).json({ error: 'No posts found' });
+      }
 
-    const paginatedDates = allDates.slice(startIndex, endIndex);
-    const hasNextPage = endIndex < allDates.length;
-    const hasPrevPage = page > 1;
+      const postsContent = [];
 
-    res.json({
-      dates: paginatedDates,
-      hasNextPage,
-      hasPrevPage,
-      currentPage: page
-    });
+      // Get the latest 5 posts starting from the found latest post date
+      for (let i = 0; i < 5; i++) {
+          const currentPostDate = new Date(latestPostDate);
+          currentPostDate.setDate(currentPostDate.getDate() - i); // Move backwards
+
+          const year = currentPostDate.getFullYear();
+          const month = String(currentPostDate.getMonth() + 1).padStart(2, '0');
+          const day = String(currentPostDate.getDate()).padStart(2, '0');
+
+          const filePath = path.join(__dirname, 'posts', `${year}`, `${month}`, `${day}.md`);
+          
+          try {
+              const content = await fs.readFile(filePath, 'utf-8');
+              postsContent.push({ fileName: `${year}/${month}/${day}.md`, content });
+          } catch (err) {
+              console.log(`No post found for ${year}-${month}-${day}`);
+              // Continue to next date if file does not exist
+          }
+      }
+
+      res.json(postsContent);
   } catch (error) {
-    console.error('Error fetching post dates:', error);
-    res.status(500).json({ error: 'Error fetching post dates' });
+      console.error('Error fetching posts:', error);
+      res.status(500).json({ error: 'Internal server error' });
   }
 });
 
 // Serve individual blog posts
 app.get('/posts/:year/:month/:day.md', async (req, res) => {
-  const { year, month, day } = req.params;
-  const filePath = path.join(__dirname, 'posts', year, month, `${day}.md`);
-  
-  try {
-    const data = await fs.readFile(filePath, 'utf8');
-    res.type('text/markdown').send(data);
-  } catch (err) {
-    console.error(`Error reading file ${filePath}:`, err);
-    res.status(404).send('Post not found');
-  }
+    const { year, month, day } = req.params;
+    const filePath = path.join(__dirname, 'posts', year, month, `${day}.md`);
+    
+    try {
+        const data = await fs.readFile(filePath, 'utf8');
+        res.type('text/markdown').send(data);
+    } catch (err) {
+        console.error(`Error reading file ${filePath}:`, err);
+        res.status(404).send('Post not found');
+    }
 });
 
-
-// catch 404 and forward to error handler
+// Catch 404 and forward to error handler
 app.use(function(req, res, next) {
-  next(createError(404));
+    next(createError(404));
 });
 
-// error handler
+// Error handler
 app.use(function(err, req, res, next) {
-  // set locals, only providing error in development
-  res.locals.message = err.message;
-  res.locals.error = req.app.get('env') === 'development' ? err : {};
+    // Set locals only providing error in development
+    res.locals.message = err.message;
+    res.locals.error = req.app.get('env') === 'development' ? err : {};
 
-  // render the error page
-  res.status(err.status || 500);
-  res.render('error');
+    // Render the error page
+    res.status(err.status || 500);
+    res.render('error');
 });
 
 module.exports = app;
