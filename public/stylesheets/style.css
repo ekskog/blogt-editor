@@ -1,0 +1,143 @@
+body {
+  font: 11px/1.8 Verdana, 'Bitstream Vera Sans', sans-serif;
+  color: #111;
+  word-wrap: break-word;
+  position: relative;
+  width: 540px;
+  margin: 7em auto;
+  padding: 0 74px 0 222px;
+}
+
+.sidebar {
+  width: 160px;
+  position: absolute;
+  left: 0;
+  text-align: right;
+  margin-right: 62px; /* Add margin to push content to the right */
+}
+
+.light {
+  color: #8a8a8a;
+}
+
+.sidebar, h1, h2, h3, h4, h5, h6 {
+  font-weight: 400;
+  margin-bottom: 1em;
+  font-family: 'Gill Sans MT', 'Gill Sans', 'Gill Sans Std', Verdana, 'Bitstream Vera Sans', sans-serif;
+}
+
+.sidebar, h1 a, h2, h3, h4, h5, h6 {
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 1.7325px;
+}
+
+.sidebar a {
+  display: block;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+.logo {
+  display: block;
+  text-align: right;
+  margin-bottom: 3em;
+}
+
+.logo.hasAvatar {
+  word-spacing: 160px;
+}
+
+.avatar {
+  margin: -.1em .1em 0 0;
+}
+
+.entry {
+  max-width: 540px;
+  width: 100%;
+  margin: 0 auto;
+}
+
+.entry img {
+  max-width: 100%;
+  width: 540px; /* Set the desired width */
+  height: auto;
+  display: block;
+  margin: 0;
+}
+
+.entry .markdown-content {
+  width: 100%;
+  max-width: 540px;
+  margin: 0 auto;
+}
+
+.entry .markdown-content p,
+.entry .markdown-content h1,
+.entry .markdown-content h2,
+.entry .markdown-content h3,
+.entry .markdown-content h4,
+.entry .markdown-content h5,
+.entry .markdown-content h6,
+.entry .markdown-content ul,
+.entry .markdown-content ol {
+  width: 100%;
+  max-width: 540px;
+  margin: 1em auto;
+}
+
+/* Ensure the title aligns with the content */
+.entry h2 {
+  width: 100%;
+  max-width: 540px;
+  margin: 1em 0;
+}
+
+.entry p {
+  padding: 0;
+  margin: 1.6em 0;
+}
+
+.entry a {
+  text-decoration: none;
+  text-shadow: .03em 0 #fff, -.03em 0 #fff, 0 .03em #fff, 0 -.03em #fff, .06em 0 #fff, -.06em 0 #fff, .09em 0 #fff, -.09em 0 #fff, 0 .03em #fff, 0 -.03em #fff, 0 .06em #fff, 0 -.06em #fff;
+  background-image: linear-gradient(#fff, #fff), linear-gradient(#fff, #fff), linear-gradient(#555, #555);
+  background-size: 0 0, 0 0, .1em .1em;
+  background-repeat: no-repeat, no-repeat, repeat-x;
+  background-position: 0 90%, 100% 100%, 0 100%;
+  display: inline-block;
+  max-width: 100%;
+}
+
+.entry a:hover {
+  color: #00f;
+  background-image: linear-gradient(#fff, #fff), linear-gradient(#fff, #fff), linear-gradient(blue, #00f);
+}
+
+/* Pagination styles */
+.pagination {
+  margin-top: 20px;
+  text-align: center;
+  width: 100%;
+  max-width: 540px;
+}
+
+.pagination button {
+  font: inherit;
+  font-size: 12px;
+  padding: 3px 12px;
+  margin: 0 10px;
+  color: #000;
+  background: transparent;
+  border: 1px solid #000;
+  cursor: pointer;
+}
+
+.pagination button:disabled {
+  color: #8a8a8a;
+  border-color: #8a8a8a;
+  cursor: not-allowed;
+}
