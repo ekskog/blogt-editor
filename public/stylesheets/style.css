@@ -227,3 +227,19 @@ hr.footnote-seperator {
   padding: 5px 10px;
   cursor: pointer;
 }
+
+.post-date {
+  color: inherit; /* Use the default text color */
+  text-decoration: none; /* Remove underline */
+  cursor: default; /* Use default cursor */
+}
+
+.post-date.clickable {
+  color: blue; /* Or whatever color you prefer */
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+.post-date.clickable:hover {
+  text-decoration: none;
+}

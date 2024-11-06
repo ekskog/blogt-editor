@@ -1,14 +1,12 @@
 const blogPostsContainer = document.getElementById('blog-posts');
+const url = 'api/posts';
 
-async function loadBlogPosts() {
+async function loadBlogPosts(posts) {
     try {
-        const response = await fetch('/api/posts');
-        if (!response.ok) {
-            throw new Error('Failed to fetch posts');
-        }
-        const posts = await response.json();
-
         blogPostsContainer.innerHTML = ''; // Clear existing posts
+        const isSinglePost = posts.length === 1;
+
+        console.log(isSinglePost)
 
         posts.forEach((post) => {
             const lines = post.content.split('\n');
@@ -17,19 +15,16 @@ async function loadBlogPosts() {
             const tags = tagsLine ? tagsLine.split(', ').map(tag => tag.trim()) : [];
             const titleLine = lines.find(line => line.trim().startsWith('# '));
             const title = titleLine ? titleLine.replace(/^#\s*/, '').trim() : 'Untitled';
-            console.log('File Name: ' + post.fileName);
             // Extract the date parts from the filename using regex
             const match = post.fileName.match(/(\d{4})\/(\d{2})\/(\d{2})\.md/);
             if (!match) {
-                console.log("Invalid filename format");
+                console.error("Invalid filename format");
             }
 
             // Destructure the matched groups into variables
             const [_, year, month, day] = match;
 
             const parsedDate = `${day}/${month}/${year}`
-            console.log('Parsed Date: ' + parsedDate);
-
 
             let htmlContentMarkdown = lines.slice(3).join('\n'); // Content after metadata
             let htmlContentParsed = marked.parse(htmlContentMarkdown); // Parse content
@@ -42,8 +37,8 @@ async function loadBlogPosts() {
             postElement.innerHTML = `
             <div class="markdown-content">${htmlContentParsed}</div>
             <div class="light">
-                <a href="/posts/${year}/${month}/${day}.md" title="${title}">${parsedDate}</a>
-                ${tags.map(tag => `· <a title="Everything tagged ${tag}" href="/tagged/${tag.toLowerCase().replace(/\s+/g, '-')}">${tag}</a>`).join(' ')}
+              <span class="post-date ${isSinglePost ? '' : 'clickable'}" data-date="${year}-${month}-${day}">${parsedDate}</span>
+              ${tags.map(tag => `· <a title="Everything tagged ${tag}" href="/tagged/${tag.toLowerCase().replace(/\s+/g, '-')}">${tag}</a>`).join(' ')}
             </div>
         `;
             blogPostsContainer.appendChild(postElement);
@@ -54,13 +49,68 @@ async function loadBlogPosts() {
             blogPostsContainer.appendChild(hr);
         });
 
+        // Add click event listeners to all post dates
+        if (!isSinglePost) {
+            document.querySelectorAll('.post-date.clickable').forEach(dateElement => {
+                dateElement.addEventListener('click', (event) => {
+                    event.preventDefault(); // Prevent default action
+                    const date = event.target.dataset.date;
+                    fetchPosts(date).then(posts => {
+                        loadBlogPosts(posts);
+                    }).catch(error => {
+                        console.error('Error fetching single post:', error);
+                    });
+                });
+            });
+        }
+
     } catch (error) {
         console.error('Error loading blog posts:', error);
         blogPostsContainer.innerHTML = '<p>Error loading blog posts. Please try again later.</p>';
     }
 }
 
+async function fetchPosts(date = null) {
+    let url = '/api/posts';
+    let options = {
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json',
+        }
+    };
+
+    if (date) {
+        options.method = 'POST';
+        options.body = JSON.stringify({ date });
+    }
+
+    try {
+        const response = await fetch(url, options);
+
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+
+        const data = await response.json();
+        return data;
+    } catch (error) {
+        console.error('There was a problem with the fetch operation:', error);
+        throw error;
+    }
+}
+
 // Initial load
 document.addEventListener('DOMContentLoaded', () => {
-    loadBlogPosts();
+    fetchPosts()
+        .then(posts => {
+            loadBlogPosts(posts)
+        })
+        .catch(error => {
+            console.error('Error fetching 5 latest posts:', error);
+        });
 });
+
+// If you have this function, keep it; otherwise, you can remove it
+function showImageOverlay(imageSrc) {
+    // Implementation of image overlay functionality
+}

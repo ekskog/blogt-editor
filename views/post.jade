@@ -5,7 +5,8 @@ html
     link(rel='stylesheet', href='/stylesheets/style.css') // Link your CSS here
   body
     h1 Blog Post
-    div.markdown-content!= content // Render parsed markdown content here
+      div#single-post-container
+      script(src='/js/single-post.js')
 
     footer
       p © Your Blog Name - All rights reserved.
