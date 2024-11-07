@@ -145,21 +145,27 @@ hr {
   margin: 2.55em auto;
   font-size: 18px;
   border: none;
-  display: block;
+  border-top: 0 solid #000;
+  display: block
 }
 
 hr.full {
   color: #000;
-  margin: 3em 0;
-  height: 1px;
+  margin: 3em 0 3em 1em;
+  height: 1;
   width: 100%;
   text-align: center;
   border: none;
-  letter-spacing: 2em;
+  letter-spacing: 2em
 }
 
 hr.full:after {
-  content: "··•··";
+  content: "··•··"
+}
+
+hr.footnote-seperator {
+  margin: 4em 0 1em;
+  width: 8em
 }
 
 .clickable-image {

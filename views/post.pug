@@ -1,29 +1,26 @@
 extends layout
 
 block content
-    link(rel="stylesheet" href="/stylesheets/styles.css")
+  .main-content(style="margin: 0; padding: 0;")
+    each post in postsContent
+      .title-nav-container
+        h2= post.title
+        //- Navigation links removed as they're specific to single post view
 
-    .main-content(style="margin: 0; padding: 0;")
-        .title-nav-container
-            h2= title
-            .nav
-                if prevPost
-                    a(href=`/${prevPost}`) Previous Post
-                if nextPost
-                    a(href=`/${nextPost}`) Next Post
+      .image-container
+        img(src=post.imageUrl width="500" height="500" alt=post.title border="1")
+        figcaption= post.md5Title
 
-        .image-container
-            img(src=imageUrl width="500" height="500" alt=title border="1")
-            figcaption= md5Title
+      .content!= post.htmlContent
 
-        .content!= content
+      .post-footer
+        .light
+          if post.formattedDate
+            span.post-date= post.formattedDate
+            span.separator &nbsp;&middot;&nbsp;
+          each tag, i in post.tags
+            if i != 0
+              span.separator &nbsp;&middot;&nbsp;
+            a(href=`/tagged/${encodeURIComponent(tag.toLowerCase().replace(/\s+/g, '-'))}` title=`Everything tagged ${tag}`)= tag
 
-        .post-footer
-            .light
-                span.post-date= formattedDate
-                span.separator &nbsp;&middot;&nbsp; 
-                each tag, i in tags
-                    if i != 0
-                        span.separator &nbsp;&middot;&nbsp; 
-                    a(href=`/tagged/${tag.toLowerCase().replace(/\s+/g, '-')}` title=`Everything tagged ${tag}`) #{tag}
-
+      hr
