@@ -1,0 +1,20 @@
+doctype html
+html
+  head
+    title= title
+    link(rel="stylesheet", href="/stylesheets/styles.css")
+  body
+    .wrapper
+      div.sidebar
+        a.logo.hasAvatar(href='/', title='a 365 blog')
+          img.avatar(width='42', height='42', src='/images/avatar.jpg')
+          span(style='display:block') ekskog
+        
+        a.light(href='/pages/archives.html', title='archive') archive
+        a.light(href='/pages/archives.html', title='archive') otherstuff
+
+      div.main-content
+        block content
+        // The actual post content goes here
+        
+    center © blind_swan_cage

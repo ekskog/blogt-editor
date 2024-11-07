@@ -101,6 +101,7 @@ async function fetchPosts(date = null) {
 
 // Initial load
 document.addEventListener('DOMContentLoaded', () => {
+    /*
     fetchPosts()
         .then(posts => {
             loadBlogPosts(posts)
@@ -108,6 +109,8 @@ document.addEventListener('DOMContentLoaded', () => {
         .catch(error => {
             console.error('Error fetching 5 latest posts:', error);
         });
+        */
+       console.log('starting...')
 });
 
 // If you have this function, keep it; otherwise, you can remove it
