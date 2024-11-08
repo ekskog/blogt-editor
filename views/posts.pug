@@ -1,0 +1,26 @@
+extends layout
+
+block content
+  .main-content(style="margin: 0; padding: 0;")
+  each post in postsContent
+    .post
+      .title-container
+        h2= post.title
+
+      .image-container
+        img(src=post.imageUrl width="600" height="600" alt=post.title border="1")
+        figcaption= post.md5Title
+
+      .content!= post.htmlContent
+
+      .post-footer
+        .light 
+          if post.formattedDate
+            a.post-date(href=`${post.baseUrl}/posts/${post.formattedDate.split('/').reverse().join('')}`)= post.formattedDate
+            span.separator &nbsp;&middot;&nbsp;
+          each tag, i in post.tags
+            if i != 0
+              span.separator &nbsp;&middot;&nbsp; 
+            a(href=`/tagged/${tag.toLowerCase().replace(/\s+/g, '-')}` title=`Everything tagged ${tag}`) #{tag}
+
+    hr.full

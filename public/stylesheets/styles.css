@@ -4,12 +4,17 @@ body {
   word-wrap: break-word;
   position: relative;
   margin: 7em auto;
+  /* New properties for sticky footer */
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
 }
 
 .main-wrapper {
   width: 600px;
   margin: 0 auto;
   padding: 0 1rem;
+  flex: 1; /* This pushes the footer to the bottom */
 }
 
 .main-content {
@@ -98,6 +103,7 @@ footer {
   width: 100%;
   text-align: center;
   padding: 80px 0;
+  margin-top: auto; /* This pushes the footer to the bottom */
 }
 
 .title-nav-container {
