@@ -1,9 +1,13 @@
 # Logs
 logs
 *.log
+change_log_*
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
+
+# Python scripts
+*.py
 
 # Runtime data
 pids

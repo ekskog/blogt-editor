@@ -1,0 +1,79 @@
+Change Log
+==================================================
+
+File: /Users/lucarv/Documents/repos/Blot/blot-too/posts/2021/03/27.md | Original: 'zheul' | Updated: 'z heul'
+File: /Users/lucarv/Documents/repos/Blot/blot-too/posts/2021/03/21.md | Original: 'gizmo' | Updated: 'giz mo'
+File: /Users/lucarv/Documents/repos/Blot/blot-too/posts/2021/03/31.md | Original: 'rendezvous' | Updated: 'rendez vous'
+File: /Users/lucarv/Documents/repos/Blot/blot-too/posts/2021/03/25.md | Original: 'egészségedre' | Updated: 'egész ségedre'
+File: /Users/lucarv/Documents/repos/Blot/blot-too/posts/2021/04/26.md | Original: 'jazz
+Title' | Updated: 'jazz 
+Title'
+File: /Users/lucarv/Documents/repos/Blot/blot-too/posts/2021/04/27.md | Original: 'herzliya' | Updated: 'herz liya'
+File: /Users/lucarv/Documents/repos/Blot/blot-too/posts/2021/04/17.md | Original: 'buzzcut' | Updated: 'buzz cut'
+File: /Users/lucarv/Documents/repos/Blot/blot-too/posts/2021/04/30.md | Original: 'zsh' | Updated: 'z sh'
+File: /Users/lucarv/Documents/repos/Blot/blot-too/posts/2021/04/25.md | Original: 'rendez-vous' | Updated: 'rendez -vous'
+File: /Users/lucarv/Documents/repos/Blot/blot-too/posts/2021/05/02.md | Original: 'puzzles' | Updated: 'puzz les'
+File: /Users/lucarv/Documents/repos/Blot/blot-too/posts/2021/05/17.md | Original: 'jazz
+Title' | Updated: 'jazz 
+Title'
+File: /Users/lucarv/Documents/repos/Blot/blot-too/posts/2021/05/07.md | Original: 'rendezvous' | Updated: 'rendez vous'
+File: /Users/lucarv/Documents/repos/Blot/blot-too/posts/2021/02/08.md | Original: 'az900' | Updated: 'az 900'
+File: /Users/lucarv/Documents/repos/Blot/blot-too/posts/2021/02/19.md | Original: 'lazy' | Updated: 'laz y'
+File: /Users/lucarv/Documents/repos/Blot/blot-too/posts/2021/02/26.md | Original: 'zzzs' | Updated: 'zzz s'
+File: /Users/lucarv/Documents/repos/Blot/blot-too/posts/2021/11/19.md | Original: 'drizzle' | Updated: 'drizz le'
+File: /Users/lucarv/Documents/repos/Blot/blot-too/posts/2021/11/09.md | Original: 'rendezvous' | Updated: 'rendez vous'
+File: /Users/lucarv/Documents/repos/Blot/blot-too/posts/2021/11/06.md | Original: 'zozó' | Updated: 'zoz ó'
+File: /Users/lucarv/Documents/repos/Blot/blot-too/posts/2021/11/06.md | Original: 'crazy' | Updated: 'craz y'
+File: /Users/lucarv/Documents/repos/Blot/blot-too/posts/2021/11/17.md | Original: 'drizzle' | Updated: 'drizz le'
+File: /Users/lucarv/Documents/repos/Blot/blot-too/posts/2021/11/01.md | Original: 'hunbatzmen' | Updated: 'hunbatz men'
+File: /Users/lucarv/Documents/repos/Blot/blot-too/posts/2021/10/08.md | Original: 'zhang' | Updated: 'z hang'
+File: /Users/lucarv/Documents/repos/Blot/blot-too/posts/2021/10/02.md | Original: 'rendezvous' | Updated: 'rendez vous'
+File: /Users/lucarv/Documents/repos/Blot/blot-too/posts/2021/10/03.md | Original: 'rendezvous' | Updated: 'rendez vous'
+File: /Users/lucarv/Documents/repos/Blot/blot-too/posts/2021/10/07.md | Original: 'katzcards' | Updated: 'katz cards'
+File: /Users/lucarv/Documents/repos/Blot/blot-too/posts/2021/10/04.md | Original: 'cizâniers' | Updated: 'ciz âniers'
+File: /Users/lucarv/Documents/repos/Blot/blot-too/posts/2021/10/31.md | Original: 'jazz
+Title' | Updated: 'jazz 
+Title'
+File: /Users/lucarv/Documents/repos/Blot/blot-too/posts/2021/10/11.md | Original: 'strzyga' | Updated: 'strz yga'
+File: /Users/lucarv/Documents/repos/Blot/blot-too/posts/2021/07/08.md | Original: 'cruzcroido' | Updated: 'cruz croido'
+File: /Users/lucarv/Documents/repos/Blot/blot-too/posts/2021/07/09.md | Original: 'lazy' | Updated: 'laz y'
+File: /Users/lucarv/Documents/repos/Blot/blot-too/posts/2021/07/29.md | Original: 'tomázno' | Updated: 'tomáz no'
+File: /Users/lucarv/Documents/repos/Blot/blot-too/posts/2021/07/22.md | Original: 'bizmodels' | Updated: 'biz models'
+File: /Users/lucarv/Documents/repos/Blot/blot-too/posts/2021/07/05.md | Original: 'fuzzpedals' | Updated: 'fuzz pedals'
+File: /Users/lucarv/Documents/repos/Blot/blot-too/posts/2021/09/19.md | Original: 'rendezvous' | Updated: 'rendez vous'
+File: /Users/lucarv/Documents/repos/Blot/blot-too/posts/2021/09/19.md | Original: 'crazy' | Updated: 'craz y'
+File: /Users/lucarv/Documents/repos/Blot/blot-too/posts/2021/09/03.md | Original: 'izzy' | Updated: 'izz y'
+File: /Users/lucarv/Documents/repos/Blot/blot-too/posts/2021/09/10.md | Original: 'sizzlers' | Updated: 'sizz lers'
+File: /Users/lucarv/Documents/repos/Blot/blot-too/posts/2021/09/14.md | Original: 'azcli' | Updated: 'az cli'
+File: /Users/lucarv/Documents/repos/Blot/blot-too/posts/2021/09/01.md | Original: 'jazz
+Title' | Updated: 'jazz 
+Title'
+File: /Users/lucarv/Documents/repos/Blot/blot-too/posts/2021/08/28.md | Original: 'zzzbrfore' | Updated: 'zzz brfore'
+File: /Users/lucarv/Documents/repos/Blot/blot-too/posts/2021/08/12.md | Original: 'zhb' | Updated: 'z hb'
+File: /Users/lucarv/Documents/repos/Blot/blot-too/posts/2021/08/12.md | Original: 'crazy' | Updated: 'craz y'
+File: /Users/lucarv/Documents/repos/Blot/blot-too/posts/2021/08/12.md | Original: 'izzy' | Updated: 'izz y'
+File: /Users/lucarv/Documents/repos/Blot/blot-too/posts/2021/08/24.md | Original: 'ravaillezsilence' | Updated: 'ravaillez silence'
+File: /Users/lucarv/Documents/repos/Blot/blot-too/posts/2021/08/10.md | Original: 'zs' | Updated: 'z s'
+File: /Users/lucarv/Documents/repos/Blot/blot-too/posts/2021/08/30.md | Original: 'lazy' | Updated: 'laz y'
+File: /Users/lucarv/Documents/repos/Blot/blot-too/posts/2021/08/05.md | Original: 'laluz.bandcamp' | Updated: 'laluz .bandcamp'
+File: /Users/lucarv/Documents/repos/Blot/blot-too/posts/2021/08/01.md | Original: 'cádiz
+Title' | Updated: 'cádiz 
+Title'
+File: /Users/lucarv/Documents/repos/Blot/blot-too/posts/2021/01/08.md | Original: 'zwift' | Updated: 'z wift'
+File: /Users/lucarv/Documents/repos/Blot/blot-too/posts/2021/01/16.md | Original: 'ramirez
+https' | Updated: 'ramirez 
+https'
+File: /Users/lucarv/Documents/repos/Blot/blot-too/posts/2021/01/15.md | Original: 'z-e' | Updated: 'z -e'
+File: /Users/lucarv/Documents/repos/Blot/blot-too/posts/2021/06/19.md | Original: 'hemizwas' | Updated: 'hemiz was'
+File: /Users/lucarv/Documents/repos/Blot/blot-too/posts/2021/06/09.md | Original: 'luizyanas' | Updated: 'luiz yanas'
+File: /Users/lucarv/Documents/repos/Blot/blot-too/posts/2021/06/17.md | Original: 'jazz-in' | Updated: 'jazz -in'
+File: /Users/lucarv/Documents/repos/Blot/blot-too/posts/2021/06/23.md | Original: 'amzprime' | Updated: 'amz prime'
+File: /Users/lucarv/Documents/repos/Blot/blot-too/posts/2021/06/20.md | Original: 'beiszspiel' | Updated: 'beisz spiel'
+File: /Users/lucarv/Documents/repos/Blot/blot-too/posts/2021/06/25.md | Original: 'deborahsacksmintz.bandcamp' | Updated: 'deborahsacksmintz .bandcamp'
+File: /Users/lucarv/Documents/repos/Blot/blot-too/posts/2021/06/11.md | Original: 'jazz
+Title' | Updated: 'jazz 
+Title'
+File: /Users/lucarv/Documents/repos/Blot/blot-too/posts/2021/12/22.md | Original: 'blitzkrieg' | Updated: 'blitz krieg'
+File: /Users/lucarv/Documents/repos/Blot/blot-too/posts/2021/12/06.md | Original: 'bizdevs' | Updated: 'biz devs'
+File: /Users/lucarv/Documents/repos/Blot/blot-too/posts/2021/12/20.md | Original: 'lazy' | Updated: 'laz y'
+File: /Users/lucarv/Documents/repos/Blot/blot-too/posts/2021/12/11.md | Original: 'zzzs' | Updated: 'zzz s'

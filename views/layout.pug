@@ -4,17 +4,16 @@ html
     title= title
     link(rel="stylesheet", href="/stylesheets/styles.css")
   body
-    .wrapper
-      div.sidebar
+    nav.top-nav(style="border: 1px solid #000000;")
+      .nav-content
         a.logo.hasAvatar(href='/', title='a 365 blog')
-          img.avatar(width='42', height='42', src='/images/avatar.jpg')
-          span(style='display:block') ekskog
-        
-        a.light(href='/pages/archives.html', title='archive') archive
-        a.light(href='/pages/archives.html', title='archive') otherstuff
-
-      div.main-content
+          img.avatar(width='30', height='30', src='/images/avatar2.jpg')
+        .nav-links
+          a.light(href='/pages/archives.html', title='archive') ARCHIVE
+          a.light(href='/pages/archives.html', title='archive') OTHERSTUFF
+    .main-wrapper
+      .main-content
         block content
-        // The actual post content goes here
-        
-    center © blind_swan_cage
+         // The actual post content goes here
+    footer
+      center © blind_swan_cage

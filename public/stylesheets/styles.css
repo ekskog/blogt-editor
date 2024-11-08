@@ -1,133 +1,66 @@
 body {
-  font: 12px/1.8 'Roboto', Arial, sans-serif; 
+  font: 12px/1.8 'Roboto', Arial, sans-serif;
   color: #111;
   word-wrap: break-word;
   position: relative;
-  width: 540px;
   margin: 7em auto;
-  padding: 0 74px 0 222px;
 }
 
-.wrapper {
-  display: flex;
-  align-items: flex-start; /* Align sidebar and main content to the top */
-}
-
-.sidebar {
-  width: 160px;
-  text-align: right;
-  margin-right: 62px;
-}
-
-/* Explicitly define the link styles for the sidebar */
-.sidebar a {
-  text-decoration: none;  /* Remove underlines */
-  color: inherit;  /* Ensure links don't change color */
+.main-wrapper {
+  width: 600px;
+  margin: 0 auto;
+  padding: 0 1rem;
 }
 
 .main-content {
-  flex-grow: 1;
-  width: 500px; /* Keep the fixed width of the post */
-  margin-top: 0; /* Ensure the post aligns at the top */
-  padding: 0; /* Remove any padding that might be affecting alignment */
-  display: flex; /* Ensure it's using flex layout */
-  flex-direction: column; /* Stack child elements vertically */
+  width: 100%;
+  margin-top: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
 }
 
-
-.sidebar, h1, h2, h3, h4, h5, h6 {
+h2 {
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 1.7325px;
   font-weight: 400;
   margin-bottom: 1em;
   font-family: 'Gill Sans MT', 'Gill Sans', 'Gill Sans Std', Verdana, 'Bitstream Vera Sans', sans-serif;
 }
 
-.sidebar, h1 h2, h3, h4, h5, h6 {
-  font-size: 12px;
-  text-transform: uppercase;
-  letter-spacing: 1.7325px;
-}
-
-.sidebar a {
-  display: block;
-}
-
 a {
-  color: inherit;
+  color: #700170;
   text-decoration: none;
 }
 
 .logo {
-  display: block;
-  text-align: right;
-  margin-bottom: 3em;
+  display: flex;
+  align-items: center;
+  text-decoration: none;
+  color: inherit;
+}
+
+.logo span {
+  margin-left: 0.5rem;
 }
 
 .avatar {
-  margin: -.1em .1em 0 0;
+  vertical-align: middle;
 }
 
-.entry {
-  max-width: 540px;
-  width: 100%;
-  margin: 0 auto;
+.nav-links {
+  display: flex;
+  gap: 2rem;
+  align-items: center;
 }
 
-.entry img {
-  max-width: 100%;
-  width: 540px; 
-  height: auto;
-  display: block;
-  margin: 0;
-}
-
-.entry .markdown-content {
-  width: 100%;
-  max-width: 540px;
-  margin: 0 auto;
-}
-
-.entry .markdown-content p,
-.entry .markdown-content h1,
-.entry .markdown-content h2,
-.entry .markdown-content h3,
-.entry .markdown-content h4,
-.entry .markdown-content h5,
-.entry .markdown-content h6,
-.entry .markdown-content ul,
-.entry .markdown-content ol {
-  width: 100%;
-  max-width: 540px;
-  text-transform: uppercase;
-}
-
-.entry h2 {
-  margin: 0 !important;
-  padding-top: 0 !important;
-  text-transform: uppercase;
-}
-
-.entry p {
-  padding: 0;
-  margin: 1.6em 0;
-}
-
-.entry a {
+.nav-links a {
   text-decoration: none;
-  background-image: linear-gradient(#fff, #fff), linear-gradient(#fff, #fff), linear-gradient(#555, #555);
-  background-size: 0 0, 0 0, .1em .1em;
-  background-repeat: no-repeat, no-repeat, repeat-x;
-  background-position: 0 90%, 100% 100%, 0 100%;
-  display: inline-block;
-  max-width: 100%;
-}
-
-.entry a:hover {
-  color: #00f;
-  background-image: linear-gradient(#fff, #fff), linear-gradient(#fff, #fff), linear-gradient(blue, #00f);
+  color: inherit;
 }
 
 .light {
-  color: #8a8a8a;
   margin-top: 1em;
 }
 
@@ -138,15 +71,7 @@ a {
 
 .light a:hover {
   text-decoration: underline;
-}
-
-hr {
-  width: 142px;
-  margin: 2.55em auto;
-  font-size: 18px;
-  border: none;
-  border-top: 0 solid #000;
-  display: block
+  text-transform: uppercase;
 }
 
 hr.full {
@@ -156,76 +81,17 @@ hr.full {
   width: 100%;
   text-align: center;
   border: none;
-  letter-spacing: 2em
+  letter-spacing: 2em;
 }
 
 hr.full:after {
-  content: "··•··"
-}
-
-hr.footnote-seperator {
-  margin: 4em 0 1em;
-  width: 8em
-}
-
-.clickable-image {
-  cursor: pointer;
-  transition: opacity 0.3s ease;
-}
-
-.clickable-image:hover {
-  opacity: 0.8;
-}
-
-.image-overlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background-color: rgba(0, 0, 0, 0.9);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  z-index: 1000;
-}
-
-.overlay-content {
-  max-width: 90%;
-  max-height: 90%;
-  position: relative;
-}
-
-.overlay-content img {
-  max-width: 100%;
-  max-height: 90vh;
-  object-fit: contain;
-}
-
-.overlay-content button {
-  position: absolute;
-  top: 10px;
-  right: 10px;
-  background-color: white;
-  border: none;
-  padding: 5px 10px;
-  cursor: pointer;
+  content: "··•··";
 }
 
 .post-date {
-  color: inherit; 
-  text-decoration: none; 
-  cursor: default; 
-}
-
-.post-date.clickable {
-  color: blue; 
-  text-decoration: underline;
-  cursor: pointer;
-}
-
-.post-date.clickable:hover {
+  color: inherit;
   text-decoration: none;
+  cursor: default;
 }
 
 footer {
@@ -234,16 +100,10 @@ footer {
   padding: 80px 0;
 }
 
-.container {
-  max-width: 800px; 
-  margin: 0 auto; 
-  padding: 20px;
-}
-
 .title-nav-container {
   display: flex;
-  justify-content: space-between; 
-  align-items: flex-start; /* Align items to the top */
+  justify-content: space-between;
+  align-items: flex-start;
   width: 100%;
 }
 
@@ -252,25 +112,32 @@ footer {
   text-transform: uppercase;
 }
 
-.nav {
-  display: flex;
-  gap: 10px; 
+.top-nav {
+  width: 600px;
+  background-color: #fff;
+  padding: 1rem 0;
+  margin-bottom: 2rem;
+  margin-left: auto;
+  margin-right: auto;
 }
 
-.nav a {
-  text-decoration: none;
-  padding: 8px 12px;
-  transition: background-color 0.3s, color 0.3s;
+.nav-content {
+  max-width: 600px;
+  margin: 0 auto;
+  padding: 0 1rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
 
 .image-container {
   width: 100%;
-  text-align: center; 
-  margin-bottom: 20px; 
+  text-align: center;
+  margin-bottom: 20px;
 }
 
 img {
-  max-width: 100%; 
+  max-width: 100%;
   height: auto;
 }
 
@@ -279,10 +146,23 @@ img {
 }
 
 .post-footer {
-  font-size: 14px;
-  color: #666;
+  font-family: inherit;
+  font-size: inherit;
+  line-height: inherit;
 }
 
 .post-footer .separator {
   font-weight: bold;
+}
+
+@media (max-width: 768px) {
+  .nav-content {
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .nav-links {
+    width: 100%;
+    justify-content: center;
+  }
 }

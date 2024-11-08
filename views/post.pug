@@ -1,18 +1,19 @@
 extends layout
 
 block content
-  .main-content(style="margin: 0; padding: 0;")
+  .main-content
     each post in postsContent
-      .title-nav-container
+      .title-nav-container(style="display: flex; justify-content: space-between; align-items: center;")
         h2= post.title
-        //- Navigation links removed as they're specific to single post view
-
+        .day-navigation(style="display: flex; gap: 1rem;")
+          if post.prev
+            a(href=`/${post.prev}`) Previous Day
+          if post.next  
+            a(href=`/${post.next}`) Next Day
       .image-container
-        img(src=post.imageUrl width="500" height="500" alt=post.title border="1")
+        img(src=post.imageUrl width="600" height="600" alt=post.title border="1")
         figcaption= post.md5Title
-
       .content!= post.htmlContent
-
       .post-footer
         .light
           if post.formattedDate
@@ -21,6 +22,5 @@ block content
           each tag, i in post.tags
             if i != 0
               span.separator &nbsp;&middot;&nbsp;
-            a(href=`/tagged/${encodeURIComponent(tag.toLowerCase().replace(/\s+/g, '-'))}` title=`Everything tagged ${tag}`)= tag
-
+            a.where(href=`/tagged/${encodeURIComponent(tag.toLowerCase().replace(/\s+/g, '-'))}` title=`Everything tagged ${tag}`)= tag
       hr
