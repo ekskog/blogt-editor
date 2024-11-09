@@ -3,7 +3,7 @@ var router = express.Router();
 const path = require('path');
 
 let filePath = path.join(__dirname, '..', 'public', 'files');
-const tagIndex = require(`${filePath}/tag_Index.json`); // Path to JSON tag index file
+const tagIndex = require(`${filePath}/tag_index.json`); // Path to JSON tag index file
 
 router.get('/:tagName', (req, res) => {
     let { tagName } = req.params;
