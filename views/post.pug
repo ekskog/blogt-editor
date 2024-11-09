@@ -7,11 +7,11 @@ block content
         h2= post.title
         .day-navigation(style="display: flex; gap: 1rem;")
           if post.prev
-            a(href=`/${post.prev}`) Previous Day
+            a(href=`/posts/${post.prev}`) Previous Day
           if post.next  
-            a(href=`/${post.next}`) Next Day
+            a(href=`/posts/${post.next}`) Next Day
       .image-container
-        img(src=post.imageUrl width="600" height="600" alt=post.title border="1")
+        img(src=post.imageUrl width="500" height="500" alt=post.title border="1")
         figcaption= post.md5Title
       .content!= post.htmlContent
       .post-footer
@@ -22,5 +22,5 @@ block content
           each tag, i in post.tags
             if i != 0
               span.separator &nbsp;&middot;&nbsp;
-            a.where(href=`/tagged/${encodeURIComponent(tag.toLowerCase().replace(/\s+/g, '-'))}` title=`Everything tagged ${tag}`)= tag
+            a.where(href=`/tags/${encodeURIComponent(tag)}` title=`Everything tagged ${tag}`)= tag
       hr

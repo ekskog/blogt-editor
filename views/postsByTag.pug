@@ -1,0 +1,21 @@
+extends layout
+
+block content
+    h2 There are #{counter} posts tagged with "#{tagName}"
+
+    // Display posts list
+    ul.no-bullets
+        each post in postFiles
+            li
+                span.date [ #{post.date} ]&nbsp;
+                a(href=`/posts/${post.urlDate}`) #{post.title}
+
+    // Pagination controls as plain text links
+    .pagination
+        if currentPage > 1
+            a(href=`/tags/${encodeURIComponent(tagName)}?page=${currentPage - 1}`) Previous 10
+        if currentPage < totalPages
+            a(href=`/tags/${encodeURIComponent(tagName)}?page=${currentPage + 1}`) Next 10
+
+        // Link to the latest 5 posts for the tag
+        a(href=`/tags/${encodeURIComponent(tagName)}?latest=true`) Latest 5 Dates

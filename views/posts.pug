@@ -8,7 +8,7 @@ block content
         h2= post.title
 
       .image-container
-        img(src=post.imageUrl width="600" height="600" alt=post.title border="1")
+        img(src=post.imageUrl width="500" height="500" alt=post.title border="1")
         figcaption= post.md5Title
 
       .content!= post.htmlContent
@@ -16,11 +16,19 @@ block content
       .post-footer
         .light 
           if post.formattedDate
-            a.post-date(href=`${post.baseUrl}/posts/${post.formattedDate.split('/').reverse().join('')}`)= post.formattedDate
+            a.post-date(href=`/posts/${post.formattedDate.split('/').reverse().join('')}`)= post.formattedDate
             span.separator &nbsp;&middot;&nbsp;
           each tag, i in post.tags
             if i != 0
               span.separator &nbsp;&middot;&nbsp; 
-            a(href=`/tagged/${tag.toLowerCase().replace(/\s+/g, '-')}` title=`Everything tagged ${tag}`) #{tag}
+            a.where(href=`/tags/${encodeURIComponent(tag)}` title=`Everything tagged ${tag}`)= tag
 
     hr.full
+
+  // Pagination controls
+  //.pagination
+  //  if currentPage > 1
+  //    a(href=`/posts/?page=${currentPage - 1}`) Previous
+  //  span.page-number= currentPage
+  //  if currentPage < totalPages
+  //    a(href=`/posts/?page=${currentPage + 1}`) Next

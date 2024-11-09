@@ -1,5 +1,4 @@
 const path = require('path');
-
 const fs = require('fs').promises;
 const moment = require('moment');  // To easily handle date manipulation
 const crypto = require('crypto');
@@ -122,25 +121,22 @@ function formatDate(dateString) {
     return formatted;
 }
 router.get('/', async (req, res) => {
-    console.log('landing')
     try {
         if (!latestPostPath) {
             return res.status(404).json({ error: 'No posts found' });
         }
 
         const postsContent = [];
-        const year = latestPostDate.slice(0, 4);
-        const month = latestPostDate.slice(4, 6);
-        const day = latestPostDate.slice(6, 8);
-        var dateString = latestPostDate;
+        const page = parseInt(req.query.page) || 1; // Get the page number from the query, default to 1
+        const postsPerPage = 10; // Number of posts per page
+        let dateString = latestPostDate; // Start with the latest post date
 
-        // Get the latest 10 posts starting from the found latest post date
-        for (let i = 0; i < 10; i++) {
+        // Loop to get the posts for the requested page
+        for (let i = 0; i < postsPerPage; i++) {
             const year = dateString.slice(0, 4);
             const month = dateString.slice(4, 6);
             const day = dateString.slice(6, 8);
             let filePath = path.join(__dirname, '..', 'posts', year, month, `${day}.md`);
-            let baseUrl = 'http://localhost:3000'
 
             try {
                 const data = await fs.readFile(filePath, 'utf-8');
@@ -156,15 +152,23 @@ router.get('/', async (req, res) => {
                 const imageUrl = `https://objects.hbvu.su/blotpix/${year}/${month}/${day}.jpeg`;
                 const formattedDate = `${day}/${month}/${year}`;
 
-                postsContent.push({ tags, title, md5Title, formattedDate, imageUrl, baseUrl, htmlContent });
+                postsContent.push({ tags, title, md5Title, formattedDate, imageUrl, htmlContent });
                 dateString = getPreviousDay(dateString)
             } catch (err) {
                 console.error(`No post found for ${year}-${month}-${day}`);
                 // Continue to next date if file does not exist
             }
         }
+
+        // Pagination logic
+        const totalPosts = 100; // This should be the total number of posts (you might want to count posts dynamically)
+        const totalPages = Math.ceil(totalPosts / postsPerPage);
+        const currentPage = page;
+
         res.render('posts', {
-            postsContent
+            postsContent,
+            currentPage,
+            totalPages
         });
     }
     catch (error) {
@@ -173,9 +177,9 @@ router.get('/', async (req, res) => {
     }
 });
 
+
 router.get('/:dateString', async (req, res) => {
     const { dateString } = req.params;
-    console.log(`POST get one >> ${dateString}`)
 
     // Ensure dateString is in the format YYYYMMDD
     if (!/^\d{8}$/.test(dateString)) {
@@ -195,7 +199,6 @@ router.get('/:dateString', async (req, res) => {
 
     // We remove the .md extension here in the URL
     let filePath = path.join(postsDir, year, month, `${day}.md`);
-    console.log(filePath)
 
     try {
         const data = await fs.readFile(filePath, 'utf8');

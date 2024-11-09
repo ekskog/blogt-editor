@@ -7,6 +7,7 @@ const logger = require('morgan');
 const indexRouter = require('./routes/index');
 const pagesRouter = require('./routes/pages');
 const postsRouter = require('./routes/posts');
+const tagsRouter = require('./routes/tags');
 
 const app = express();
 
@@ -24,6 +25,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use('/', indexRouter);
 app.use('/pages', pagesRouter);
 app.use('/posts', postsRouter);
+app.use('/tags', tagsRouter);
 
 app.use(logger('dev'));
 
