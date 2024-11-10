@@ -11,8 +11,9 @@ block content
           if post.next  
             a(href=`/posts/${post.next}`) Next Day
       .image-container
-        img(src=post.imageUrl width="500" height="500" alt=post.title border="1")
+        img(src=post.imageUrl alt=post.title)
         figcaption= post.md5Title
+
       .content!= post.htmlContent
       .post-footer
         .light

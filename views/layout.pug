@@ -7,15 +7,13 @@ html
     link(rel="stylesheet", href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css")
     script(src="/javascripts/randomPostLink.js")
   body
-    //- Add debug info
-    div(style="position: fixed; top: 0; left: 0; background: black; color: white; padding: 5px;")
-      span#screen-width
     nav.top-nav(style="border: 1px solid #000000;")
       .nav-content
-        a.logo.hasAvatar(href='/', title='a 365 blog')
-          img.avatar(width='30', height='30', src='/images/avatar2.jpg')
-        button.hamburger-menu
-          i.fas.fa-bars
+        .menu-logo-container
+          button.hamburger-menu
+            i.fas.fa-bars
+          a.logo.hasAvatar(href='/', title='a 365 blog')
+            img.avatar(width='30', height='30', src='/images/avatar2.jpg')
         .nav-links
           a.light(href='/posts', title='archive') THE BLOG
           a.light#random-link(href='#', title='random post') RANDOM
@@ -26,11 +24,3 @@ html
     footer
       center © blind_swan_cage
     script(src="/javascripts/navigation.js?v=" + Date.now())
-    //- Add debug script
-    script.
-      function updateScreenWidth() {
-        const width = window.innerWidth;
-        document.getElementById('screen-width').textContent = `Width: ${width}px`;
-      }
-      window.addEventListener('resize', updateScreenWidth);
-      updateScreenWidth();

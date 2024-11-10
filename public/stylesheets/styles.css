@@ -4,25 +4,27 @@ body {
   word-wrap: break-word;
   position: relative;
   margin: 7em auto;
-  /* New properties for sticky footer */
   min-height: 100vh;
   display: flex;
   flex-direction: column;
 }
 
 .main-wrapper {
-  width: 500px;
+  width: 100%;
   margin: 0 auto;
-  padding: 0 1rem;
-  flex: 1; /* This pushes the footer to the bottom */
+  padding: 0;
+  flex: 1;
 }
 
 .main-content {
-  width: 100%;
+  width: 100%; 
   margin-top: 0;
   padding: 0;
   display: flex;
   flex-direction: column;
+  max-width: 600px; /* Limit max width on desktop */
+  margin-left: auto;
+  margin-right: auto;
 }
 
 h2 {
@@ -56,13 +58,16 @@ a {
 
 .nav-links {
   display: flex;
-  gap: 2rem;
   align-items: center;
+  justify-content: flex-end;
+  flex-grow: 1;
 }
 
 .nav-links a {
   text-decoration: none;
   color: inherit;
+  padding: 0.25rem;
+  margin-left: 1rem;
 }
 
 .light {
@@ -103,7 +108,7 @@ footer {
   width: 100%;
   text-align: center;
   padding: 80px 0;
-  margin-top: auto; /* This pushes the footer to the bottom */
+  margin-top: auto;
 }
 
 .title-nav-container {
@@ -119,7 +124,8 @@ footer {
 }
 
 .top-nav {
-  width: 500px;
+  width: 100%;
+  max-width: 600px; /* Ensure navbar also has max width */
   background-color: #fff;
   padding: 1rem 0;
   margin-bottom: 2rem;
@@ -128,12 +134,14 @@ footer {
 }
 
 .nav-content {
-  max-width: 500px;
+  width: 100%;
+  max-width: 600px; /* Ensure max width consistency with navbar and post */
   margin: 0 auto;
   padding: 0 1rem;
   display: flex;
   justify-content: space-between;
   align-items: center;
+  box-sizing: border-box;
 }
 
 .image-container {
@@ -177,61 +185,130 @@ img {
   margin-top: 20px;
 }
 
-/* Your regular styles remain the same until the media queries */
+.menu-logo-container {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+}
 
-/* Hamburger menu styles */
 .hamburger-menu {
-  display: none !important; /* Force hide by default */
+  display: none;
   background: none;
   border: none;
   font-size: 24px;
   cursor: pointer;
   padding: 10px;
+  order: 0;
 }
 
-/* Media Queries - with higher specificity and !important for testing */
 @media screen and (max-width: 768px) {
-  .main-wrapper {
-    width: 90% !important;
-    max-width: 500px !important;
-  }
-
-  .top-nav {
-    width: 100% !important;
-  }
-
-  .hamburger-menu {
-    display: block !important;
+  .top-nav,
+  .main-wrapper,
+  .nav-content,
+  .post,
+  .main-content {
+    width: 100%; /* Allow shrinking */
+    max-width: 600px; /* Prevent from expanding beyond 600px */
+    margin-left: auto;
+    margin-right: auto;
   }
 
   .nav-content {
-    position: relative !important;
+    padding: 0 1rem;
   }
 
   .nav-links {
-    display: none !important;
-    position: absolute !important;
-    top: 100% !important;
-    left: 0 !important;
-    width: 100% !important;
-    background-color: #fff !important;
-    flex-direction: column !important;
-    padding: 1rem 0 !important;
-    border: 1px solid #000 !important;
+    display: none; /* Hide links initially */
+    position: absolute;
+    top: 100%;
+    left: 0;
+    width: 100%;
+    background-color: #fff;
+    flex-direction: column;
+    padding: 1rem 0;
+    border: 1px solid #000;
   }
 
   .nav-links.active {
-    display: flex !important;
+    display: flex;
+  }
+
+  .nav-links a {
+    margin-left: 0;
+    padding: 0.5rem 1rem;
+  }
+
+  .image-container img {
+    max-width: 100%;
+    height: auto;
+    display: block;
+  }
+
+  .menu-logo-container {
+    justify-content: space-between;
+    width: 100%;
+  }
+
+  .hamburger-menu {
+    display: block;
+    order: 0;
+  }
+
+  .logo {
+    order: 2;
+  }
+
+  .nav-content {
+    position: relative;
+    flex-wrap: wrap;
+  }
+
+  .nav-links {
+    display: none;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    width: 100%;
+    background-color: #fff;
+    flex-direction: column;
+    padding: 1rem 0;
+    border: 1px solid #000;
+  }
+
+  .nav-links.active {
+    display: flex;
+  }
+
+  .nav-links a {
+    margin-left: 0;
+    padding: 0.5rem 1rem;
   }
 }
 
-/* Desktop styles */
 @media screen and (min-width: 769px) {
-  .hamburger-menu {
-    display: none !important;
+  .top-nav,
+  .main-wrapper,
+  .nav-content {
+    width: 100%;
+    max-width: 600px; /* Limit max width to 600px */
+    margin-left: auto;
+    margin-right: auto;
   }
-  
+
+  .menu-logo-container {
+    width: auto;
+    flex-grow: 0;
+  }
+
+  .nav-content {
+    justify-content: space-between;
+  }
+
   .nav-links {
-    display: flex !important;
+    display: flex;
+  }
+
+  .hamburger-menu {
+    display: none;
   }
 }
