@@ -9,6 +9,9 @@ yarn-error.log*
 # Python scripts
 *.py
 
+# Test Files
+posts
+
 # Runtime data
 pids
 *.pid
