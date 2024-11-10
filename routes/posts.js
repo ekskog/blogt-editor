@@ -12,7 +12,7 @@ const postsDir = path.join(__dirname, '..', 'posts');
 
 async function findLatestPost() {
 
-    console.log('postsDir >> ' + postsDir)
+    console.log('POSTS ROUTE: postsDir >> ' + postsDir)
     let latestPostDate = null;
     let latestPostPath = null;
 
@@ -27,7 +27,7 @@ async function findLatestPost() {
 
             const monthsDir = path.join(postsDir, year);
             const months = await fs.readdir(monthsDir);
-            
+
             for (const month of months) {
                 // Only proceed if it's a directory
                 const monthPath = path.join(monthsDir, month);
@@ -37,8 +37,13 @@ async function findLatestPost() {
 
                 const daysDir = path.join(monthsDir, month);
                 const days = await fs.readdir(daysDir);
-                
+
                 for (const day of days) {
+                    const dayRegex = /^(0[1-9]|[12][0-9]|3[01])\.md$/;
+
+                    if (!dayRegex.test(day)) {
+                        continue;
+                    }
                     // Only process markdown files
                     if (!day.endsWith('.md')) {
                         continue;
@@ -47,7 +52,7 @@ async function findLatestPost() {
                     const postPath = path.join(year, month, day);
                     const dateParts = postPath.split('/');
                     const postDate = new Date(`${dateParts[0]}-${dateParts[1]}-${dateParts[2].replace('.md', '')}`);
-                    
+
                     if (!latestPostDate || postDate > latestPostDate) {
                         latestPostDate = postDate;
                         latestPostPath = postPath;
@@ -67,28 +72,28 @@ function getAdjacentDays(dateString) {
     const year = parseInt(dateString.slice(0, 4));
     const month = parseInt(dateString.slice(4, 6));
     const day = parseInt(dateString.slice(6));
-  
+
     const date = new Date(year, month - 1, day);
-  
+
     // Get previous day
     date.setDate(date.getDate() - 1);
     const prevYear = date.getFullYear();
     const prevMonth = (date.getMonth() + 1).toString().padStart(2, '0');
     const prevDay = date.getDate().toString().padStart(2, '0');
     const prevDateString = `${prevYear}${prevMonth}${prevDay}`;
-  
+
     // Get next day
     date.setDate(date.getDate() + 2);
     const nextYear = date.getFullYear();
     const nextMonth = (date.getMonth() + 1).toString().padStart(2, '0');
     const nextDay = date.getDate().toString().padStart(2, '0');
     const nextDateString = `${nextYear}${nextMonth}${nextDay}`;
-  
+
     return {
-      prev: prevDateString,
-      next: nextDateString
+        prev: prevDateString,
+        next: nextDateString
     };
-  }
+}
 
 function getPreviousDay(dateString) {
     // Parse the input date string
