@@ -129,7 +129,9 @@ router.get('/', async (req, res) => {
     try {
         if (!latestPostPath) {
             return res.status(404).json({ error: 'No posts found' });
-        }
+        } 
+        console.log(`[GET /] Latest post date: ${latestPostPath}`)
+
 
         const postsContent = [];
         const page = parseInt(req.query.page) || 1; // Get the page number from the query, default to 1
@@ -144,6 +146,8 @@ router.get('/', async (req, res) => {
             let filePath = path.join(__dirname, '..', 'posts', year, month, `${day}.md`);
 
             try {
+                console.log(`[GET /] Getting POST FOR: ${filePath}`)
+
                 const data = await fs.readFile(filePath, 'utf-8');
                 const tagsMatch = data.match(/^Tags:\s*(.+)$/m);
                 const titleMatch = data.match(/^Title:\s*(.+)$/m);
@@ -161,6 +165,7 @@ router.get('/', async (req, res) => {
                 dateString = getPreviousDay(dateString)
             } catch (err) {
                 console.error(`No post found for ${year}-${month}-${day}`);
+                dateString = getPreviousDay(dateString)
                 // Continue to next date if file does not exist
             }
         }
@@ -169,7 +174,6 @@ router.get('/', async (req, res) => {
         const totalPosts = 100; // This should be the total number of posts (you might want to count posts dynamically)
         const totalPages = Math.ceil(totalPosts / postsPerPage);
         const currentPage = page;
-
         res.render('posts', {
             postsContent,
             currentPage,
@@ -234,11 +238,43 @@ router.get('/:dateString', async (req, res) => {
     }
 });
 
+router.post('/', async (req, res) => {
+    // Extract date and text from the request body
+    const { date, text } = req.body;
+
+    // Check if date and text are provided
+    if (!date || !text) {
+        return res.status(400).send('Date and text are required.');
+    }
+
+    try {
+        // Parse date (assuming format "YYYY-MM-DD")
+        const [year, month, day] = date.split('-');
+
+        // Define the file path
+        let dirPath = path.join(postsDir, year, month);
+        let filePath = path.join(dirPath, `${day}.md`);
+
+        // Ensure the directory exists
+        await fs.mkdir(dirPath, { recursive: true });
+
+        // Write the text content to the file
+        await fs.writeFile(filePath, text);
+
+        res.status(200).send(`File ${day}.md created successfully in ${dirPath}`);
+    } catch (error) {
+        console.error('Error writing file:', error);
+        res.status(500).send('Internal Server Error');
+    }
+});
+
 async function main() {
     try {
         let latestPost = await findLatestPost();
         latestPostDate = formatDate(latestPost.latestPostDate);
         latestPostPath = latestPost.latestPostPath;
+        console.log(`[MAIN] Latest post date: ${JSON.stringify(latestPost)}`)
+
     } catch (error) {
         console.error("An error occurred:", error);
     }
