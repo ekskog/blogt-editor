@@ -261,7 +261,26 @@ router.post('/', async (req, res) => {
         // Write the text content to the file
         await fs.writeFile(filePath, text);
 
-        res.status(200).send(`File ${day}.md created successfully in ${dirPath}`);
+        // recalculate the latest Post Date
+        await findLatestPost();
+        const tagsMatch = text.match(/^Tags:\s*(.+)$/m);
+        const titleMatch = text.match(/^Title:\s*(.+)$/m);
+        const tags = tagsMatch ? tagsMatch[1].split(',').map(tag => tag.trim()) : [];
+        const title = titleMatch ? titleMatch[1] : 'Untitled';
+
+        const content = text.replace(/^Tags:.*$/m, '').replace(/^Title:.*$/m, '').trim();
+        const htmlContent = marked(content);
+        const md5Title = crypto.createHash('md5').update(title).digest('hex');
+        const imageUrl = `https://objects.hbvu.su/blotpix/${year}/${month}/${day}.jpeg`;
+        const formattedDate = `${day}/${month}/${year}`;
+
+        const postsContent = [];
+
+        const { prev, next } = getAdjacentDays(date);
+        console.log(`${prev} AND ${next}`);
+        postsContent.push({ tags, title, md5Title, formattedDate, imageUrl, htmlContent, prev, next });
+
+        res.render('post', { postsContent });
     } catch (error) {
         console.error('Error writing file:', error);
         res.status(500).send('Internal Server Error');

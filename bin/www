@@ -87,6 +87,6 @@ function onListening() {
     ? 'pipe ' + addr
     : 'port ' + addr.port;
   console.log('Listening on ' + bind);
-  console.log('V 4b0119e');
+  console.log('[ e090438 ]');
 
 }
