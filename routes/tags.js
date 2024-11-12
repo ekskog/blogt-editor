@@ -5,6 +5,25 @@ const path = require('path');
 let filePath = path.join(__dirname, '..', 'posts');
 const tagIndex = require(`${filePath}/tag_index.json`); // Path to JSON tag index file
 
+// Add this new route in your Express app
+router.get('/search', (req, res) => {
+    const searchTerm = req.query.tag?.toLowerCase();
+    if (!searchTerm) {
+        return res.render('search', { results: null });
+    }
+
+    const matchingTags = Object.keys(tagIndex).filter(tag => 
+        tag.toLowerCase().includes(searchTerm)
+    );
+
+    const results = matchingTags.map(tag => ({
+        tag,
+        posts: tagIndex[tag].slice(0, 5) // Get first 5 posts for each matching tag
+    }));
+
+    res.render('search', { results, searchTerm });
+});
+
 router.get('/:tagName', (req, res) => {
     let { tagName } = req.params;
     tagName = decodeURIComponent(tagName); // Decode the tag name to handle multi-word and special characters
