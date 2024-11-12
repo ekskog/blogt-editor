@@ -10,6 +10,8 @@ const express = require('express');
 const router = express.Router();
 const postsDir = path.join(__dirname, '..', 'posts');
 
+const MAX_ITERATIONS = 365;
+
 async function findLatestPost() {
 
     console.log('POSTS ROUTE: postsDir >> ' + postsDir)
@@ -68,51 +70,54 @@ async function findLatestPost() {
     }
 }
 
-function getAdjacentDays(dateString) {
+async function getNext(dateString) {
     const year = parseInt(dateString.slice(0, 4));
-    const month = parseInt(dateString.slice(4, 6));
+    const month = parseInt(dateString.slice(4, 6)) - 1; // JS months are 0-indexed
     const day = parseInt(dateString.slice(6));
+    let date = new Date(year, month, day);
 
-    const date = new Date(year, month - 1, day);
+    let iterations = 0;
+    while (iterations < MAX_ITERATIONS) {
+        iterations++;        date.setDate(date.getDate() + 1);
+        const nextYear = date.getFullYear().toString();
+        const nextMonth = (date.getMonth() + 1).toString().padStart(2, '0');
+        const nextDay = date.getDate().toString().padStart(2, '0');
+        const filePath = path.join(postsDir, nextYear, nextMonth, `${nextDay}.md`);
 
-    // Get previous day
-    date.setDate(date.getDate() - 1);
-    const prevYear = date.getFullYear();
-    const prevMonth = (date.getMonth() + 1).toString().padStart(2, '0');
-    const prevDay = date.getDate().toString().padStart(2, '0');
-    const prevDateString = `${prevYear}${prevMonth}${prevDay}`;
-
-    // Get next day
-    date.setDate(date.getDate() + 2);
-    const nextYear = date.getFullYear();
-    const nextMonth = (date.getMonth() + 1).toString().padStart(2, '0');
-    const nextDay = date.getDate().toString().padStart(2, '0');
-    const nextDateString = `${nextYear}${nextMonth}${nextDay}`;
-
-    return {
-        prev: prevDateString,
-        next: nextDateString
-    };
+        try {
+            await fs.access(filePath);
+            return `${nextYear}${nextMonth}${nextDay}`;
+        } catch (error) {
+            // Log the missing entry
+            console.log(`No entry found for ${nextYear}-${nextMonth}-${nextDay}. Checking next date...`);
+            // Continue to next date
+        }
+    }
 }
 
-function getPreviousDay(dateString) {
-    // Parse the input date string
-    const year = parseInt(dateString.slice(0, 4), 10);
-    const month = parseInt(dateString.slice(4, 6), 10) - 1; // JS months are 0-indexed
-    const day = parseInt(dateString.slice(6, 8), 10);
+async function getPrev(dateString) {
+    const year = parseInt(dateString.slice(0, 4));
+    const month = parseInt(dateString.slice(4, 6)) - 1; // JS months are 0-indexed
+    const day = parseInt(dateString.slice(6));
+    let date = new Date(year, month, day);
 
-    // Create a Date object and set it to the input date
-    const date = new Date(year, month, day);
+    let iterations = 0;
+    while (iterations < MAX_ITERATIONS) {
+        iterations++;        date.setDate(date.getDate() - 1);
+        const prevYear = date.getFullYear().toString();
+        const prevMonth = (date.getMonth() + 1).toString().padStart(2, '0');
+        const prevDay = date.getDate().toString().padStart(2, '0');
+        const filePath = path.join(postsDir, prevYear, prevMonth, `${prevDay}.md`);
 
-    // Subtract one day
-    date.setDate(date.getDate() - 1);
-
-    // Format the result back to YYYYMMDD
-    const resultYear = date.getFullYear();
-    const resultMonth = (date.getMonth() + 1).toString().padStart(2, '0');
-    const resultDay = date.getDate().toString().padStart(2, '0');
-
-    return `${resultYear}${resultMonth}${resultDay}`;
+        try {
+            await fs.access(filePath);
+            return `${prevYear}${prevMonth}${prevDay}`;
+        } catch (error) {
+            // Log the missing entry
+            console.log(`No entry found for ${prevYear}-${prevMonth}-${prevDay}. Checking previous date...`);
+            // Continue to previous date
+        }
+    }
 }
 
 function formatDate(dateString) {
@@ -162,10 +167,10 @@ router.get('/', async (req, res) => {
                 const formattedDate = `${day}/${month}/${year}`;
 
                 postsContent.push({ tags, title, md5Title, formattedDate, imageUrl, htmlContent });
-                dateString = getPreviousDay(dateString)
+                dateString = getPrev(dateString)
             } catch (err) {
                 console.error(`No post found for ${year}-${month}-${day}`);
-                dateString = getPreviousDay(dateString)
+                dateString = getPrev(dateString)
                 // Continue to next date if file does not exist
             }
         }
@@ -225,7 +230,9 @@ router.get('/:dateString', async (req, res) => {
 
         const postsContent = [];
 
-        const { prev, next } = getAdjacentDays(dateString);
+        const prev = await getPrev(dateString);
+        const next = await getNext(dateString);
+
         console.log(`${prev} AND ${next}`);
         postsContent.push({ tags, title, md5Title, formattedDate, imageUrl, htmlContent, prev, next });
 
