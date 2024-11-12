@@ -2,9 +2,9 @@ extends layout
 
 block content
     h2 There are #{counter} posts tagged with "#{tagName}"
-    form(action="/tags/search" method="GET")
-    input(type="text" name="tag" placeholder="Search tags")
-    button(type="submit") Search
+    form.search-form(action="/tags/search" method="GET")
+        input.search-input(type="text" name="tag" placeholder="Search tags")
+        button.search-button(type="submit") Search
 
     // Display posts list
     ul.no-bullets
@@ -22,3 +22,4 @@ block content
 
         // Link to the latest 5 posts for the tag
         a(href=`/tags/${encodeURIComponent(tagName)}?latest=true`) Latest 5 Dates
+   
