@@ -3,8 +3,8 @@ extends layout
 block content
     h2 There are #{counter} posts tagged with "#{tagName}"
     form.search-form(action="/tags/search" method="GET")
-        input.search-input(type="text" name="tag" placeholder="Search tags")
-        button.search-button(type="submit") Search
+        input(type="text" name="tag" placeholder="Search tags")
+        button(type="submit") Search
 
     // Display posts list
     ul.no-bullets

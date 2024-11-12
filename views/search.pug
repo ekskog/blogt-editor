@@ -3,8 +3,8 @@ extends layout
 block content
     h2 Search Tags
 
-    form(action="/tags/search" method="GET")
-        input(type="text" name="tag" placeholder="Enter a tag" value=searchTerm)
+    form.search-form(action="/tags/search" method="GET")
+        input(type="text" name="tag" placeholder="Search tags")
         button(type="submit") Search
 
     if results
