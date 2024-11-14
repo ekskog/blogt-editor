@@ -3,7 +3,7 @@ var router = express.Router();
 const path = require('path');
 
 let filePath = path.join(__dirname, '..', 'posts');
-const tagIndex = require(`${filePath}/tag_index.json`); // Path to JSON tag index file
+const tagIndex = require(`${filePath}/tags_index.json`); // Path to JSON tag index file
 
 // Add this new route in your Express app
 router.get('/search', (req, res) => {
