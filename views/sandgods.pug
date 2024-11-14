@@ -1,0 +1,10 @@
+extends layout 
+
+block content
+  .main-content
+    .accordion
+      each val, index in ["Section 1", "Section 2", "Section 3"]
+        button.accordion-button(onclick=`toggleAccordion(${index})`) #{val}
+        .accordion-content
+          p This is the content for #{val.toLowerCase()}
+    script(src="script.js")

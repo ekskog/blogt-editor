@@ -4,9 +4,11 @@ html
     title= title
     meta(name="viewport" content="width=device-width, initial-scale=1.0")
     link(rel="stylesheet", href="/stylesheets/styles.css?v=" + Date.now())
+    link(rel="stylesheet", href="/stylesheets/sandgods.css?v=" + Date.now())
     link(rel="stylesheet", href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css")
     script(src="/javascripts/randomPostLink.js")
     script(src="/javascripts/search.js")
+    script(src="/javascripts/sandgods.js")
 
   body
     nav.top-nav(style="border: 1px solid #000000;")
@@ -19,6 +21,8 @@ html
         .nav-links
           a.light(href='/posts', title='archive') THE BLOG
           a.light#random-link(href='#', title='random post') RANDOM
+          a.light(href='/sandgods', title='ss') SANDGODS
+
           a.light(href='/pages/about', title='about') ABOUT
     .main-wrapper
       .main-content

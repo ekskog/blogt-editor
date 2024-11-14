@@ -10,6 +10,7 @@ const pagesRouter = require('./routes/pages');
 const postsRouter = require('./routes/posts');
 const tagsRouter = require('./routes/tags');
 const editRouter = require('./routes/editor');
+const ssRouter = require('./routes/sandgods');
 
 const app = express();
 
@@ -33,6 +34,8 @@ app.use('/pages', pagesRouter);
 app.use('/posts', postsRouter);
 app.use('/tags', tagsRouter);
 app.use('/editor', editRouter);
+app.use('/sandgods', editRouter);
+
 
 app.use(logger('dev'));
 
