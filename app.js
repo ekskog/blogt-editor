@@ -34,7 +34,7 @@ app.use('/pages', pagesRouter);
 app.use('/posts', postsRouter);
 app.use('/tags', tagsRouter);
 app.use('/editor', editRouter);
-app.use('/sandgods', editRouter);
+app.use('/sandgods', ssRouter);
 
 
 app.use(logger('dev'));
