@@ -135,8 +135,7 @@ router.get('/', async (req, res) => {
         if (!latestPostPath) {
             return res.status(404).json({ error: 'No posts found' });
         } 
-        console.log(`[GET /] Latest post date: ${latestPostPath}`)
-
+        console.log(`[GET /] Latest post date: ${latestPostDate}`)
 
         const postsContent = [];
         const page = parseInt(req.query.page) || 1; // Get the page number from the query, default to 1
@@ -167,10 +166,10 @@ router.get('/', async (req, res) => {
                 const formattedDate = `${day}/${month}/${year}`;
 
                 postsContent.push({ tags, title, md5Title, formattedDate, imageUrl, htmlContent });
-                dateString = getPrev(dateString)
+                dateString = await getPrev(dateString)
             } catch (err) {
                 console.error(`No post found for ${year}-${month}-${day}`);
-                dateString = getPrev(dateString)
+                dateString = await getPrev(dateString)
                 // Continue to next date if file does not exist
             }
         }
@@ -283,7 +282,10 @@ router.post('/', async (req, res) => {
 
         const postsContent = [];
 
-        const { prev, next } = getAdjacentDays(date);
+        const prev = await getPrev(date);
+        const next = await getNext(date);
+
+        console.log(`${prev} AND ${next}`);        
         console.log(`${prev} AND ${next}`);
         postsContent.push({ tags, title, md5Title, formattedDate, imageUrl, htmlContent, prev, next });
 
