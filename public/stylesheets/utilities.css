@@ -1,0 +1,42 @@
+/* utilities.css - Utility classes and common components */
+.light {
+    margin-top: 1em;
+  }
+  
+  .light a {
+    color: inherit;
+    text-decoration: none;
+  }
+  
+  .light a:hover {
+    text-decoration: underline;
+    text-transform: uppercase;
+  }
+  
+  .avatar {
+    vertical-align: middle;
+  }
+  
+  .no-bullets {
+    list-style-type: none;
+    padding: 0;
+  }
+  
+  .no-bullets li {
+    padding: 8px 0;
+    border-bottom: 1px solid #e0e0e0;
+  }
+  
+  hr.full {
+    color: #000;
+    margin: 3em 0 3em 1em;
+    height: 1;
+    width: 100%;
+    text-align: center;
+    border: none;
+    letter-spacing: 2em;
+  }
+  
+  hr.full:after {
+    content: "··•··";
+  }

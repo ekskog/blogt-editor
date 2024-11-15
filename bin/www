@@ -87,6 +87,6 @@ function onListening() {
     ? 'pipe ' + addr
     : 'port ' + addr.port;
   console.log('Listening on ' + bind);
-  console.log(`[ sandgods skeleton  ] >> ${Date.now()}`);
+  console.log(`[ split styles  ] >> ${Date.now()}`);
 
 }

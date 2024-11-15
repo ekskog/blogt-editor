@@ -1,0 +1,30 @@
+/* base.css - Basic styles and typography */
+body {
+    font: 12px/1.8 'Roboto', Arial, sans-serif;
+    color: #111;
+    word-wrap: break-word;
+    position: relative;
+    margin: 7em auto;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+  }
+  
+  h2 {
+    font-size: 14px;
+    text-transform: uppercase;
+    letter-spacing: 1.7325px;
+    font-weight: 400;
+    margin-bottom: 1em;
+    font-family: 'Gill Sans MT', 'Gill Sans', 'Gill Sans Std', Verdana, 'Bitstream Vera Sans', sans-serif;
+  }
+  
+  a {
+    color: #700170;
+    text-decoration: none;
+  }
+  
+  img {
+    max-width: 100%;
+    height: auto;
+  }

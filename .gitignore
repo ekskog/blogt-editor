@@ -12,6 +12,9 @@ yarn-error.log*
 # Test Files
 posts
 
+# Archives
+*.zip
+
 # Runtime data
 pids
 *.pid
