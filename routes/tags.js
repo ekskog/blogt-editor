@@ -42,7 +42,7 @@ router.get('/tagcloud', (req, res) => {
     }
 
     // Send the filtered tag data to the template
-    res.render('tagcloud', { tagCounts });
+    res.render('tagCloud', { tagCounts });
 });
 
 
