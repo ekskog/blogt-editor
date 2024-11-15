@@ -1,5 +1,6 @@
 const createError = require('http-errors');
 const express = require('express');
+const robots = require('express-robots-txt');
 const path = require('path');
 const cookieParser = require('cookie-parser');
 const bodyParser = require('body-parser');
@@ -36,9 +37,13 @@ app.use('/tags', tagsRouter);
 app.use('/editor', editRouter);
 app.use('/sandgods', ssRouter);
 
-
 app.use(logger('dev'));
 
+app.use(robots({
+    UserAgent: '*',
+    Disallow: '/'
+  }));
+  
 // Catch 404 and forward to error handler
 app.use(function (req, res, next) {
     next(createError(404));
