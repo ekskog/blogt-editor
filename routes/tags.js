@@ -29,28 +29,23 @@ router.get('/tagcloud', (req, res) => {
         return res.status(500).send('Tag index is not loaded correctly');
     }
 
-    // Calculate tag frequencies
-    const tagCounts = Object.keys(tagIndex).map(tag => ({
-        name: tag,
-        count: Array.isArray(tagIndex[tag]) ? tagIndex[tag].length : 0, // Ensure it's an array
-    }));
+    // Calculate tag frequencies and filter by count
+    const tagCounts = Object.keys(tagIndex)
+        .map(tag => ({
+            name: tag,
+            count: Array.isArray(tagIndex[tag]) ? tagIndex[tag].length : 0,
+        }))
+        .filter(tag => tag.count > 50);  // Only tags with more than 10 occurrences
 
     if (tagCounts.length === 0) {
         return res.status(404).render('tagcloud', { tagCounts: [] });
     }
 
-    // Find min and max counts for scaling font sizes
-    const maxCount = Math.max(...tagCounts.map(tag => tag.count));
-    const minCount = Math.min(...tagCounts.map(tag => tag.count));
-
-    // Scale font sizes
-    tagCounts.forEach(tag => {
-        tag.fontSize = 10 + ((tag.count - minCount) / (maxCount - minCount)) * 40;
-    });
-
-    // Render the tag cloud
+    // Send the filtered tag data to the template
     res.render('tagcloud', { tagCounts });
 });
+
+
 
 
 router.get('/:tagName', (req, res) => {

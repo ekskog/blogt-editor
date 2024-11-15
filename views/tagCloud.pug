@@ -1,23 +1,9 @@
 extends layout
 
 block content
-    title Tag Cloud
-    style.
-      #tagCloud {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 10px;
-        width: 80%;
-        margin: 0 auto;
-        text-align: center;
-      }
-      #tagCloud a {
-        padding: 5px;
-        text-decoration: none;
-        color: #333;
-      }
-    .main-content
-        h1 Tag Cloud
-        #tagCloud
-        each tag in tagCounts
-            a(href=`/tags/${encodeURIComponent(tag.name)}`, style=`font-size: ${tag.fontSize}px`) #{tag.name}
+  .main-content(style="margin: 0 auto; padding: 20px; border: 1px solid black; display: flex; justify-content: flex-start; align-items: flex-start; flex-direction: column; max-width: 600px; box-sizing: border-box; margin-top: 0; margin-bottom: 0;")
+    #wordCloudCanvas(data-tags=JSON.stringify(tagCounts.map(tag => [tag.name, tag.count])))
+
+    // Include the WordCloud2.js library and custom scripts
+  script(src="https://cdn.jsdelivr.net/npm/wordcloud@1.1.1/src/wordcloud2.min.js")
+  script(src="/javascripts/tagcloud.js")

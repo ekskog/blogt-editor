@@ -1,6 +1,11 @@
 /* components.css - Specific component styles */
 
-
+#wordCloudCanvas {
+  width: 500px; 
+  height: 450px; 
+  margin: 10px auto;
+  background-color: #f9f9f9;
+}
   
 .editor-container {
     width: 100%;

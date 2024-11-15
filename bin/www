@@ -87,6 +87,6 @@ function onListening() {
     ? 'pipe ' + addr
     : 'port ' + addr.port;
   console.log('Listening on ' + bind);
-  console.log(`[ fixed md5 hash calculation ] >> ${Date.now()}`);
+  console.log(`[ implemented tag cloud ] >> ${Date.now()}`);
 
 }
