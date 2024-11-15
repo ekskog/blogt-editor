@@ -2,21 +2,25 @@ extends layout
 
 block content
   .main-content(style="margin: 0 auto; padding: 20px; border: 1px solid black; display: flex; justify-content: flex-start; align-items: flex-start; flex-direction: column; max-width: 600px; box-sizing: border-box; margin-top: 0; margin-bottom: 0;")
-        h2 There are #{counter} posts tagged with "#{tagName}"
-            // Display posts list
-        ul.no-bullets
-            each post in postFiles
-                li
-                    span.date [ #{post.date} ]&nbsp;
-                    a(href=`/posts/${post.urlDate}`) #{post.title}
+    h2 There are #{counter} posts tagged with "#{tagName}"
+        // Display posts list
+    ul.no-bullets
+        each post in postFiles
+            li
+                span.date [ #{post.date} ]&nbsp;
+                a(href=`/posts/${post.urlDate}`) #{post.title}
 
-        // Pagination controls as plain text links
-        .pagination
-            if currentPage > 1
-                a(href=`/tags/${encodeURIComponent(tagName)}?page=${currentPage - 1}`) Previous 10
-            if currentPage < totalPages
-                a(href=`/tags/${encodeURIComponent(tagName)}?page=${currentPage + 1}`) Next 10
+    // Pagination controls
+    .pagination(style="display: flex; justify-content: space-between; align-items: center; width: 100%;")
+        // Left-justified: Previous 10
+        if currentPage > 1
+            a(href=`/tags/${encodeURIComponent(tagName)}?page=${currentPage - 1}`) Previous 10
+        
+        // Centered: Latest 5
+        a(href=`/tags/${encodeURIComponent(tagName)}?latest=true` style="margin-left: auto; margin-right: auto;") Latest 5 Dates
+        
+        // Right-justified: Next 10
+        if currentPage < totalPages
+            a(href=`/tags/${encodeURIComponent(tagName)}?page=${currentPage + 1}`) Next 10
 
-            // Link to the latest 5 posts for the tag
-            a(href=`/tags/${encodeURIComponent(tagName)}?latest=true`) Latest 5 Dates
     

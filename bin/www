@@ -87,6 +87,6 @@ function onListening() {
     ? 'pipe ' + addr
     : 'port ' + addr.port;
   console.log('Listening on ' + bind);
-  console.log(`[ fixed search ] >> ${Date.now()}`);
+  console.log(`[ fixed nav alignment on tags page ] >> ${Date.now()}`);
 
 }
