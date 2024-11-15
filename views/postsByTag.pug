@@ -1,25 +1,22 @@
 extends layout
 
 block content
-    h2 There are #{counter} posts tagged with "#{tagName}"
-    form.search-form(action="/tags/search" method="GET")
-        input(type="text" name="tag" placeholder="Search tags")
-        button(type="submit") Search
+  .main-content(style="margin: 0 auto; padding: 20px; border: 1px solid black; display: flex; justify-content: flex-start; align-items: flex-start; flex-direction: column; max-width: 600px; box-sizing: border-box; margin-top: 0; margin-bottom: 0;")
+        h2 There are #{counter} posts tagged with "#{tagName}"
+            // Display posts list
+        ul.no-bullets
+            each post in postFiles
+                li
+                    span.date [ #{post.date} ]&nbsp;
+                    a(href=`/posts/${post.urlDate}`) #{post.title}
 
-    // Display posts list
-    ul.no-bullets
-        each post in postFiles
-            li
-                span.date [ #{post.date} ]&nbsp;
-                a(href=`/posts/${post.urlDate}`) #{post.title}
+        // Pagination controls as plain text links
+        .pagination
+            if currentPage > 1
+                a(href=`/tags/${encodeURIComponent(tagName)}?page=${currentPage - 1}`) Previous 10
+            if currentPage < totalPages
+                a(href=`/tags/${encodeURIComponent(tagName)}?page=${currentPage + 1}`) Next 10
 
-    // Pagination controls as plain text links
-    .pagination
-        if currentPage > 1
-            a(href=`/tags/${encodeURIComponent(tagName)}?page=${currentPage - 1}`) Previous 10
-        if currentPage < totalPages
-            a(href=`/tags/${encodeURIComponent(tagName)}?page=${currentPage + 1}`) Next 10
-
-        // Link to the latest 5 posts for the tag
-        a(href=`/tags/${encodeURIComponent(tagName)}?latest=true`) Latest 5 Dates
-   
+            // Link to the latest 5 posts for the tag
+            a(href=`/tags/${encodeURIComponent(tagName)}?latest=true`) Latest 5 Dates
+    

@@ -29,11 +29,17 @@ html
           a.logo.hasAvatar(href='/', title='a 365 blog')
             img.avatar(width='30', height='30', src='/images/avatar2.jpg')
         .nav-links
-          a.light(href='/posts', title='archive') THE BLOG
-          a.light#random-link(href='#', title='random post') RANDOM
-          a.light(href='/sandgods', title='ss') SANDGODS
-
-          a.light(href='/pages/about', title='about') ABOUT
+          .menu-item
+            a.light(href='#', title='blog') BLOG
+            .submenu
+              a.submenu-item(href='/posts') Latest Posts
+              a.submenu-item(href='/tags/search') Search
+              a.submenu-item(href='/tags/tagcloud') Tags              
+              a.light#random-link(href='#', title='random post') Random Post
+          .menu-item
+            a.light(href='/sandgods', title='ss') SANDGODS
+          .menu-item
+            a.light(href='/pages/about', title='about') ABOUT
     .main-wrapper
       .main-content
         block content

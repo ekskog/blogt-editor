@@ -12,7 +12,7 @@ router.get('/search', (req, res) => {
         return res.render('search', { results: null });
     }
 
-    const matchingTags = Object.keys(tagIndex).filter(tag => 
+    const matchingTags = Object.keys(tagIndex).filter(tag =>
         tag.toLowerCase().includes(searchTerm)
     );
 
@@ -23,6 +23,35 @@ router.get('/search', (req, res) => {
 
     res.render('search', { results, searchTerm });
 });
+
+router.get('/tagcloud', (req, res) => {
+    if (!tagIndex || typeof tagIndex !== 'object') {
+        return res.status(500).send('Tag index is not loaded correctly');
+    }
+
+    // Calculate tag frequencies
+    const tagCounts = Object.keys(tagIndex).map(tag => ({
+        name: tag,
+        count: Array.isArray(tagIndex[tag]) ? tagIndex[tag].length : 0, // Ensure it's an array
+    }));
+
+    if (tagCounts.length === 0) {
+        return res.status(404).render('tagcloud', { tagCounts: [] });
+    }
+
+    // Find min and max counts for scaling font sizes
+    const maxCount = Math.max(...tagCounts.map(tag => tag.count));
+    const minCount = Math.min(...tagCounts.map(tag => tag.count));
+
+    // Scale font sizes
+    tagCounts.forEach(tag => {
+        tag.fontSize = 10 + ((tag.count - minCount) / (maxCount - minCount)) * 40;
+    });
+
+    // Render the tag cloud
+    res.render('tagcloud', { tagCounts });
+});
+
 
 router.get('/:tagName', (req, res) => {
     let { tagName } = req.params;
@@ -69,7 +98,7 @@ router.get('/:tagName', (req, res) => {
     });
 });
 
-    module.exports = router;
+module.exports = router;
 
 
 

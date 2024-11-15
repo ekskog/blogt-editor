@@ -22,3 +22,14 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 });
+
+// JavaScript for toggling submenu visibility on click
+document.querySelectorAll('.menu-item').forEach(item => {
+  item.addEventListener('click', function (e) {
+    // Prevent other items from remaining open when a new one is clicked
+    document.querySelectorAll('.menu-item').forEach(i => i.classList.remove('active'));
+    
+    // Toggle 'active' class on clicked menu item
+    this.classList.toggle('active');
+  });
+});

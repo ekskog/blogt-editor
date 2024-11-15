@@ -1,0 +1,23 @@
+extends layout
+
+block content
+    title Tag Cloud
+    style.
+      #tagCloud {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+        width: 80%;
+        margin: 0 auto;
+        text-align: center;
+      }
+      #tagCloud a {
+        padding: 5px;
+        text-decoration: none;
+        color: #333;
+      }
+    .main-content
+        h1 Tag Cloud
+        #tagCloud
+        each tag in tagCounts
+            a(href=`/tags/${encodeURIComponent(tag.name)}`, style=`font-size: ${tag.fontSize}px`) #{tag.name}

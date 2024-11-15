@@ -2,7 +2,7 @@
     width: 100%;
     max-width: 600px;
     margin: 20px auto;
-    border: 1px solid #ddd;
+    border: 1px solid #000;
     border-radius: 5px;
 }
 
@@ -10,7 +10,7 @@
     width: 100%;
     padding: 15px;
     text-align: left;
-    background-color: #f1f1f1;
+    background-color: #fff;
     border: none;
     outline: none;
     cursor: pointer;
@@ -26,7 +26,7 @@
     overflow: hidden;
     transition: max-height 0.3s ease;
     padding: 0 15px;
-    background-color: #fafafa;
+    background-color: black;
 }
 
 .accordion-content p {

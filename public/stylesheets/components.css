@@ -1,36 +1,8 @@
 /* components.css - Specific component styles */
-.search-form {
-    display: flex;
-    align-items: center;
-    max-width: 500px;
-    margin-bottom: 20px;
-  }
+
+
   
-  .search-form input[type="text"] {
-    flex: 3;
-    padding: 10px;
-    font-size: 16px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    margin-right: 10px;
-  }
-  
-  .search-form button {
-    flex: 1;
-    padding: 10px 20px;
-    font-size: 16px;
-    background-color: #007bff;
-    color: white;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-  }
-  
-  .search-form button:hover {
-    background-color: #0056b3;
-  }
-  
-  .editor-container {
+.editor-container {
     width: 100%;
     max-width: 600px;
     margin: 0 auto;

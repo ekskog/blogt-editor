@@ -39,3 +39,26 @@
     padding: 10px;
     order: 0;
   }
+
+  /* Hide submenu by default */
+.submenu {
+  display: none;
+  position: absolute; /* So it doesn’t push down other elements */
+  background-color: #f9f9f9;
+  box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.2);
+  z-index: 1;
+  min-width: 160px;
+}
+
+/* Style for submenu items */
+.submenu-item {
+  display: block;
+  padding: 12px 16px;
+  color: #333;
+  text-decoration: none;
+}
+
+/* Show the submenu when .menu-item is clicked */
+.menu-item.active .submenu {
+  display: block;
+}

@@ -162,6 +162,7 @@ router.get('/', async (req, res) => {
                 const htmlContent = marked(content);
 
                 const md5Title = crypto.createHash('md5').update(title).digest('hex');
+                console.log(`Calculated hash: ${md5Title}`)
                 const imageUrl = `https://objects.hbvu.su/blotpix/${year}/${month}/${day}.jpeg`;
                 const formattedDate = `${day}/${month}/${year}`;
 
@@ -224,6 +225,8 @@ router.get('/:dateString', async (req, res) => {
         const content = data.replace(/^Tags:.*$/m, '').replace(/^Title:.*$/m, '').trim();
         const htmlContent = marked(content);
         const md5Title = crypto.createHash('md5').update(title).digest('hex');
+        console.log(`Calculated hash: ${md5Title}`)
+
         const imageUrl = `https://objects.hbvu.su/blotpix/${year}/${month}/${day}.jpeg`;
         const formattedDate = `${day}/${month}/${year}`;
 
@@ -277,6 +280,8 @@ router.post('/', async (req, res) => {
         const content = text.replace(/^Tags:.*$/m, '').replace(/^Title:.*$/m, '').trim();
         const htmlContent = marked(content);
         const md5Title = crypto.createHash('md5').update(title).digest('hex');
+        console.log(`Calculated hash: ${md5Title}`)
+
         const imageUrl = `https://objects.hbvu.su/blotpix/${year}/${month}/${day}.jpeg`;
         const formattedDate = `${day}/${month}/${year}`;
 
