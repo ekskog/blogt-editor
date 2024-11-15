@@ -14,7 +14,6 @@ const MAX_ITERATIONS = 365;
 
 async function findLatestPost() {
 
-    console.log('POSTS ROUTE: postsDir >> ' + postsDir)
     let latestPostDate = null;
     let latestPostPath = null;
 
@@ -89,7 +88,7 @@ async function getNext(dateString) {
             return `${nextYear}${nextMonth}${nextDay}`;
         } catch (error) {
             // Log the missing entry
-            console.log(`No entry found for ${nextYear}-${nextMonth}-${nextDay}. Checking next date...`);
+            // console.log(`No entry found for ${nextYear}-${nextMonth}-${nextDay}. Checking next date...`);
             // Continue to next date
         }
     }
@@ -114,7 +113,7 @@ async function getPrev(dateString) {
             return `${prevYear}${prevMonth}${prevDay}`;
         } catch (error) {
             // Log the missing entry
-            console.log(`No entry found for ${prevYear}-${prevMonth}-${prevDay}. Checking previous date...`);
+            // console.err(`No entry found for ${prevYear}-${prevMonth}-${prevDay}. Checking previous date...`);
             // Continue to previous date
         }
     }
@@ -135,7 +134,6 @@ router.get('/', async (req, res) => {
         if (!latestPostPath) {
             return res.status(404).json({ error: 'No posts found' });
         } 
-        console.log(`[GET /] Latest post date: ${latestPostDate}`)
 
         const postsContent = [];
         const page = parseInt(req.query.page) || 1; // Get the page number from the query, default to 1
@@ -150,8 +148,6 @@ router.get('/', async (req, res) => {
             let filePath = path.join(__dirname, '..', 'posts', year, month, `${day}.md`);
 
             try {
-                console.log(`[GET /] Getting POST FOR: ${filePath}`)
-
                 const data = await fs.readFile(filePath, 'utf-8');
                 const tagsMatch = data.match(/^Tags:\s*(.+)$/m);
                 const titleMatch = data.match(/^Title:\s*(.+)$/m);
@@ -161,7 +157,7 @@ router.get('/', async (req, res) => {
                 const content = data.replace(/^Tags:.*$/m, '').replace(/^Title:.*$/m, '').trim();
                 const htmlContent = marked(content);
 
-                const md5Title = crypto.createHash('md5').update(title).digest('hex');
+                const md5Title = crypto.createHash('md5').update(content).digest('hex');
                 console.log(`Calculated hash: ${md5Title}`)
                 const imageUrl = `https://objects.hbvu.su/blotpix/${year}/${month}/${day}.jpeg`;
                 const formattedDate = `${day}/${month}/${year}`;
@@ -169,7 +165,7 @@ router.get('/', async (req, res) => {
                 postsContent.push({ tags, title, md5Title, formattedDate, imageUrl, htmlContent });
                 dateString = await getPrev(dateString)
             } catch (err) {
-                console.error(`No post found for ${year}-${month}-${day}`);
+                //console.error(`No post found for ${year}-${month}-${day}`);
                 dateString = await getPrev(dateString)
                 // Continue to next date if file does not exist
             }
@@ -224,7 +220,7 @@ router.get('/:dateString', async (req, res) => {
 
         const content = data.replace(/^Tags:.*$/m, '').replace(/^Title:.*$/m, '').trim();
         const htmlContent = marked(content);
-        const md5Title = crypto.createHash('md5').update(title).digest('hex');
+        const md5Title = crypto.createHash('md5').update(content).digest('hex');
         console.log(`Calculated hash: ${md5Title}`)
 
         const imageUrl = `https://objects.hbvu.su/blotpix/${year}/${month}/${day}.jpeg`;
@@ -235,7 +231,6 @@ router.get('/:dateString', async (req, res) => {
         const prev = await getPrev(dateString);
         const next = await getNext(dateString);
 
-        console.log(`${prev} AND ${next}`);
         postsContent.push({ tags, title, md5Title, formattedDate, imageUrl, htmlContent, prev, next });
 
         // Render the page and include navigation links
@@ -279,7 +274,7 @@ router.post('/', async (req, res) => {
 
         const content = text.replace(/^Tags:.*$/m, '').replace(/^Title:.*$/m, '').trim();
         const htmlContent = marked(content);
-        const md5Title = crypto.createHash('md5').update(title).digest('hex');
+        const md5Title = crypto.createHash('md5').update(content).digest('hex');
         console.log(`Calculated hash: ${md5Title}`)
 
         const imageUrl = `https://objects.hbvu.su/blotpix/${year}/${month}/${day}.jpeg`;
@@ -290,8 +285,6 @@ router.post('/', async (req, res) => {
         const prev = await getPrev(date);
         const next = await getNext(date);
 
-        console.log(`${prev} AND ${next}`);        
-        console.log(`${prev} AND ${next}`);
         postsContent.push({ tags, title, md5Title, formattedDate, imageUrl, htmlContent, prev, next });
 
         res.render('post', { postsContent });
@@ -306,7 +299,7 @@ async function main() {
         let latestPost = await findLatestPost();
         latestPostDate = formatDate(latestPost.latestPostDate);
         latestPostPath = latestPost.latestPostPath;
-        console.log(`[MAIN] Latest post date: ${JSON.stringify(latestPost)}`)
+        // console.log(`[MAIN] Latest post date: ${JSON.stringify(latestPost)}`)
 
     } catch (error) {
         console.error("An error occurred:", error);

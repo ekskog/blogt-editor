@@ -87,6 +87,6 @@ function onListening() {
     ? 'pipe ' + addr
     : 'port ' + addr.port;
   console.log('Listening on ' + bind);
-  console.log(`[ fixed nav alignment on tags page ] >> ${Date.now()}`);
+  console.log(`[ fixed md5 hash calculation ] >> ${Date.now()}`);
 
 }

@@ -19,7 +19,7 @@ const app = express();
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'pug');
 
-app.use(logger('dev'));
+//app.use(logger('dev'));
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
@@ -36,8 +36,6 @@ app.use('/posts', postsRouter);
 app.use('/tags', tagsRouter);
 app.use('/editor', editRouter);
 app.use('/sandgods', ssRouter);
-
-app.use(logger('dev'));
 
 app.use(robots({
     UserAgent: '*',
