@@ -87,6 +87,6 @@ function onListening() {
     ? 'pipe ' + addr
     : 'port ' + addr.port;
   console.log('Listening on ' + bind);
-  console.log(`[ robot.txt  ] >> ${Date.now()}`);
+  console.log(`[ repaginated ] >> ${Date.now()}`);
 
 }
