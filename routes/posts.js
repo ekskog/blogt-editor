@@ -242,57 +242,6 @@ router.get('/:dateString', async (req, res) => {
     }
 });
 
-router.post('/', async (req, res) => {
-    // Extract date and text from the request body
-    const { date, text } = req.body;
-
-    // Check if date and text are provided
-    if (!date || !text) {
-        return res.status(400).send('Date and text are required.');
-    }
-
-    try {
-        // Parse date (assuming format "YYYY-MM-DD")
-        const [year, month, day] = date.split('-');
-
-        // Define the file path
-        let dirPath = path.join(postsDir, year, month);
-        let filePath = path.join(dirPath, `${day}.md`);
-
-        // Ensure the directory exists
-        await fs.mkdir(dirPath, { recursive: true });
-
-        // Write the text content to the file
-        await fs.writeFile(filePath, text);
-
-        // recalculate the latest Post Date
-        await findLatestPost();
-        const tagsMatch = text.match(/^Tags:\s*(.+)$/m);
-        const titleMatch = text.match(/^Title:\s*(.+)$/m);
-        const tags = tagsMatch ? tagsMatch[1].split(',').map(tag => tag.trim()) : [];
-        const title = titleMatch ? titleMatch[1] : 'Untitled';
-
-        const content = text.replace(/^Tags:.*$/m, '').replace(/^Title:.*$/m, '').trim();
-        const htmlContent = marked(content);
-        const md5Title = crypto.createHash('md5').update(content).digest('hex');
-        console.log(`Calculated hash: ${md5Title}`)
-
-        const imageUrl = `https://objects.hbvu.su/blotpix/${year}/${month}/${day}.jpeg`;
-        const formattedDate = `${day}/${month}/${year}`;
-
-        const postsContent = [];
-
-        const prev = await getPrev(date);
-        const next = await getNext(date);
-
-        postsContent.push({ tags, title, md5Title, formattedDate, imageUrl, htmlContent, prev, next });
-
-        res.render('post', { postsContent });
-    } catch (error) {
-        console.error('Error writing file:', error);
-        res.status(500).send('Internal Server Error');
-    }
-});
 
 async function main() {
     try {

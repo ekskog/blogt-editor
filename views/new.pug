@@ -3,7 +3,7 @@ extends layout
 block content
   .editor-container
     h2 Test Title
-    form(action="/posts" method="POST")
+    form(action="/editor" method="POST")
       .editor-form-group
         label.editor-label(for="date") Select a date:
         input#date(type="date" name="date" required)
