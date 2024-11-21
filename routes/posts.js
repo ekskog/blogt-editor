@@ -5,13 +5,14 @@ const crypto = require('crypto');
 const { marked } = require('marked');
 var latestPostPath,
     latestPostDate;
-    const {
-        findLatestPost,
-        getNext,
-        getPrev,
-        formatDate
-      } = require('../utils/utils');
-      
+
+const {
+    findLatestPost,
+    getNext,
+    getPrev,
+    formatDate
+} = require('../utils/utils');
+
 const express = require('express');
 const router = express.Router();
 const postsDir = path.join(__dirname, '..', 'posts');
@@ -20,7 +21,7 @@ router.get('/', async (req, res) => {
     try {
         if (!latestPostPath) {
             return res.status(404).json({ error: 'No posts found' });
-        } 
+        }
 
         const postsContent = [];
         const page = parseInt(req.query.page) || 1; // Get the page number from the query, default to 1
@@ -29,6 +30,7 @@ router.get('/', async (req, res) => {
 
         // Loop to get the posts for the requested page
         for (let i = 0; i < postsPerPage; i++) {
+            console.log(`posts.js retrieving ${dateString}`)
             const year = dateString.slice(0, 4);
             const month = dateString.slice(4, 6);
             const day = dateString.slice(6, 8);
