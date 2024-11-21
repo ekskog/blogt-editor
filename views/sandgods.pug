@@ -1,7 +1,7 @@
 extends layout 
 
 block content
-  .main-content
+  .main-content(style="margin: 0 auto; padding: 0; border: 1px solid red; height: 500px; display: flex; justify-content: center; align-items: center")
     .accordion
       each val, index in ["Section 1", "Section 2", "Section 3"]
         button.accordion-button(onclick=`toggleAccordion(${index})`) #{val}

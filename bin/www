@@ -87,6 +87,6 @@ function onListening() {
     ? 'pipe ' + addr
     : 'port ' + addr.port;
   console.log('Listening on ' + bind);
-  console.log(`[ mov funcs to utils ] >> ${Date.now()}`);
+  console.log(`[ remove funcs from routes ] >> ${Date.now()}`);
 
 }
