@@ -1,21 +1,75 @@
+
+const multer = require('multer');
+// Configure multer to store files in memory
+const storage = multer.memoryStorage();
+const upload = multer({ storage });
+
 const path = require('path');
 const fs = require('fs').promises;
-const moment = require('moment');  // To easily handle date manipulation
 const crypto = require('crypto');
 const { marked } = require('marked');
 
 const {
   getNext,
   getPrev,
+  fetchBuckets,
+  getUploadParams, 
+  uploadToMinio
 } = require('../utils/utils');
 
 var express = require('express');
 var router = express.Router();
 const postsDir = path.join(__dirname, '..', 'posts');
 
-/* GET users listing. */
+/* GET the editor land page listing. */
 router.get('/', async (req, res) => {
   res.render('new', { });
+});
+
+router.get('/imgup', async (req, res) => {
+  const buckets = await fetchBuckets();
+  console.log(buckets)
+  res.render('imgup', { buckets });
+});
+
+router.post('/imgup', upload.single('file'), async (req, res) => {
+  try {
+      const file = req.file;
+
+      if (!file) {
+          return res.status(400).send('No file uploaded.');
+      }
+
+      console.log('File received:', file);
+
+      var fileName = req.body.newFileName || file.originalname;
+
+      const bucketName = req.body.bucket;
+      var folderPath = req.body.path;
+
+      const calculatedParams = await getUploadParams();
+
+      // Fallback to calculated values if necessary
+      if (!folderPath) {
+          folderPath = calculatedParams.filePath;
+      }
+
+      if (bucketName === 'blotpix' && !fileName) {
+          fileName = calculatedParams.fileName;
+      }
+
+      // Log the buffer to ensure it's present
+      console.log('File buffer length:', file.buffer.length);
+
+      // Upload to MinIO (assuming the utility function works as expected)
+      const result = await uploadToMinio(file, bucketName, folderPath, fileName);
+      console.log('Upload result:', result);
+
+      res.render('index', { result });
+  } catch (error) {
+      console.error('Error handling file upload:', error);
+      res.status(500).send('Error uploading file.');
+  }
 });
 
 router.post('/', async (req, res) => {

@@ -1,8 +1,58 @@
 const path = require('path');
 const fs = require('fs').promises;
 const postsDir = path.join(__dirname, '..', 'posts');
+const sharp = require('sharp');
 
-async function findLatestPost() {
+const Minio = require('minio');
+var buckets = ['bollox'];
+
+const minioClient = new Minio.Client({
+    endPoint: 'objects.hbvu.su',
+    port: 443,
+    useSSL: true,
+    accessKey: 'lucarv',
+    secretKey: 'lucaPWD$MinI0'
+});
+
+const uploadToMinio = async (file, bucketName, folderPath, fileName) => {
+    try {
+        // Resize the image to 1920x1920 pixels using sharp
+        const resizedImageBuffer = await sharp(file.buffer)
+            .resize(1920, 1920, { fit: 'inside' })
+            .toBuffer();
+
+        // Construct the full object name using the folder path and file name
+        const objectName = `${folderPath}/${fileName}`;
+
+        console.log(`Uploading to bucket: ${bucketName}, object: ${objectName}`); // Log for debugging
+
+        // Upload the resized image buffer to MinIO
+        await minioClient.putObject(bucketName, objectName, resizedImageBuffer);
+        return(`File uploaded successfully to ${bucketName}/${objectName}.`);
+    } catch (err) {
+        return(err);
+    }
+}
+
+const fetchBuckets = async () => {
+    return buckets
+};
+
+const getUploadParams = async () => {
+    const today = new Date();
+
+    // Create bucket in YYYY/MM format
+    const year = today.getFullYear();
+    const month = String(today.getMonth() + 1).padStart(2, '0'); // Months are 0-based
+    const filePath = `${year}/${month}`;
+
+    // Create file name in DD.jpeg format
+    const day = String(today.getDate()).padStart(2, '0');
+    const fileName = `${day}.jpeg`;
+    return { fileName, filePath }
+}
+
+const findLatestPost = async () => {
 
     let latestPostDate = null;
     let latestPostPath = null;
@@ -71,7 +121,7 @@ async function getNext(dateString) {
 
     let iterations = 0;
     while (iterations < 365) {
-        iterations++; 
+        iterations++;
         date.setDate(date.getDate() + 1);
         const nextYear = date.getFullYear().toString();
         const nextMonth = (date.getMonth() + 1).toString().padStart(2, '0');
@@ -125,9 +175,27 @@ function formatDate(dateString) {
     return formatted;
 }
 
+async function main() {
+    try {
+        bucketsList = await minioClient.listBuckets();
+        buckets = bucketsList.map(bucket => bucket.name);
+    } catch (err) {
+        console.error('Error fetching buckets:', err);
+    }
+}
+
+// Invoke the main function
+main().catch(error => {
+    console.error("Unhandled error in main:", error);
+    process.exit(1);
+})
+
 module.exports = {
     findLatestPost,
     getNext,
     getPrev,
-    formatDate
-  };
+    formatDate,
+    fetchBuckets,
+    getUploadParams,
+    uploadToMinio
+};

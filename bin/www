@@ -86,7 +86,6 @@ function onListening() {
   var bind = typeof addr === 'string'
     ? 'pipe ' + addr
     : 'port ' + addr.port;
-  console.log('Listening on ' + bind);
-  console.log(`[ adding debug to findLatestPost ] >> ${Date.now()}`);
-
+  debug('Listening on ' + bind);
+  console.log(`[ added image upload here ] >> ${Date.now()}`);
 }
