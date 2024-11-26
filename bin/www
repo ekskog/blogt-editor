@@ -87,5 +87,5 @@ function onListening() {
     ? 'pipe ' + addr
     : 'port ' + addr.port;
   debug('Listening on ' + bind);
-  console.log(`[ added image upload here ] >> ${Date.now()}`);
+  console.log(`[ improved editor to ask if image should be uploaded ] >> ${Date.now()}`);
 }

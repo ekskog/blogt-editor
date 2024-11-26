@@ -11,6 +11,11 @@ block content
       .editor-form-group
         label.editor-label(for="text") Enter your text:
         textarea#text(name="text" rows="4" placeholder="Enter a few lines of text here..." required)
+
+      .editor-form-group
+        label.editor-label
+          input#uploadImage(type="checkbox" name="uploadImage") 
+          | Upload Image  
       
       .editor-submit
         button(type="submit") Submit

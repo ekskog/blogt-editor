@@ -13,12 +13,20 @@ block content
         label(for="file") Choose File:
         input#file(type="file" name="file" required)
 
-      .form-group
-        label(for="newFileName") New File Name (optional):
-        input#newFileName(type="text" name="newFileName" placeholder="Enter new file name")
+      if dateString
+        .form-group
+          label(for="dateField") You are uploading an image for:
+          input#dateField(type="text" name="dateField" value=date readonly)
 
-      .form-group
-        label(for="path") Upload Path (optional):
-        input#path(type="text" name="path" placeholder="Enter path on Minio server")
+
+      if !dateString
+        .form-group
+          label(for="newFileName") New File Name (optional):
+          input#newFileName(type="text" name="newFileName" placeholder="Enter new file name")
+
+        .form-group
+          label(for="path") Upload Path (optional):
+          input#path(type="text" name="path" placeholder="Enter path on Minio server")
+
 
       button.submit-btn(type="submit") Upload Image
