@@ -3,6 +3,8 @@ const fs = require('fs').promises;
 const moment = require('moment');  // To easily handle date manipulation
 const crypto = require('crypto');
 const { marked } = require('marked');
+var debug = require('debug');
+
 var latestPostPath,
     latestPostDate;
 
@@ -19,6 +21,11 @@ const postsDir = path.join(__dirname, '..', 'posts');
 
 router.get('/', async (req, res) => {
     try {
+        let latestPost = await findLatestPost();
+        latestPostDate = formatDate(latestPost.latestPostDate);
+        latestPostPath = latestPost.latestPostPath;
+        debug(`[MAIN] Latest post date: ${JSON.stringify(latestPost)}`)
+        
         if (!latestPostPath) {
             return res.status(404).json({ error: 'No posts found' });
         }
@@ -30,7 +37,6 @@ router.get('/', async (req, res) => {
 
         // Loop to get the posts for the requested page
         for (let i = 0; i < postsPerPage; i++) {
-            console.log(`posts.js retrieving ${dateString}`)
             const year = dateString.slice(0, 4);
             const month = dateString.slice(4, 6);
             const day = dateString.slice(6, 8);
@@ -47,7 +53,6 @@ router.get('/', async (req, res) => {
                 const htmlContent = marked(content);
 
                 const md5Title = crypto.createHash('md5').update(content).digest('hex');
-                console.log(`Calculated hash: ${md5Title}`)
                 const imageUrl = `https://objects.hbvu.su/blotpix/${year}/${month}/${day}.jpeg`;
                 const formattedDate = `${day}/${month}/${year}`;
 
@@ -110,7 +115,6 @@ router.get('/:dateString', async (req, res) => {
         const content = data.replace(/^Tags:.*$/m, '').replace(/^Title:.*$/m, '').trim();
         const htmlContent = marked(content);
         const md5Title = crypto.createHash('md5').update(content).digest('hex');
-        console.log(`Calculated hash: ${md5Title}`)
 
         const imageUrl = `https://objects.hbvu.su/blotpix/${year}/${month}/${day}.jpeg`;
         const formattedDate = `${day}/${month}/${year}`;
@@ -129,25 +133,6 @@ router.get('/:dateString', async (req, res) => {
         console.error('Error reading post file:', err);
         res.status(404).send('Post not found');
     }
-});
-
-
-async function main() {
-    try {
-        let latestPost = await findLatestPost();
-        latestPostDate = formatDate(latestPost.latestPostDate);
-        latestPostPath = latestPost.latestPostPath;
-        console.log(`[MAIN] Latest post date: ${JSON.stringify(latestPost)}`)
-
-    } catch (error) {
-        console.error("An error occurred:", error);
-    }
-}
-
-// Invoke the main function
-main().catch(error => {
-    console.error("Unhandled error in main:", error);
-    process.exit(1);
 });
 
 module.exports = router;

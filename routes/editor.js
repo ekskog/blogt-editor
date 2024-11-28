@@ -104,7 +104,6 @@ router.post('/', async (req, res) => {
     const content = text.replace(/^Tags:.*$/m, '').replace(/^Title:.*$/m, '').trim();
     const htmlContent = marked(content);
     const md5Title = crypto.createHash('md5').update(content).digest('hex');
-    console.log(`Calculated hash: ${md5Title}`)
 
     const imageUrl = `https://objects.hbvu.su/blotpix/${year}/${month}/${day}.jpeg`;
     const formattedDate = `${day}/${month}/${year}`;

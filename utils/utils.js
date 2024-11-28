@@ -2,6 +2,8 @@ const path = require('path');
 const fs = require('fs').promises;
 const postsDir = path.join(__dirname, '..', 'posts');
 const sharp = require('sharp');
+var debug = require('debug');
+
 
 const Minio = require('minio');
 var buckets = ['bollox'];
@@ -24,7 +26,7 @@ const uploadToMinio = async (file, bucketName, folderPath, fileName) => {
         // Construct the full object name using the folder path and file name
         const objectName = `${folderPath}/${fileName}`;
 
-        console.log(`Uploading to bucket: ${bucketName}, object: ${objectName}`); // Log for debugging
+        debug(`Uploading to bucket: ${bucketName}, object: ${objectName}`); // Log for debugging
 
         // Upload the resized image buffer to MinIO
         await minioClient.putObject(bucketName, objectName, resizedImageBuffer);
@@ -115,9 +117,6 @@ async function getNext(dateString) {
     const month = parseInt(dateString.slice(4, 6)) - 1; // JS months are 0-indexed
     const day = parseInt(dateString.slice(6));
     let date = new Date(year, month, day);
-
-    console.log(`date: ${dateString}, year: ${year}, month: ${month}, day: ${day}`)
-
 
     let iterations = 0;
     while (iterations < 365) {
