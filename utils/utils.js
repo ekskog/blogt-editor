@@ -12,8 +12,8 @@ const minioClient = new Minio.Client({
     endPoint: 'objects.hbvu.su',
     port: 443,
     useSSL: true,
-    accessKey: 'lucarv',
-    secretKey: 'lucaPWD$MinI0'
+    accessKey:  process.env.MINIO_ACCESS_KEY,
+    secretKey:  process.env.MINIO_SECRET_KEY
 });
 
 const uploadToMinio = async (file, bucketName, folderPath, fileName) => {
