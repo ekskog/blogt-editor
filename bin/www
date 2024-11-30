@@ -86,6 +86,6 @@ function onListening() {
   var bind = typeof addr === 'string'
     ? 'pipe ' + addr
     : 'port ' + addr.port;
-  debug('Listening on ' + bind);
-  console.log(`[ improved editor to ask if image should be uploaded ] >> ${Date.now()}`);
+  console.log('Listening on ' + bind);
+  console.log(`[ debug ENV ] >> ${Date.now()}`);
 }

@@ -16,6 +16,7 @@ COPY . .
 # Set environment variables
 ENV NODE_ENV=production
 ENV PORT=3000
+ENV DEBUG=*
 
 # Expose the port the app runs on
 EXPOSE 3000
