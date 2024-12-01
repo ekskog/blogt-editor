@@ -69,7 +69,7 @@ spec:
     spec:
       containers:
       - name: blogt
-        image: lucarv/blogt-too:latest
+        image: lucarv/blogt:latest
         imagePullPolicy: Always
         ports:
           - containerPort: 80
