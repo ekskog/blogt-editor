@@ -1,0 +1,106 @@
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: blog-nfspv
+spec:
+  capacity:
+    storage: 500Gi
+  accessModes:
+    - ReadWriteMany
+  nfs:
+    path: /mnt/usb/500/web/blog/posts
+    server: ubumac
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: minio-nfspvc
+  namespace: webapps
+spec:
+  accessModes:
+    - ReadWriteMany
+  resources:
+    requests:
+      storage: 500Gi
+  storageClassName: ""
+  volumeName: blog-nfspv
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  namespace: webapps
+  name: minio-credentials
+type: Opaque
+stringData:
+  accessKey: lucarv
+  secretKey: lucaPWD$MinI0
+  endpoint: minio-service.minio.svc.cluster.local
+---
+apiVersion: v1
+kind: Service
+metadata:
+  namespace: webapps
+  name: blot
+spec:
+  selector:
+    app: blot
+  ports:
+    - protocol: TCP
+      port: 3000
+      name: http
+  type: LoadBalancer
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  namespace: webapps
+  name: blot
+  labels:
+    app: blot
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: blot
+  template:
+    metadata:
+      labels:
+        app: blot
+    spec:
+      containers:
+      - name: blot
+        image: lucarv/blot-too:latest
+        imagePullPolicy: Always
+        ports:
+          - containerPort: 80
+            name: blotpix-be
+        env:
+          - name: MINIO_ACCESS_KEY
+            valueFrom:
+              secretKeyRef:
+                name: minio-credentials
+                key: accessKey
+          - name: MINIO_SECRET_KEY
+            valueFrom:
+              secretKeyRef:
+                name: minio-credentials
+                key: secretKey
+          - name: MINIO_ENDPOINT
+            valueFrom:
+              secretKeyRef:
+                name: minio-credentials
+                key: endpoint
+        volumeMounts:
+          - name: blogposts
+            mountPath: /app/posts
+        resources:
+          requests:
+            memory: "1Gi"
+            cpu: "500m"
+          limits:
+            memory: "2Gi"
+            cpu: "1"
+      volumes:
+        - name: blogposts
+          persistentVolumeClaim:
+            claimName: minio-nfspvc
