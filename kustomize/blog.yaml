@@ -4,7 +4,7 @@ metadata:
   name: blog-nfspv
 spec:
   capacity:
-    storage: 500Gi
+    storage: 100Gi
   accessModes:
     - ReadWriteMany
   nfs:
@@ -21,7 +21,7 @@ spec:
     - ReadWriteMany
   resources:
     requests:
-      storage: 500Gi
+      storage: 100Gi
   storageClassName: ""
   volumeName: blog-nfspv
 ---
