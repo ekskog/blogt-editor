@@ -40,10 +40,10 @@ apiVersion: v1
 kind: Service
 metadata:
   namespace: webapps
-  name: blot
+  name: blogt
 spec:
   selector:
-    app: blot
+    app: blogt
   ports:
     - protocol: TCP
       port: 3000
@@ -54,26 +54,26 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   namespace: webapps
-  name: blot
+  name: blogt
   labels:
-    app: blot
+    app: blogt
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: blot
+      app: blogt
   template:
     metadata:
       labels:
-        app: blot
+        app: blogt
     spec:
       containers:
-      - name: blot
-        image: lucarv/blot-too:latest
+      - name: blogt
+        image: lucarv/blogt-too:latest
         imagePullPolicy: Always
         ports:
           - containerPort: 80
-            name: blotpix-be
+            name: blogt
         env:
           - name: MINIO_ACCESS_KEY
             valueFrom:
