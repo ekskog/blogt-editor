@@ -14,7 +14,7 @@ spec:
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-  name: minio-nfspvc
+  name: blog-nfspvc
   namespace: webapps
 spec:
   accessModes:
@@ -103,4 +103,4 @@ spec:
       volumes:
         - name: blogposts
           persistentVolumeClaim:
-            claimName: minio-nfspvc
+            claimName: blog-nfspvc
