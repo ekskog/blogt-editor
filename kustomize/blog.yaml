@@ -113,11 +113,16 @@ spec:
                 secretKeyRef:
                   name: editor-credentials
                   key: accessKey
-            - name: EDITOR_PASSWRODS
+            - name: EDITOR_PASSWORD
               valueFrom:
                 secretKeyRef:
                   name: editor-credentials
                   key: accessKey
+            - name: SESSION_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: editor-credentials
+                  key: sessionSecret                  
             - name: MINIO_SECRET_KEY
               valueFrom:
                 secretKeyRef:
