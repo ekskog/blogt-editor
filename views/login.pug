@@ -1,0 +1,33 @@
+extends layout
+
+block content
+  .main-content(style="margin: 0 auto; padding: 0; border: 1px solid black; height: 500px; display: flex; justify-content: center; align-items: center")
+    form.login-form(action="/login" method="POST")
+      h2 Login to Editor
+      
+      if error
+        .error-message= error
+      
+      input(type="hidden" name="returnTo" value=returnTo)
+      
+      .form-group
+        label(for="username") Username
+        input#username.form-control(
+          type="text" 
+          name="username" 
+          required 
+          placeholder="Enter your username"
+        )
+      
+      .form-group
+        label(for="password") Password
+        input#password.form-control(
+          type="password" 
+          name="password" 
+          required 
+          placeholder="Enter your password"
+        )
+      
+      .form-actions
+        button.btn.btn-primary(type="submit") Login
+        a.btn.btn-secondary(href="/") Cancel

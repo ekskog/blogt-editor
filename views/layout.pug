@@ -15,11 +15,10 @@ html
     link(rel="stylesheet", href="/stylesheets/sandgods.css?v=" + Date.now())
     link(rel="stylesheet", href="/stylesheets/uploader.css?v=" + Date.now())
     link(rel="stylesheet", href="/stylesheets/editor.css?v=" + Date.now())
-
     link(rel="stylesheet", href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css")
 
-
     script(src="/javascripts/randomPostLink.js")
+    script(src="/javascripts/protectEditor.js")
     script(src="/javascripts/search.js")
     script(src="/javascripts/sandgods.js")
 
@@ -44,7 +43,11 @@ html
             .submenu
               a.submenu-item(href='/editor') Create New
               a.submenu-item(href='/editor/edit') Edit Post
-              a.submenu-item(href='/editor/imgupl') Upload Image              
+              a.submenu-item(href='/editor/imgupl') Upload Image
+              if session.isAuthenticated
+                a.submenu-item(href='/logout') Logout
+              else
+                a.submenu-item(href='/login?returnTo=/editor') Login           
           .menu-item
             a.light(href='/sandgods', title='ss') SANDGODS
           .menu-item
