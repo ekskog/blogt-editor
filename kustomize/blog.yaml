@@ -10,6 +10,10 @@ spec:
   nfs:
     path: /mnt/usb/500/web/blog/posts
     server: ubumac
+  persistentVolumeReclaimPolicy: Retain  # Ensures the volume is retained even after the PVC is deleted
+  mountOptions:
+    - nolock   # Improve security and performance by disabling file locking, if suitable for your use case
+
 ---
 apiVersion: v1
 kind: PersistentVolumeClaim
@@ -24,6 +28,7 @@ spec:
       storage: 100Gi
   storageClassName: ""
   volumeName: blog-nfspv
+
 ---
 apiVersion: v1
 kind: Secret
@@ -35,6 +40,8 @@ stringData:
   accessKey: lucarv
   secretKey: lucaPWD$MinI0
   endpoint: minio-service.minio.svc.cluster.local
+# Use Kubernetes secrets instead of hardcoding sensitive values directly in the environment variables or YAML files
+
 ---
 apiVersion: v1
 kind: Service
@@ -49,6 +56,8 @@ spec:
       port: 3000
       name: http
   type: LoadBalancer
+  externalTrafficPolicy: Local  # Ensure that the source IP is preserved when using LoadBalancer
+
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -67,40 +76,60 @@ spec:
       labels:
         app: blogt
     spec:
+      securityContext:
+        runAsUser: 1000  # Run as non-root user for improved security
+        runAsGroup: 1000
+        fsGroup: 1000  # Ensures the pod has the necessary file system access
+        allowPrivilegeEscalation: false  # Prevents privilege escalation for security
       containers:
-      - name: blogt
-        image: lucarv/blogt:latest
-        imagePullPolicy: Always
-        ports:
-          - containerPort: 80
-            name: blogt
-        env:
-          - name: MINIO_ACCESS_KEY
-            valueFrom:
-              secretKeyRef:
-                name: minio-credentials
-                key: accessKey
-          - name: MINIO_SECRET_KEY
-            valueFrom:
-              secretKeyRef:
-                name: minio-credentials
-                key: secretKey
-          - name: MINIO_ENDPOINT
-            valueFrom:
-              secretKeyRef:
-                name: minio-credentials
-                key: endpoint
-        volumeMounts:
-          - name: blogposts
-            mountPath: /app/posts
-        resources:
-          requests:
-            memory: "1Gi"
-            cpu: "500m"
-          limits:
-            memory: "2Gi"
-            cpu: "1"
+        - name: blogt
+          image: lucarv/blogt:latest
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 80
+              name: blogt
+          env:
+            - name: MINIO_ACCESS_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: minio-credentials
+                  key: accessKey
+            - name: MINIO_SECRET_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: minio-credentials
+                  key: secretKey
+            - name: MINIO_ENDPOINT
+              valueFrom:
+                secretKeyRef:
+                  name: minio-credentials
+                  key: endpoint
+          volumeMounts:
+            - name: blogposts
+              mountPath: /app/posts
+          resources:
+            requests:
+              memory: "1Gi"
+              cpu: "500m"
+            limits:
+              memory: "2Gi"
+              cpu: "1"
       volumes:
         - name: blogposts
           persistentVolumeClaim:
             claimName: blog-nfspvc
+      terminationGracePeriodSeconds: 30  # Graceful shutdown for pods
+      livenessProbe:
+        httpGet:
+          path: /healthz
+          port: 80
+        initialDelaySeconds: 30
+        periodSeconds: 60
+        failureThreshold: 3
+      readinessProbe:
+        httpGet:
+          path: /readiness
+          port: 80
+        initialDelaySeconds: 10
+        periodSeconds: 30
+        failureThreshold: 3
