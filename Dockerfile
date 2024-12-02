@@ -15,7 +15,7 @@ COPY . .
 
 # Set environment variables
 ENV NODE_ENV=production
-ENV PORT=3000
+# ENV PORT=3000
 ENV DEBUG="*:,-express"
 
 # Expose the port the app runs on

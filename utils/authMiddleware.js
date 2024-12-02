@@ -1,4 +1,6 @@
 const session = require('express-session');
+require('dotenv').config();
+
 /*
 function requireLogin(req, res, next) {
   console.log('------- Authentication Middleware -------');
@@ -51,7 +53,6 @@ function setupAuthRoutes(app) {
   // Login page route
   app.get('/login', (req, res) => {
     console.log('------- Login Page Route -------');
-    console.log('Session exists:', !!req.session);
 
     const returnTo = req.session && req.session.returnTo 
       ? req.session.returnTo 
@@ -73,8 +74,10 @@ function setupAuthRoutes(app) {
 
     const { username, password, returnTo } = req.body;
 
-    const validUsername = process.env.EDITOR_USERNAME || 'admin';
-    const validPassword = process.env.EDITOR_PASSWORD || 'password';
+    console.log(process.env)
+
+    const validUsername = process.env.EDITOR_USERNAME;
+    const validPassword = process.env.EDITOR_PASSWORD;
 
     console.log('Attempting login with:', { username, validUsername });
     console.log('Attempting login with:', { password, validPassword });

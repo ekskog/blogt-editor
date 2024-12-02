@@ -7,7 +7,7 @@ const robots = require('express-robots-txt');
 const path = require('path');
 const cookieParser = require('cookie-parser');
 const bodyParser = require('body-parser');
-const logger = require('morgan');
+//const logger = require('morgan');
 const methodOverride = require('method-override');
 
 const indexRouter = require('./routes/index');
@@ -24,7 +24,7 @@ app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'pug');
 
 // Logging
-app.use(logger('dev'));
+//app.use(logger('dev'));
 
 // Middleware for parsing requests
 app.use(express.json());
