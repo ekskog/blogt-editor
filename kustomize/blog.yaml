@@ -85,6 +85,13 @@ spec:
         - name: blogt
           image: lucarv/blogt:latest
           imagePullPolicy: Always
+          resources:
+            requests:
+              memory: "256Mi"   # Reduced memory request to 256 MB (based on observed usage)
+              cpu: "100m"       # Reduced CPU request to 100 milli-CPU (0.1 CPU)
+            limits:
+              memory: "512Mi"   # Set memory limit to 512 MB
+              cpu: "500m"       # Set CPU limit to 500 milli-CPU (0.5 CPU)
           ports:
             - containerPort: 80
               name: blogt
@@ -107,13 +114,6 @@ spec:
           volumeMounts:
             - name: blogposts
               mountPath: /app/posts
-          resources:
-            requests:
-              memory: "1Gi"
-              cpu: "500m"
-            limits:
-              memory: "2Gi"
-              cpu: "1"
       volumes:
         - name: blogposts
           persistentVolumeClaim:
