@@ -120,7 +120,12 @@ spec:
               valueFrom:
                 secretKeyRef:
                   name: editor-credentials
-                  key: sessionSecret                  
+                  key: sessionSecret      
+            - name: MINIO_ACCESS_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: minio-credentials
+                  key: accessKey                              
             - name: MINIO_SECRET_KEY
               valueFrom:
                 secretKeyRef:
