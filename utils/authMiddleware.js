@@ -45,6 +45,9 @@ function setupAuthRoutes(app) {
     const validUsername = process.env.EDITOR_USERNAME;
     const validPassword = process.env.EDITOR_PASSWORD;
 
+    console.log(`Editor User: ${process.env.EDITOR_USERNAME}\Editor Password: ${process.env.EDITOR_PASSWORD}`)
+
+
     console.log('Attempting login with:', { username, validUsername });
     console.log('Attempting login with:', { password, validPassword });
 
