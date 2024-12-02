@@ -1,39 +1,6 @@
 const session = require('express-session');
 require('dotenv').config();
 
-/*
-function requireLogin(req, res, next) {
-  console.log('------- Authentication Middleware -------');
-  console.log('Request URL:', req.originalUrl);
-  console.log('Session exists:', !!req.session);
-
-  if (req.session) {
-    console.log('Session details:', {
-      isAuthenticated: req.session.isAuthenticated,
-      returnTo: req.session.returnTo
-    });
-  }
-
-  // Check if the user is authenticated
-  if (req.session && req.session.isAuthenticated) {
-    console.log('User is authenticated - proceeding');
-    return next();
-  }
-
-  console.log('User not authenticated - redirecting to login');
-
-  // Store the original URL for redirect after login
-  if (req.session) {
-    req.session.returnTo = req.originalUrl || '/editor';
-    console.log('Stored returnTo:', req.session.returnTo);
-  } else {
-    console.error('ERROR: Session is not initialized!');
-  }
-
-  // Redirect to login page
-  res.redirect('/login');
-}
-*/
 function requireLogin(req, res, next) {
     if (req.session && req.session.isAuthenticated) {
       return next();
@@ -74,7 +41,6 @@ function setupAuthRoutes(app) {
 
     const { username, password, returnTo } = req.body;
 
-    console.log(process.env)
 
     const validUsername = process.env.EDITOR_USERNAME;
     const validPassword = process.env.EDITOR_PASSWORD;

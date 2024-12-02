@@ -9,8 +9,7 @@ var debug = require('debug');
 const Minio = require('minio');
 var buckets = ['bollox'];
 
-console.log(process.env.MINIO_ACCESS_KEY)
-console.log(process.env.MINIO_SECRET_KEY)
+console.log(`Minio User: ${process.env.MINIO_ACCESS_KEY}\nMinio Password: ${process.env.MINIO_SECRET_KEY}`)
 
 const minioClient = new Minio.Client({
     endPoint: 'objects.hbvu.su',

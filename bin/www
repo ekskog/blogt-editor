@@ -87,5 +87,5 @@ function onListening() {
     ? 'pipe ' + addr
     : 'port ' + addr.port;
   console.log('Listening on ' + bind);
-  console.log(`[ login protection of editor area ] >> ${Date.now()}`);
+  console.log(`[ debug util credentials ] >> ${Date.now()}`);
 }
