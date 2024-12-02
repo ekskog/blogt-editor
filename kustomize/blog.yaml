@@ -10,9 +10,9 @@ spec:
   nfs:
     path: /mnt/usb/500/web/blog/posts
     server: ubumac
-  persistentVolumeReclaimPolicy: Retain  # Ensures the volume is retained even after the PVC is deleted
+  persistentVolumeReclaimPolicy: Retain
   mountOptions:
-    - nolock   # Improve security and performance by disabling file locking, if suitable for your use case
+    - nolock 
 
 ---
 apiVersion: v1
@@ -30,7 +30,6 @@ spec:
   volumeName: blog-nfspv
 
 ---
-# Use Kubernetes secrets instead of hardcoding sensitive values directly in the environment variables or YAML files
 apiVersion: v1
 kind: Secret
 metadata:
@@ -40,9 +39,8 @@ type: Opaque
 stringData:
   accessKey: lucarv
   secretKey: lucaPWD$MinI0
-  sessionSecret: YV92ZXJ5X2xvbmdfcmFuZG9tX3N0cmluZ191c2VkX3RvX3Byb3RlY3RfYmxvZ3RfZWRpdG9y
-
-  ---
+  endpoint: minio-service.minio.svc.cluster.local
+---
 apiVersion: v1
 kind: Secret
 metadata:
@@ -52,7 +50,7 @@ type: Opaque
 stringData:
   accessKey: lucarv
   secretKey: lucaPWD$b10gt
-  endpoint: minio-service.minio.svc.cluster.local
+  sessionSecret: YV92ZXJ5X2xvbmdfcmFuZG9tX3N0cmluZ191c2VkX3RvX3Byb3RlY3RfYmxvZ3RfZWRpdG9y
 
 ---
 apiVersion: v1
@@ -68,7 +66,7 @@ spec:
       port: 3000
       name: http
   type: LoadBalancer
-  externalTrafficPolicy: Local  # Ensure that the source IP is preserved when using LoadBalancer
+  externalTrafficPolicy: Local 
 
 ---
 apiVersion: apps/v1
@@ -89,21 +87,21 @@ spec:
         app: blogt
     spec:
       securityContext:
-        runAsUser: 1000  # Run as non-root user for improved security
+        runAsUser: 1000 
         runAsGroup: 1000
-        fsGroup: 1000  # Ensures the pod has the necessary file system access
-        allowPrivilegeEscalation: false  # Prevents privilege escalation for security
+        fsGroup: 1000
+        allowPrivilegeEscalation: false
       containers:
         - name: blogt
           image: lucarv/blogt:latest
           imagePullPolicy: Always
           resources:
             requests:
-              memory: "256Mi"   # Reduced memory request to 256 MB (based on observed usage)
-              cpu: "100m"       # Reduced CPU request to 100 milli-CPU (0.1 CPU)
+              memory: "256Mi"
+              cpu: "100m"
             limits:
-              memory: "512Mi"   # Set memory limit to 512 MB
-              cpu: "500m"       # Set CPU limit to 500 milli-CPU (0.5 CPU)
+              memory: "512Mi" 
+              cpu: "500m" 
           ports:
             - containerPort: 80
               name: blogt
@@ -140,7 +138,7 @@ spec:
         - name: blogposts
           persistentVolumeClaim:
             claimName: blog-nfspvc
-      terminationGracePeriodSeconds: 30  # Graceful shutdown for pods
+      terminationGracePeriodSeconds: 30
       livenessProbe:
         httpGet:
           path: /healthz
