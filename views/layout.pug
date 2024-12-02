@@ -14,6 +14,7 @@ html
     link(rel="stylesheet", href="/stylesheets/desktop.css?v=" + Date.now())
     link(rel="stylesheet", href="/stylesheets/sandgods.css?v=" + Date.now())
     link(rel="stylesheet", href="/stylesheets/uploader.css?v=" + Date.now())
+    link(rel="stylesheet", href="/stylesheets/editor.css?v=" + Date.now())
 
     link(rel="stylesheet", href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css")
 
@@ -38,6 +39,12 @@ html
               a.submenu-item(href='/tags/search') Search
               a.submenu-item(href='/tags/tagcloud') Tags              
               a.light#random-link(href='#', title='random post') Random Post
+          .menu-item
+            a.light(href='#', title='blog') EDITOR
+            .submenu
+              a.submenu-item(href='/editor') Create New
+              a.submenu-item(href='/editor/edit') Edit Post
+              a.submenu-item(href='/editor/imgupl') Upload Image              
           .menu-item
             a.light(href='/sandgods', title='ss') SANDGODS
           .menu-item

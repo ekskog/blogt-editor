@@ -1,4 +1,5 @@
 const path = require('path');
+require('dotenv').config();
 const fs = require('fs').promises;
 const postsDir = path.join(__dirname, '..', 'posts');
 const sharp = require('sharp');
@@ -7,6 +8,9 @@ var debug = require('debug');
 
 const Minio = require('minio');
 var buckets = ['bollox'];
+
+console.log(process.env.MINIO_ACCESS_KEY)
+console.log(process.env.MINIO_SECRET_KEY)
 
 const minioClient = new Minio.Client({
     endPoint: 'objects.hbvu.su',

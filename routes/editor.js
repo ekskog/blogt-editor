@@ -26,7 +26,7 @@ router.get('/', async (req, res) => {
   res.render('new', {});
 });
 
-router.get('/imgup', async (req, res) => {
+router.get('/imgupl', async (req, res) => {
   const buckets = await fetchBuckets();
   res.render('imgup', { buckets });
 });
@@ -134,4 +134,45 @@ router.post('/', async (req, res) => {
 
   }
 });
+
+// GET route to edit a specific post
+router.get('/edit/', async (req, res) => {
+  res.render('edit', { 
+    post: {
+    }
+  });
+});
+
+router.post('/edit/', async (req, res) => {
+
+  const { date, text } = req.body;
+  let year = date.substring(0, 4);
+  let month = date.substring(5, 7);
+  let day = date.substring(8);
+
+  console.log(`${day}/${month}/${year}`)
+  
+  try {
+    // Construct the file path
+    const filePath = path.join(postsDir, year, month, `${day}.md`);
+    
+    // Read the file content
+    const fileContent = await fs.readFile(filePath, 'utf8');
+    
+    // Render edit page with existing content
+    res.render('editPost', { 
+      post: {
+        year,
+        month,
+        day,
+        date: `${year}-${month}-${day}`,
+        content: fileContent 
+      }
+    });
+  } catch (error) {
+    console.error('Error reading post for editing:', error);
+    res.status(404).send('Post not found');
+  }
+});
+
 module.exports = router;

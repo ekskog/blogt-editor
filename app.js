@@ -6,6 +6,7 @@ const cookieParser = require('cookie-parser');
 const bodyParser = require('body-parser');
 const logger = require('morgan');
 
+
 const indexRouter = require('./routes/index');
 const pagesRouter = require('./routes/pages');
 const postsRouter = require('./routes/posts');
@@ -41,7 +42,9 @@ app.use(robots({
     UserAgent: '*',
     Disallow: '/'
   }));
-  
+
+const methodOverride = require('method-override');
+app.use(methodOverride('_method'));
 // Catch 404 and forward to error handler
 app.use(function (req, res, next) {
     next(createError(404));

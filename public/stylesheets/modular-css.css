@@ -218,15 +218,6 @@ hr.full:after {
   background-color: #0056b3;
 }
 
-.editor-container {
-  width: 100%;
-  max-width: 600px;
-  margin: 0 auto;
-  padding: 1rem;
-  box-sizing: border-box;
-  border: 1px solid #000;
-}
-
 /* mobile.css - Mobile specific styles */
 @media screen and (max-width: 768px) {
   body {
