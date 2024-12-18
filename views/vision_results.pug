@@ -1,0 +1,30 @@
+extends layout
+
+block content
+  .main-content(style="margin: 0 auto; padding: 0; border: 1px solid black; display: flex; justify-content: center; align-items: center")
+
+    h2 What the AI sees
+
+    //- Tags and Confidence Scores
+    h3 Tags and Confidence Scores
+    if analysisResult.tags && analysisResult.tags.length
+      table(style="width: 90%; border-collapse: collapse; margin-left: 0; margin-right: 0; background-color: #fff")
+        thead
+          tr
+            th(style="border: 1px solid #ccc; padding: 10px; background-color: #f2f2f2") Tag Name
+            th(style="border: 1px solid #ccc; padding: 10px; background-color: #f2f2f2") Confidence
+        tbody
+          each tag in analysisResult.tags
+            tr
+              td(style="border: 1px solid #ccc; padding: 10px")= tag.name
+              td(style="border: 1px solid #ccc; padding: 10px")= tag.confidence.toFixed(2)
+    else
+      p No tags found.
+
+    //- Extracted Text
+
+    h3 Extracted Text 
+    if analysisResult.extractedText 
+      p= analysisResult.extractedText
+    else 
+      p No text detected.

@@ -81,8 +81,8 @@ router.get('/', async (req, res) => {
     }
 });
 
-
 router.get('/:dateString', async (req, res) => {
+
     const { dateString } = req.params;
 
     // Ensure dateString is in the format YYYYMMDD
@@ -95,13 +95,6 @@ router.get('/:dateString', async (req, res) => {
     const day = dateString.slice(6, 8);
 
     // Use moment to ensure we are manipulating only the date (start of the day)
-    const currentDate = moment.utc(dateString, 'YYYYMMDD').startOf('day');  // Set to the start of the day in UTC
-
-    // Calculate the previous and next dates properly, considering month boundaries
-    const nextDate = currentDate.clone().add(1, 'days').format('YYYYMMDD');
-    const prevDate = currentDate.clone().subtract(1, 'days').format('YYYYMMDD');
-
-    // We remove the .md extension here in the URL
     let filePath = path.join(postsDir, year, month, `${day}.md`);
 
     try {
@@ -127,7 +120,7 @@ router.get('/:dateString', async (req, res) => {
         postsContent.push({ tags, title, md5Title, formattedDate, imageUrl, htmlContent, prev, next });
 
         // Render the page and include navigation links
-        res.render('post', { postsContent });
+        res.render('post', { tags, title, md5Title, formattedDate, imageUrl, htmlContent, prev, next });
 
     } catch (err) {
         console.error('Error reading post file:', err);

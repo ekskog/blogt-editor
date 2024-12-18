@@ -87,5 +87,5 @@ function onListening() {
     ? 'pipe ' + addr
     : 'port ' + addr.port;
   console.log('Listening on ' + bind);
-  console.log(`[ debug util credentials ] >> ${Date.now()}`);
+  console.log(`[ back to az vision ] >> ${Date.now()}`);
 }

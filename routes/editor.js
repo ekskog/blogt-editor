@@ -39,12 +39,11 @@ router.post('/imgup', upload.single('file'), async (req, res) => {
       return res.status(400).send('No file uploaded.');
     }
 
-    console.log('File received:', file);
+    const [year, month, day] = req.body.dateField.split('-');
+    var fileName = `${day}.jpeg` || file.originalname;
 
-    var fileName = req.body.newFileName || file.originalname;
-
-    const bucketName = req.body.bucket;
-    var folderPath = req.body.path;
+    const bucketName = 'blotpix';
+    var folderPath = `${year}/${month}`;
 
     const calculatedParams = await getUploadParams();
 

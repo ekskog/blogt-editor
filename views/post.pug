@@ -2,25 +2,29 @@ extends layout
 
 block content
   .main-content
-    each post in postsContent
       .title-nav-container(style="display: flex; justify-content: space-between; align-items: center;")
-        h2= post.title
+        h2= title
         .day-navigation(style="display: flex; gap: 1rem;")
-          if post.prev
-            a(href=`/posts/${post.prev}`) Previous Day
-          if post.next  
-            a(href=`/posts/${post.next}`) Next Day
+          if prev
+            a(href=`/posts/${prev}`) Previous Day
+          if next  
+            a(href=`/posts/${next}`) Next Day
       .image-container
-        img(src=post.imageUrl alt=post.title border="1")
-        figcaption= post.md5Title
+        img(src=imageUrl alt=title border="1")
+        figcaption= md5Title
 
-      .content!= post.htmlContent
+      .content!= htmlContent
+
+      form.analyze-form(action="/eye" method="post") 
+        input(type="hidden" name="imageUrl" value=imageUrl)
+        button.submit-btn(type="submit") What the AI sees
+
       .post-footer
         .light
-          if post.formattedDate
-            span.post-date= post.formattedDate
+          if formattedDate
+            span.post-date= formattedDate
             span.separator &nbsp;&middot;&nbsp;
-          each tag, i in post.tags
+          each tag, i in tags
             if i != 0
               span.separator &nbsp;&middot;&nbsp;
             a.where(href=`/tags/${encodeURIComponent(tag)}` title=`Everything tagged ${tag}`)= tag

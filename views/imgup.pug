@@ -3,11 +3,6 @@ block content
   .main-content(style="margin: 0 auto; padding: 0; border: 1px solid black; height: 500px; display: flex; justify-content: center; align-items: center")
     form(action="/editor/imgup" method="POST" enctype="multipart/form-data")
       .form-group.formGroup
-        label(for="bucket") Select Bucket:
-        select#bucket(name="bucket" required)
-          option(value="") Choose a bucket
-          each bucket in buckets
-            option(value=bucket)= bucket
 
       .form-group
         label(for="file") Choose File:
@@ -18,15 +13,10 @@ block content
           label(for="dateField") You are uploading an image for:
           input#dateField(type="text" name="dateField" value=date readonly)
 
-
       if !dateString
         .form-group
-          label(for="newFileName") New File Name (optional):
-          input#newFileName(type="text" name="newFileName" placeholder="Enter new file name")
-
-        .form-group
-          label(for="path") Upload Path (optional):
-          input#path(type="text" name="path" placeholder="Enter path on Minio server")
+          label.editor-label(for="date") Select a date:
+          input#dateField(type="date" name="dateField" required)
 
 
       button.submit-btn(type="submit") Upload Image

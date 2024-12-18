@@ -1,12 +1,13 @@
 extends layout
 
 block content
+  script(src="/javascripts/search.js")
   .main-content(style="margin: 0 auto; padding: 20px; border: 1px solid black; display: flex; justify-content: flex-start; align-items: flex-start; flex-direction: column; max-width: 600px; box-sizing: border-box; margin-top: 0; margin-bottom: 0;")
 
     .search-container(style="border: 1px solid blue; padding: 15px; margin-bottom: 20px; width: 90%; align-self: center;")
         form.search-form(action="/tags/search" method="GET" style="display: flex; justify-content: space-between; align-items: center; width: 90%; margin: 0 auto; padding: 0; ") 
             input(type="text" name="tag" placeholder="Search tags" style="padding: 5px 8px; font-size: 16px; border: 1px solid #ccc; border-radius: 4px; flex-grow: 1; box-sizing: border-box;") 
-            button(type="submit" style="padding: 5px 10px; font-size: 16px; background-color: #007bff; color: white; border: none; border-radius: 4px; cursor: pointer; box-sizing: border-box; margin-left: 10px;")
+            button.submit-btn(type="submit")
                 | Search
     
     if results

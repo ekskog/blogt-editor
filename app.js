@@ -16,6 +16,8 @@ const postsRouter = require('./routes/posts');
 const tagsRouter = require('./routes/tags');
 const editRouter = require('./routes/editor');
 const ssRouter = require('./routes/sandgods');
+const visionRouter = require('./routes/vision');
+const eyeRouter = require('./routes/eye');
 
 const app = express();
 
@@ -35,9 +37,6 @@ app.use(bodyParser.json());
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(methodOverride('_method'));
 
-// Debugging session secret
-console.log('SESSION_SECRET:', process.env.SESSION_SECRET);
-
 // **Session middleware** - Ensure this is BEFORE routes
 app.use(session({
   secret: process.env.SESSION_SECRET || 'your_fallback_secret',
@@ -48,10 +47,6 @@ app.use(session({
 
 // Session diagnostics middleware
 app.use((req, res, next) => {
-  console.log('------- Session Middleware Diagnostic -------');
-  console.log('Session ID:', req.sessionID);
-  console.log('Session data:', req.session);
-  console.log('Session middleware active');
   res.locals.session = req.session; // Expose session to templates
   next();
 });
@@ -64,6 +59,8 @@ app.use('/', indexRouter);
 app.use('/pages', pagesRouter);
 app.use('/posts', postsRouter);
 app.use('/tags', tagsRouter);
+app.use('/vision', visionRouter)
+app.use('/eye', eyeRouter)
 
 // Protect editor-related routes
 app.use('/editor', requireLogin, editRouter);

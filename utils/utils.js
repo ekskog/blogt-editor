@@ -5,7 +5,6 @@ const postsDir = path.join(__dirname, '..', 'posts');
 const sharp = require('sharp');
 var debug = require('debug');
 
-
 const Minio = require('minio');
 var buckets = ['bollox'];
 
