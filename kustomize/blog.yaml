@@ -115,7 +115,7 @@ spec:
               valueFrom:
                 secretKeyRef:
                   name: editor-credentials
-                  key: secret++++++++++++++++++Key
+                  key: secretKey
             - name: SESSION_SECRET
               valueFrom:
                 secretKeyRef:
