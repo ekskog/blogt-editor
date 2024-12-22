@@ -88,5 +88,5 @@ function onListening() {
     : 'port ' + addr.port;
     let today = new Date();
   console.log('Listening on ' + bind);
-  console.log(`[ two dots on gallery ] >> ${today}`);
+  console.log(`[ new edit post logic ] >> ${today}`);
 }

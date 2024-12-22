@@ -82,7 +82,6 @@ router.get('/', async (req, res) => {
 });
 
 router.get('/:dateString', async (req, res) => {
-
     const { dateString } = req.params;
 
     // Ensure dateString is in the format YYYYMMDD
@@ -116,8 +115,6 @@ router.get('/:dateString', async (req, res) => {
 
         const prev = await getPrev(dateString);
         const next = await getNext(dateString);
-
-        postsContent.push({ tags, title, md5Title, formattedDate, imageUrl, htmlContent, prev, next });
 
         // Render the page and include navigation links
         res.render('post', { tags, title, md5Title, formattedDate, imageUrl, htmlContent, prev, next });

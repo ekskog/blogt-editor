@@ -24,8 +24,8 @@ block content
           if formattedDate
             span.post-date= formattedDate
             span.separator &nbsp;&middot;&nbsp;
-          each tag, i in tags
-            if i != 0
-              span.separator &nbsp;&middot;&nbsp;
-            a.where(href=`/tags/${encodeURIComponent(tag)}` title=`Everything tagged ${tag}`)= tag
-      hr
+          if tags  
+            each tag, i in tags
+              if i != 0
+                span.separator &nbsp;&middot;&nbsp;
+              a.where(href=`/tags/${encodeURIComponent(tag)}` title=`Everything tagged ${tag}`)= tag
