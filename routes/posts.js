@@ -33,7 +33,7 @@ router.get('/', async (req, res) => {
         const postsContent = [];
         const page = parseInt(req.query.page) || 1; // Get the page number from the query, default to 1
         const postsPerPage = 10; // Number of posts per page
-        let dateString = latestPostDate; // Start with the latest post date
+        let dateString = await latestPostDate; // Start with the latest post date
 
         // Loop to get the posts for the requested page
         for (let i = 0; i < postsPerPage; i++) {

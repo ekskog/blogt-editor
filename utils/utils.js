@@ -3,19 +3,19 @@ require('dotenv').config();
 const fs = require('fs').promises;
 const postsDir = path.join(__dirname, '..', 'posts');
 const sharp = require('sharp');
+const crypto = require('crypto');
+const { marked } = require('marked');
 var debug = require('debug');
 
 const Minio = require('minio');
 var buckets = ['bollox'];
 
-console.log(`Minio User: ${process.env.MINIO_ACCESS_KEY}\nMinio Password: ${process.env.MINIO_SECRET_KEY}`)
-
 const minioClient = new Minio.Client({
     endPoint: 'objects.hbvu.su',
     port: 443,
     useSSL: true,
-    accessKey:  process.env.MINIO_ACCESS_KEY,
-    secretKey:  process.env.MINIO_SECRET_KEY
+    accessKey: process.env.MINIO_ACCESS_KEY,
+    secretKey: process.env.MINIO_SECRET_KEY
 });
 
 const uploadToMinio = async (file, bucketName, folderPath, fileName) => {
@@ -32,9 +32,9 @@ const uploadToMinio = async (file, bucketName, folderPath, fileName) => {
 
         // Upload the resized image buffer to MinIO
         await minioClient.putObject(bucketName, objectName, resizedImageBuffer);
-        return(`File uploaded successfully to ${bucketName}/${objectName}.`);
+        return (`File uploaded successfully to ${bucketName}/${objectName}.`);
     } catch (err) {
-        return(err);
+        return (err);
     }
 }
 
@@ -108,7 +108,6 @@ const findLatestPost = async () => {
 
         return { latestPostPath, latestPostDate };
     } catch (error) {
-        console.error('Error reading post files:', error);
         throw new Error('Could not retrieve post files');
     }
 }
@@ -165,7 +164,7 @@ async function getPrev(dateString) {
     }
 }
 
-function formatDate(dateString) {
+const formatDate = async (dateString) => {
     const date = new Date(dateString);
 
     const year = date.getUTCFullYear();
@@ -176,18 +175,65 @@ function formatDate(dateString) {
     return formatted;
 }
 
+const commitPost = async (date, text, uploadImage) => {
+    console.log("trace 2")
+
+    const [year, month, day] = date.split('-');
+    try {
+        // Define the file path
+        let dirPath = path.join(postsDir, year, month);
+        let filePath = path.join(dirPath, `${day}.md`);
+
+        // Ensure the directory exists
+        await fs.mkdir(dirPath, { recursive: true });
+        // Write the text content to the file
+        await fs.writeFile(filePath, text);
+
+        // recalculate the latest Post Date
+        const tagsMatch = text.match(/^Tags:\s*(.+)$/m);
+        const titleMatch = text.match(/^Title:\s*(.+)$/m);
+        const tags = tagsMatch ? tagsMatch[1].split(',').map(tag => tag.trim()) : [];
+        const title = titleMatch ? titleMatch[1] : 'Untitled';
+
+        const content = text.replace(/^Tags:.*$/m, '').replace(/^Title:.*$/m, '').trim();
+        const htmlContent = marked(content);
+        const md5Title = crypto.createHash('md5').update(content).digest('hex');
+
+        const imageUrl = `https://objects.hbvu.su/blotpix/${year}/${month}/${day}.jpeg`;
+        const formattedDate = `${day}/${month}/${year}`;
+
+        const prev = await getPrev(date.replace(/-/g, ""));
+        const next = await getNext(date.replace(/-/g, ""));
+
+        if (uploadImage) {
+            const buckets = await fetchBuckets();
+
+            // Split the input string into year, month, and day
+            const [year, month, day] = date.split('-');
+            // Reformatted date string
+            let dateString = `${day}/${month}/${year}`;
+
+            res.render('imgup', { buckets, dateString });
+        } else {
+            let post = { tags, title, md5Title, formattedDate, imageUrl, htmlContent, prev, next }
+            return { res: 'ok', post }
+        }
+    } catch (error) {
+        return { res: 'error', error }
+    }
+}
+
 async function main() {
     try {
         bucketsList = await minioClient.listBuckets();
         buckets = bucketsList.map(bucket => bucket.name);
     } catch (err) {
-        console.error('Error fetching buckets:', err);
+        throw new Error('Could not retrieve post files');
     }
 }
 
 // Invoke the main function
 main().catch(error => {
-    console.error("Unhandled error in main:", error);
     process.exit(1);
 })
 
@@ -198,5 +244,6 @@ module.exports = {
     formatDate,
     fetchBuckets,
     getUploadParams,
-    uploadToMinio
+    uploadToMinio,
+    commitPost
 };

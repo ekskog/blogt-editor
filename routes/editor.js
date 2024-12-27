@@ -6,15 +6,12 @@ const upload = multer({ storage });
 
 const path = require('path');
 const fs = require('fs').promises;
-const crypto = require('crypto');
-const { marked } = require('marked');
 
 const {
-  getNext,
-  getPrev,
   fetchBuckets,
   getUploadParams,
-  uploadToMinio
+  uploadToMinio,
+  commitPost
 } = require('../utils/utils');
 
 var express = require('express');
@@ -74,67 +71,26 @@ router.post('/imgup', upload.single('file'), async (req, res) => {
 router.post('/', async (req, res) => {
 
   // Extract date and text from the request body
-  const { date, text } = req.body;
-
-  // Check if date and text are provided
-  if (!date || !text) {
-    return res.status(400).send('Date and text are required.');
-  }
+  const { date, text, uploadImage } = req.body;
+  const [year, month, day] = date.split('-');
 
   try {
-    // Parse date (assuming format "YYYY-MM-DD")
-    const [year, month, day] = date.split('-');
-
-    // Define the file path
-    let dirPath = path.join(postsDir, year, month);
-    let filePath = path.join(dirPath, `${day}.md`);
-
-    // Ensure the directory exists
-    await fs.mkdir(dirPath, { recursive: true });
-
-    // Write the text content to the file
-    await fs.writeFile(filePath, text);
-    console.log(`editor >> ${filePath} written`)
-
-    // recalculate the latest Post Date
-    const tagsMatch = text.match(/^Tags:\s*(.+)$/m);
-    const titleMatch = text.match(/^Title:\s*(.+)$/m);
-    const tags = tagsMatch ? tagsMatch[1].split(',').map(tag => tag.trim()) : [];
-    const title = titleMatch ? titleMatch[1] : 'Untitled';
-
-    const content = text.replace(/^Tags:.*$/m, '').replace(/^Title:.*$/m, '').trim();
-    const htmlContent = marked(content);
-    const md5Title = crypto.createHash('md5').update(content).digest('hex');
-
-    const imageUrl = `https://objects.hbvu.su/blotpix/${year}/${month}/${day}.jpeg`;
-    const formattedDate = `${day}/${month}/${year}`;
-
-    const postsContent = [];
-
-    const prev = await getPrev(date.replace(/-/g, ""));
-    const next = await getNext(date.replace(/-/g, ""));
-
-    console.log(`date: ${date}, prev: ${prev}, next: ${next}`)
-
-    postsContent.push({ tags, title, md5Title, formattedDate, imageUrl, htmlContent, prev, next });
-
-    if (req.body.uploadImage) {
-      const buckets = await fetchBuckets();
-
-      // Split the input string into year, month, and day
-      const [year, month, day] = date.split('-');
-      // Reformatted date string
-      let dateString = `${day}/${month}/${year}`;
-
-      res.render('imgup', { buckets, dateString });
-    } else {
-      res.render('post', { postsContent });
+    console.log("trace 1")
+    const result = await commitPost(date, text, uploadImage);
+    if (result.res == 'ok')
+      res.render('post', result.post);
+    else {
+      let message = 'Error writing to disk';
+      let error = result.error;
+      res.render('error', { error, message });
     }
   } catch (error) {
-    console.error('Error writing file:', error);
-
+    console.log(error)
+    let message = 'Error writing to disk';
+    res.render('error', { error, message });
   }
 });
+
 
 // EDIT an existing blog post
 router.get('/edit/', async (req, res) => {
@@ -144,58 +100,22 @@ router.get('/edit/', async (req, res) => {
 });
 
 router.post('/edit/', async (req, res) => {
-  const { date, text, action } = req.body;
+  const { date, text, action, uploadImage } = req.body;
   const [year, month, day] = date.split('-');
 
-    if (action === 'submit') {
+  if (action === 'submit') {
     try {
-      // Parse date (assuming format "YYYY-MM-DD")
-      const [year, month, day] = date.split('-');
-
-      // Define the file path
-      let dirPath = path.join(postsDir, year, month);
-      let filePath = path.join(dirPath, `${day}.md`);
-
-      // Ensure the directory exists
-      await fs.mkdir(dirPath, { recursive: true });
-
-      // Write the text content to the file
-      await fs.writeFile(filePath, text);
-      console.log(`editor >> ${filePath} written`)
-
-      // recalculate the latest Post Date
-      const tagsMatch = text.match(/^Tags:\s*(.+)$/m);
-      const titleMatch = text.match(/^Title:\s*(.+)$/m);
-      const tags = tagsMatch ? tagsMatch[1].split(',').map(tag => tag.trim()) : [];
-      const title = titleMatch ? titleMatch[1] : 'Untitled';
-
-      const content = text.replace(/^Tags:.*$/m, '').replace(/^Title:.*$/m, '').trim();
-      const htmlContent = marked(content);
-      const md5Title = crypto.createHash('md5').update(content).digest('hex');
-
-      const imageUrl = `https://objects.hbvu.su/blotpix/${year}/${month}/${day}.jpeg`;
-      const formattedDate = `${day}/${month}/${year}`;
-
-      const postsContent = [];
-
-      const prev = await getPrev(date.replace(/-/g, ""));
-      const next = await getNext(date.replace(/-/g, ""));
-
-      if (req.body.uploadImage) {
-        const buckets = await fetchBuckets();
-
-        // Split the input string into year, month, and day
-        const [year, month, day] = date.split('-');
-        // Reformatted date string
-        let dateString = `${day}/${month}/${year}`;
-
-        res.render('imgup', { buckets, dateString });
-      } else {
-        res.render('post', { tags, title, md5Title, formattedDate, imageUrl, htmlContent, prev, next });
+      const result = await commitPost(date, text, uploadImage);
+      if (result.res == 'ok')
+        res.render('post', result.post);
+      else {
+        let message = 'Error writing to disk';
+        let error = result.error;
+        res.render('error', { error, message });
       }
     } catch (error) {
-      console.error('Error writing file:', error);
-
+      let message = 'Error writing to disk';
+      res.render('error', { error, message });
     }
   } else if (action === 'load') {
     try {
