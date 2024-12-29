@@ -1,6 +1,5 @@
 const path = require('path');
 const fs = require('fs').promises;
-const moment = require('moment');  // To easily handle date manipulation
 const crypto = require('crypto');
 const { marked } = require('marked');
 var debug = require('debug');
@@ -17,6 +16,7 @@ const {
 
 const express = require('express');
 const router = express.Router();
+
 const postsDir = path.join(__dirname, '..', 'posts');
 
 router.get('/', async (req, res) => {
