@@ -1,6 +1,7 @@
 var express = require('express');
 var router = express.Router();
 const path = require('path');
+var debug = require('debug')('blot-too:tags-route');
 
 let filePath = path.join(__dirname, '..', 'posts');
 const tagIndex = require(`${filePath}/tags_index.json`); // Path to JSON tag index file

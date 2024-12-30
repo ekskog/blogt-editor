@@ -4,8 +4,8 @@
   "private": true,
   "scripts": {
     "start": "node ./bin/www",
-    "debug": "DEBUG=*,-express node ./bin/www"
-  },
+    "debug": "DEBUG=blot-too,-express:* ./bin/www"
+    },
   "dependencies": {
     "@azure/cognitiveservices-computervision": "^8.2.0",
     "@azure/cognitiveservices-face": "^5.0.0",

@@ -2,7 +2,7 @@ const path = require('path');
 const fs = require('fs').promises;
 const crypto = require('crypto');
 const { marked } = require('marked');
-var debug = require('debug');
+var debug = require('debug')('blot-too:posts-route');
 
 var latestPostPath,
     latestPostDate;
@@ -72,10 +72,8 @@ router.get('/', async (req, res) => {
         }
 
         // Pagination logic
-        /*
         const totalPosts = 100; // This should be the total number of posts (you might want to count posts dynamically)
         const totalPages = Math.ceil(totalPosts / postsPerPage);
-        */
         const currentPage = page;
         
         res.render('posts', {

@@ -1,6 +1,7 @@
 require('dotenv').config();
 var express = require('express');
 var router = express.Router();
+var debug = require('debug')('blot-too:eye-route');
 
 const { ComputerVisionClient } = require('@azure/cognitiveservices-computervision');
 const { FaceClient } = require('@azure/cognitiveservices-face');

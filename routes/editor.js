@@ -6,6 +6,7 @@ const upload = multer({ storage });
 
 const path = require('path');
 const fs = require('fs').promises;
+var debug = require('debug')('blot-too:editor-route');
 
 const {
   fetchBuckets,
