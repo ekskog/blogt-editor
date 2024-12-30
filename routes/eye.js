@@ -75,7 +75,7 @@ const azAnalyzer = async (imageUrl) => {
 router.post('/', async (req, res) => {
   const imageUrl = req.body.imageUrl;
   const analysisResult = await azAnalyzer(imageUrl);
-  console.log(analysisResult.extractedText);
+  debug(analysisResult.extractedText);
   res.render('vision_results', { analysisResult });
 });
 

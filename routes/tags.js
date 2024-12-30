@@ -4,7 +4,7 @@ const path = require('path');
 
 let filePath = path.join(__dirname, '..', 'posts');
 const tagIndex = require(`${filePath}/tags_index.json`); // Path to JSON tag index file
-console.log(Object.keys(tagIndex).length);
+debug(Object.keys(tagIndex).length);
 
 
 // Add this new route in your Express app
@@ -61,7 +61,7 @@ router.get('/:tagName', (req, res) => {
     const postsPerPage = 10;
 
     let postFiles = tagIndex[normalizedTag] || [];
-    console.log(`${tagName} >> ${postFiles.length}`);
+    debug(`${tagName} >> ${postFiles.length}`);
 
     if (postFiles.length === 0) {
         return res.render('noPosts', { tagName });

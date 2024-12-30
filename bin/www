@@ -10,7 +10,7 @@ var app = require('../app');
 var http = require('http');
 
 process.on('exit', (code) => {
-  console.log(`Process exited with code: ${code}`);
+  debug(`Process exited with code: ${code}`);
 });
 
 process.on('uncaughtException', (err) => {
@@ -39,12 +39,12 @@ app.set('port', port);
 var server = http.createServer(app);
 // Add this to check if the process is being killed
 process.on('SIGTERM', () => {
-  console.log('Received SIGTERM');
+  debug('Received SIGTERM');
   process.exit(0);
 });
 
 process.on('SIGINT', () => {
-  console.log('Received SIGINT');
+  debug('Received SIGINT');
   process.exit(0);
 });
 /**
@@ -113,6 +113,6 @@ function onListening() {
     ? 'pipe ' + addr
     : 'port ' + addr.port;
     let today = new Date();
-  console.log('Listening on ' + bind);
-  console.log(`[ factored out commitPost to utils ] >> ${today}`);
+  debug('Listening on ' + bind);
+  debug(`[ turned debug on ] >> ${today}`);
 }

@@ -28,10 +28,10 @@ router.post('/', async (req, res) => {
     const text = textDetectionResult.fullTextAnnotation;
   
     // Process the results as needed
-    console.log('Labels:', labels);
-    console.log('Landmarks:', landmarks);
-    console.log('Faces:', faces);
-    console.log('Text:', text);
+    debug('Labels:', labels);
+    debug('Landmarks:', landmarks);
+    debug('Faces:', faces);
+    debug('Text:', text);
   } catch (error) {
     console.error('Error:', error);
   }

@@ -133,7 +133,7 @@ async function getNext(dateString) {
             return `${nextYear}${nextMonth}${nextDay}`;
         } catch (error) {
             // Log the missing entry
-            // console.log(`No entry found for ${nextYear}-${nextMonth}-${nextDay}. Checking next date...`);
+            // debug(`No entry found for ${nextYear}-${nextMonth}-${nextDay}. Checking next date...`);
             // Continue to next date
         }
     }
@@ -176,7 +176,7 @@ const formatDate = async (dateString) => {
 }
 
 const commitPost = async (date, text, uploadImage) => {
-    console.log("trace 2")
+    debug("trace 2")
 
     const [year, month, day] = date.split('-');
     try {
@@ -227,7 +227,6 @@ async function main() {
     try {
         bucketsList = await minioClient.listBuckets();
         buckets = bucketsList.map(bucket => bucket.name);
-        console.log("utils ready")
     } catch (err) {
         throw new Error('Could not retrieve post files');
     }

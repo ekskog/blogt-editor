@@ -1,4 +1,4 @@
 document.querySelector('form').addEventListener('submit', function(e) {
-    console.log('Form submitted');
-    console.log('Search term:', this.tag.value);
+    debug('Form submitted');
+    debug('Search term:', this.tag.value);
 })

@@ -75,8 +75,9 @@ router.get('/', async (req, res) => {
         /*
         const totalPosts = 100; // This should be the total number of posts (you might want to count posts dynamically)
         const totalPages = Math.ceil(totalPosts / postsPerPage);
-        const currentPage = page;
         */
+        const currentPage = page;
+        
         res.render('posts', {
             postsContent,
             currentPage,

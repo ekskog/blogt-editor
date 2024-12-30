@@ -6,7 +6,7 @@ async function loadBlogPosts(posts) {
         blogPostsContainer.innerHTML = ''; // Clear existing posts
         const isSinglePost = posts.length === 1;
 
-        console.log(isSinglePost)
+        debug(isSinglePost)
 
         posts.forEach((post) => {
             const lines = post.content.split('\n');
@@ -110,7 +110,7 @@ document.addEventListener('DOMContentLoaded', () => {
             console.error('Error fetching 5 latest posts:', error);
         });
         */
-       console.log('starting...')
+       debug('starting...')
 });
 
 // If you have this function, keep it; otherwise, you can remove it

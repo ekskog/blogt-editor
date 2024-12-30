@@ -68,7 +68,7 @@ function setupAuthRoutes(app) {
 
   // Logout route
   app.get('/logout', (req, res) => {
-    console.log('------- Logout Route -------');
+    debug('------- Logout Route -------');
 
     if (req.session) {
       req.session.destroy((err) => {
@@ -78,7 +78,7 @@ function setupAuthRoutes(app) {
         res.redirect('/');
       });
     } else {
-      console.log('No session to destroy');
+      debug('No session to destroy');
       res.redirect('/');
     }
   });

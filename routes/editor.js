@@ -54,11 +54,11 @@ router.post('/imgup', upload.single('file'), async (req, res) => {
     }
 
     // Log the buffer to ensure it's present
-    console.log('File buffer length:', file.buffer.length);
+    debug('File buffer length:', file.buffer.length);
 
     // Upload to MinIO (assuming the utility function works as expected)
     const result = await uploadToMinio(file, bucketName, folderPath, fileName);
-    console.log('Upload result:', result);
+    debug('Upload result:', result);
 
     res.render('index', { result });
   } catch (error) {
@@ -75,7 +75,7 @@ router.post('/', async (req, res) => {
   const [year, month, day] = date.split('-');
 
   try {
-    console.log("trace 1")
+    debug("trace 1")
     const result = await commitPost(date, text, uploadImage);
     if (result.res == 'ok')
       res.render('post', result.post);
@@ -85,7 +85,7 @@ router.post('/', async (req, res) => {
       res.render('error', { error, message });
     }
   } catch (error) {
-    console.log(error)
+    debug(error)
     let message = 'Error writing to disk';
     res.render('error', { error, message });
   }
