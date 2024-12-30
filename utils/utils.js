@@ -227,6 +227,7 @@ async function main() {
     try {
         bucketsList = await minioClient.listBuckets();
         buckets = bucketsList.map(bucket => bucket.name);
+        console.log("utils ready")
     } catch (err) {
         throw new Error('Could not retrieve post files');
     }

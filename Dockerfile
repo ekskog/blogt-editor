@@ -22,4 +22,4 @@ ENV DEBUG="*:,-express"
 EXPOSE 3000
 
 # Start the app
-CMD ["node", "./bin/www"]
+CMD ["npm", "run", "debug"]

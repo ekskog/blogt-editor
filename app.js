@@ -7,7 +7,7 @@ const robots = require('express-robots-txt');
 const path = require('path');
 const cookieParser = require('cookie-parser');
 const bodyParser = require('body-parser');
-//const logger = require('morgan');
+const logger = require('morgan');
 const methodOverride = require('method-override');
 
 const indexRouter = require('./routes/index');
@@ -76,6 +76,8 @@ app.use(robots({
   Disallow: '/'
 }));
 
+app.use(logger('dev'));
+
 // Catch 404 and forward to error handler
 app.use((req, res, next) => {
   next(createError(404));
@@ -88,5 +90,6 @@ app.use((err, req, res, next) => {
   res.status(err.status || 500);
   res.render('error');
 });
+
 
 module.exports = app;

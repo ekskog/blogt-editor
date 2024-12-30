@@ -58,17 +58,25 @@ router.get('/', async (req, res) => {
 
                 postsContent.push({ tags, title, md5Title, formattedDate, imageUrl, htmlContent });
                 dateString = await getPrev(dateString)
+                debug(dateString)
+                if (!dateString) {
+                    break;
+                } else {
+                    debug("Posts to display" + postsContent.length)
+                }   
             } catch (err) {
-                //console.error(`No post found for ${year}-${month}-${day}`);
+                console.error(`No post found for ${year}-${month}-${day}`);
                 dateString = await getPrev(dateString)
                 // Continue to next date if file does not exist
             }
         }
 
         // Pagination logic
+        /*
         const totalPosts = 100; // This should be the total number of posts (you might want to count posts dynamically)
         const totalPages = Math.ceil(totalPosts / postsPerPage);
         const currentPage = page;
+        */
         res.render('posts', {
             postsContent,
             currentPage,
