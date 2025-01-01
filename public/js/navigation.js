@@ -1,22 +1,14 @@
 document.addEventListener('DOMContentLoaded', () => {
-  debug('Script loaded!');
   
   const hamburger = document.querySelector('.hamburger-menu');
   const navLinks = document.querySelector('.nav-links');
-  
-  debug('Hamburger element:', hamburger);
-  debug('Nav links element:', navLinks);
-  
+    
   if (hamburger && navLinks) {
-    debug('Both elements found, adding click listener');
     hamburger.addEventListener('click', () => {
-      debug('Hamburger clicked!');
-      debug('Nav links classes before:', navLinks.classList.toString());
       navLinks.classList.toggle('active');
-      debug('Nav links classes after:', navLinks.classList.toString());
     });
   } else {
-    debug('Missing elements:', {
+    console.err('Missing elements:', {
       hamburger: !!hamburger,
       navLinks: !!navLinks
     });
