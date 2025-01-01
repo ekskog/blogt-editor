@@ -1,7 +1,8 @@
 extends layout
-
+block head
+  link(rel="stylesheet", href="/stylesheets/vision.css?v=" + Date.now())
 block content
-  .main-content(style="margin: 0 auto; padding: 0; border: 1px solid black; display: flex; justify-content: center; align-items: center")
+  .main-content(style="border: 1px solid black; align-items: center")
 
     h2 What the AI sees
 
