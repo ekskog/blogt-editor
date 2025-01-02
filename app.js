@@ -1,4 +1,5 @@
 const createError = require('http-errors');
+const cors = require('cors');
 const express = require('express');
 const session = require('express-session');
 const { requireLogin, setupAuthRoutes } = require('./utils/authMiddleware');
@@ -37,6 +38,7 @@ app.use(bodyParser.json());
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(methodOverride('_method'));
 
+app.use(cors());
 // **Session middleware** - Ensure this is BEFORE routes
 app.use(session({
   secret: process.env.SESSION_SECRET || 'your_fallback_secret',
