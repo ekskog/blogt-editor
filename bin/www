@@ -114,5 +114,5 @@ function onListening() {
     : 'port ' + addr.port;
     let today = new Date();
   debug('Listening on ' + bind);
-  debug(`[ fno debug on frontend ] >> ${today}`);
+  debug(`[ allow cors ] >> ${today}`);
 }
