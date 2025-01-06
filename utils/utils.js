@@ -9,14 +9,18 @@ var debug = require('debug');
 
 const Minio = require('minio');
 var buckets = ['bollox'];
-
-const minioClient = new Minio.Client({
+const minioParams = 
+{
     endPoint: 'objects.hbvu.su',
     port: 443,
     useSSL: true,
     accessKey: process.env.MINIO_ACCESS_KEY,
     secretKey: process.env.MINIO_SECRET_KEY
-});
+}
+console.log(minioParams)
+
+const minioClient = new Minio.Client(minioParams);
+
 
 const uploadToMinio = async (file, bucketName, folderPath, fileName) => {
     try {
@@ -227,7 +231,9 @@ async function main() {
     try {
         bucketsList = await minioClient.listBuckets();
         buckets = bucketsList.map(bucket => bucket.name);
+        console.log('Buckets:', buckets);
     } catch (err) {
+        console.log('Error fetching buckets:', err);
         throw new Error('Could not retrieve post files');
     }
 }

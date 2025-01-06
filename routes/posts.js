@@ -16,7 +16,6 @@ const {
 
 const express = require('express');
 const router = express.Router();
-
 const postsDir = path.join(__dirname, '..', 'posts');
 
 router.get('/', async (req, res) => {
@@ -25,7 +24,7 @@ router.get('/', async (req, res) => {
         latestPostDate = formatDate(latestPost.latestPostDate);
         latestPostPath = latestPost.latestPostPath;
         debug(`[MAIN] Latest post date: ${JSON.stringify(latestPost)}`)
-        
+
         if (!latestPostPath) {
             return res.status(404).json({ error: 'No posts found' });
         }
@@ -43,7 +42,8 @@ router.get('/', async (req, res) => {
             let filePath = path.join(__dirname, '..', 'posts', year, month, `${day}.md`);
 
             try {
-                const data = await fs.readFile(filePath, 'utf-8');
+                const fullMD = await fs.readFile(filePath, 'utf8');
+                const data = fullMD.replace(/^Date:.*\n?/gm, '');
                 const tagsMatch = data.match(/^Tags:\s*(.+)$/m);
                 const titleMatch = data.match(/^Title:\s*(.+)$/m);
                 const tags = tagsMatch ? tagsMatch[1].split(',').map(tag => tag.trim()) : [];
@@ -63,7 +63,7 @@ router.get('/', async (req, res) => {
                     break;
                 } else {
                     debug("Posts to display" + postsContent.length)
-                }   
+                }
             } catch (err) {
                 console.error(`No post found for ${year}-${month}-${day}`);
                 dateString = await getPrev(dateString)
@@ -75,7 +75,7 @@ router.get('/', async (req, res) => {
         const totalPosts = 100; // This should be the total number of posts (you might want to count posts dynamically)
         const totalPages = Math.ceil(totalPosts / postsPerPage);
         const currentPage = page;
-        
+
         res.render('posts', {
             postsContent,
             currentPage,
@@ -104,7 +104,9 @@ router.get('/:dateString', async (req, res) => {
     let filePath = path.join(postsDir, year, month, `${day}.md`);
 
     try {
-        const data = await fs.readFile(filePath, 'utf8');
+        const fullMD = await fs.readFile(filePath, 'utf8');
+        const data = fullMD.replace(/^Date:.*\n?/gm, '');
+
 
         const tagsMatch = data.match(/^Tags:\s*(.+)$/m);
         const titleMatch = data.match(/^Title:\s*(.+)$/m);
@@ -118,7 +120,6 @@ router.get('/:dateString', async (req, res) => {
         const imageUrl = `https://objects.hbvu.su/blotpix/${year}/${month}/${day}.jpeg`;
         const formattedDate = `${day}/${month}/${year}`;
 
-        const postsContent = [];
 
         const prev = await getPrev(dateString);
         const next = await getNext(dateString);

@@ -1,94 +1,31 @@
 #!/usr/bin/env node
 
-/**
- * Module dependencies.
- */
-
 var app = require('../app');
 var debug = require('debug')('blot-too:server');
 var http = require('http');
-var punycode = require('punycode');
-
-process.on('exit', (code) => {
-  debug(`Process exited with code: ${code}`);
-});
-
-process.on('uncaughtException', (err) => {
-  console.error('UNCAUGHT EXCEPTION');
-  console.error(err);
-  console.error(err.stack);
-});
-
-process.on('unhandledRejection', (reason, promise) => {
-  console.error('UNHANDLED REJECTION');
-  console.error('Reason:', reason);
-  console.error('Promise:', promise);
-});
-
-/**
- * Get port from environment and store in Express.
- */
 
 var port = normalizePort(process.env.PORT || '3000');
 app.set('port', port);
 
-/**
- * Create HTTP server.
- */
-
 var server = http.createServer(app);
-// Add this to check if the process is being killed
-process.on('SIGTERM', () => {
-  debug('Received SIGTERM');
-  process.exit(0);
-});
-
-process.on('SIGINT', () => {
-  debug('Received SIGINT');
-  process.exit(0);
-});
-/**
- * Listen on provided port, on all network interfaces.
- */
 
 server.listen(port);
 server.on('error', onError);
 server.on('listening', onListening);
 
-/**
- * Normalize a port into a number, string, or false.
- */
-
 function normalizePort(val) {
   var port = parseInt(val, 10);
-
-  if (isNaN(port)) {
-    // named pipe
-    return val;
-  }
-
-  if (port >= 0) {
-    // port number
-    return port;
-  }
-
+  
+  if (isNaN(port)) return val; // named pipe
+  if (port >= 0) return port; // port number
   return false;
 }
 
-/**
- * Event listener for HTTP server "error" event.
- */
-
 function onError(error) {
-  if (error.syscall !== 'listen') {
-    throw error;
-  }
+  if (error.syscall !== 'listen') throw error;
 
-  var bind = typeof port === 'string'
-    ? 'Pipe ' + port
-    : 'Port ' + port;
+  var bind = typeof port === 'string' ? 'Pipe ' + port : 'Port ' + port;
 
-  // handle specific listen errors with friendly messages
   switch (error.code) {
     case 'EACCES':
       console.error(bind + ' requires elevated privileges');
@@ -103,16 +40,11 @@ function onError(error) {
   }
 }
 
-/**
- * Event listener for HTTP server "listening" event.
- */
-
 function onListening() {
   var addr = server.address();
-  var bind = typeof addr === 'string'
-    ? 'pipe ' + addr
-    : 'port ' + addr.port;
-    let today = new Date();
-  debug('Listening on ' + bind);
-  debug(`[ allow cors ] >> ${today}`);
+  var bind = typeof addr === 'string' ? 'pipe ' + addr : 'port ' + addr.port;
+  
+  let today = new Date();
+  console.log('Listening on ' + bind);
+  debug(`[ remove meta Tag Date ] >> ${today}`);
 }
