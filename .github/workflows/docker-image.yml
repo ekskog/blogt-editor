@@ -33,4 +33,4 @@ jobs:
           context: .
           platforms: linux/amd64,linux/arm64
           push: true
-          tags: lucarv/blogt:latest
+          tags: lucarv/blogt-editor:latest

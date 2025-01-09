@@ -46,5 +46,5 @@ function onListening() {
   
   let today = new Date();
   debug('Listening on ' + bind);
-  debug(`[ remove meta Tag Date ] >> ${today}`);
+  debug(`[ renamed app to editor ] >> ${today}`);
 }
