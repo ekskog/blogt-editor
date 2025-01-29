@@ -36,6 +36,9 @@ function setupAuthRoutes(app) {
     const validUsername = process.env.EDITOR_USERNAME;
     const validPassword = process.env.EDITOR_PASSWORD;
 
+    console.log(username + " | " + password)
+    console.log(validUsername + " | " + password)
+
     if (username === validUsername && password === validPassword) {
       if (!req.session) {
         console.error('ERROR: Session is not initialized during login!');

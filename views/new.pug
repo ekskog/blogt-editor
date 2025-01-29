@@ -7,7 +7,15 @@ block content
       .editor-form-group
         label.editor-label(for="date") Select a date:
         input#date(type="date" name="date" required)
-      
+
+      .editor-form-group
+        label.editor-label(for="title") Post Header:
+        input#text(name="title" placeholder="Enter the Post header here..." required)
+
+      .editor-form-group
+        label.editor-label(for="tags") Post tags:
+        input#text(name="tags" placeholder="Enter the comma-separated post tags here..." required)
+
       .editor-form-group
         label.editor-label(for="text") Enter your text:
         textarea#text(name="text" rows="4" placeholder="Enter a few lines of text here..." required)

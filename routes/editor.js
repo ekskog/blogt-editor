@@ -72,12 +72,11 @@ router.post('/imgup', upload.single('file'), async (req, res) => {
 router.post('/', async (req, res) => {
 
   // Extract date and text from the request body
-  const { date, text, uploadImage } = req.body;
-  const [year, month, day] = date.split('-');
+  const { date, text, tags, title, uploadImage } = req.body;
 
-  try {
+try {
     debug("trace 1")
-    const result = await commitPost(date, text, uploadImage);
+    const result = await commitPost(date, text, tags, title, uploadImage);
     if (result.res == 'ok')
       res.render('post', result.post);
     else {

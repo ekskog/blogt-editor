@@ -21,7 +21,6 @@ console.log(minioParams)
 
 const minioClient = new Minio.Client(minioParams);
 
-
 const uploadToMinio = async (file, bucketName, folderPath, fileName) => {
     try {
         // Resize the image to 1920x1920 pixels using sharp
@@ -179,10 +178,13 @@ const formatDate = async (dateString) => {
     return formatted;
 }
 
-const commitPost = async (date, text, uploadImage) => {
+const commitPost = async (date, text, tags, title, uploadImage) => {
     debug("trace 2")
 
     const [year, month, day] = date.split('-');
+    const formattedDate = `${day}${month}${year}`;
+    const textWithMetadata = `Date: ${formattedDate}\nTags: ${tags} \nTitle: ${title}\n${text}`;
+
     try {
         // Define the file path
         let dirPath = path.join(postsDir, year, month);
@@ -191,20 +193,14 @@ const commitPost = async (date, text, uploadImage) => {
         // Ensure the directory exists
         await fs.mkdir(dirPath, { recursive: true });
         // Write the text content to the file
-        await fs.writeFile(filePath, text);
+        await fs.writeFile(filePath, textWithMetadata, 'utf8');
 
         // recalculate the latest Post Date
-        const tagsMatch = text.match(/^Tags:\s*(.+)$/m);
-        const titleMatch = text.match(/^Title:\s*(.+)$/m);
-        const tags = tagsMatch ? tagsMatch[1].split(',').map(tag => tag.trim()) : [];
-        const title = titleMatch ? titleMatch[1] : 'Untitled';
 
-        const content = text.replace(/^Tags:.*$/m, '').replace(/^Title:.*$/m, '').trim();
-        const htmlContent = marked(content);
-        const md5Title = crypto.createHash('md5').update(content).digest('hex');
+        const htmlContent = marked(text);
+        const md5Title = crypto.createHash('md5').update(text).digest('hex');
 
         const imageUrl = `https://objects.hbvu.su/blotpix/${year}/${month}/${day}.jpeg`;
-        const formattedDate = `${day}/${month}/${year}`;
 
         const prev = await getPrev(date.replace(/-/g, ""));
         const next = await getNext(date.replace(/-/g, ""));
