@@ -7,6 +7,9 @@
     "start": "node ./bin/www",
     "debug": "DEBUG=blot-too,-express:* ./bin/www"
   },
+  "bin": {
+    "blot-too": "./bin/www"
+  },
   "dependencies": {
     "@azure/cognitiveservices-computervision": "^8.2.0",
     "@azure/cognitiveservices-face": "^5.0.0",
