@@ -1,4 +1,4 @@
-\name: Deploy Node.js Express app to GitHub Pages
+name: Deploy Node.js Express app to GitHub Pages
 
 on:
   push:
