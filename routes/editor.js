@@ -105,7 +105,16 @@ router.post('/edit/', async (req, res) => {
 
   if (action === 'submit') {
     try {
-      const result = await commitPost(date, text, uploadImage);
+      const tagsMatch = text.match(/^Tags:\s*(.+)$/m);
+      const titleMatch = text.match(/^Title:\s*(.+)$/m);
+      
+      const tags = tagsMatch ? tagsMatch[1] : '';
+      const title = titleMatch ? titleMatch[1] : ''
+
+      const textNoMetadata = text.replace(/^(Date:|Tags:|Title:).*$/gm, '').trim();
+
+      const result = await commitPost(date, textNoMetadata, tags, title);
+      console.log(result)
       if (result.res == 'ok')
         res.render('post', result.post);
       else {

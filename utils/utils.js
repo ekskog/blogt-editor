@@ -179,7 +179,6 @@ const formatDate = async (dateString) => {
 };
 
 const commitPost = async (date, text, tags, title) => {
-  debug("trace 2");
 
   const [year, month, day] = date.split("-");
   const formattedDate = `${day}${month}${year}`;
@@ -204,6 +203,8 @@ const commitPost = async (date, text, tags, title) => {
 
     const prev = await getPrev(date.replace(/-/g, ""));
     const next = await getNext(date.replace(/-/g, ""));
+
+    // display the Post    
 
     let post = {
       tags,
