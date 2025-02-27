@@ -71,8 +71,6 @@ function setupAuthRoutes(app) {
 
   // Logout route
   app.get('/logout', (req, res) => {
-    debug('------- Logout Route -------');
-
     if (req.session) {
       req.session.destroy((err) => {
         if (err) {
