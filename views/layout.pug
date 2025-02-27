@@ -6,14 +6,10 @@ html
 
     link(rel="stylesheet", href="/stylesheets/base.css?v=" + Date.now())
     link(rel="stylesheet", href="/stylesheets/layout.css?v=" + Date.now())
-    link(rel="stylesheet", href="/stylesheets/navigation.css?v=" + Date.now())
-    link(rel="stylesheet", href="/stylesheets/uploader.css?v=" + Date.now())
     link(rel="stylesheet", href="/stylesheets/editor.css?v=" + Date.now())
     link(rel="stylesheet", href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css")
 
-    script(src="/js/randomPostLink.js")
     script(src="/js/protectEditor.js")
-    script(src="/js/popup.js")
     block head
 
   body
@@ -33,9 +29,8 @@ html
               a.menu-item(href='/logout') LOGOUT
             else
               a.menu-item(href='/login?returnTo=/editor') LOGOUT           
-    .main-wrapper
-      .main-content
-        block content
+    .main-content
+      block content
     footer
       center © blind_swan_cage
     script(src="/js/navigation.js?v=" + Date.now())

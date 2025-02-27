@@ -1,12 +1,74 @@
 /* components.css - Specific component styles */
 
-#wordCloudCanvas {
-  width: 500px; 
-  height: 450px; 
-  margin: 10px auto;
-  background-color: #f9f9f9;
+/* navigation.css - Navigation specific styles */
+
+.top-nav {
+  border: 1px solid black;
+margin: 20px;
 }
-  
+
+.top-nav,
+.main-wrapper,
+.nav-content {
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: 10px;
+  padding-right: 10px;
+}
+
+.menu-logo-container {
+  width: auto;
+  flex-grow: 0;
+}
+
+.nav-content {
+  justify-content: space-between;
+}
+
+.nav-links {
+  display: flex;
+}
+
+.nav-links {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  flex-grow: 1;
+}
+
+.nav-links a {
+  text-decoration: none;
+  color: inherit;
+  padding: 0.25rem;
+  margin-left: 1rem;
+}
+
+.logo {
+  display: flex;
+  align-items: center;
+  text-decoration: none;
+  color: inherit;
+}
+
+.logo span {
+  margin-left: 0.5rem;
+}
+
+.menu-logo-container {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+}
+
+.hamburger-menu {
+  display: none;
+  background: none;
+  border: none;
+  font-size: 24px;
+  cursor: pointer;
+  padding: 10px;
+  order: 0;
+}
 
 
   .login-container {
