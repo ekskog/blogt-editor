@@ -25,6 +25,7 @@ const uploadToMinio = async (file, bucketName, folderPath, fileName) => {
     // Resize the image to 1920x1920 pixels using sharp
     const resizedImageBuffer = await sharp(file.buffer)
       .resize(1920, 1920, { fit: "inside" })
+      .withMetadata() // This is the key line to preserve EXIF data
       .toBuffer();
 
     // Construct the full object name using the folder path and file name

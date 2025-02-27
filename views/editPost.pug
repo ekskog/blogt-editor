@@ -13,7 +13,7 @@ block content
           label.editor-label(for="text") Post Content
           textarea#text(name="text" rows="15")= post.content          
         .editor-submit
-          button.submit-btn(type="submit" name="action" value="submit") Submit
+          button.editor-submit(type="submit" name="action" value="submit") Submit
       else
         .editor-submit
-          button#loadBtn.submit-btn(type="submit" name="action" value="load") Load
+          button#loadBtn.editor-submit(type="submit" name="action" value="load") Load

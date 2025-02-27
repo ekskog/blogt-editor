@@ -19,51 +19,12 @@ block content
       .editor-form-group
         label.editor-label(for="text") Enter your text:
         textarea#text(name="text" rows="4" placeholder="Enter a few lines of text here..." required)
-
-      .editor-form-group
-        label.editor-label
-          input#uploadImage(type="checkbox" name="uploadImage") 
-          | Upload Image  
       
       .editor-submit
-        button.submit-btn(type="submit") Submit
+        button.editor-submit(type="submit") Submit
 
   script.
     document.getElementById('date').addEventListener('focus', function() {
       this.showPicker();
     });
 
-  style.
-    .editor-form-group {
-      margin-bottom: 15px;
-    }
-    editor-label {
-      display: block;
-      margin-bottom: 5px;
-    }
-    input[type="date"], textarea {
-      width: 100%;
-      padding: 8px;
-      box-sizing: border-box;
-    }
-    input[type="tags"], input {
-      width: 100%;
-      padding: 8px;
-      box-sizing: border-box;
-    }
-    input[type="title"], input {
-      width: 100%;
-      padding: 8px;
-      box-sizing: border-box;
-    }    
-    .editor-submit {
-      display: flex;
-      justify-content: flex-end;
-    }
-    editor-button[type="submit"] {
-      padding: 10px 20px;
-      background-color: #4CAF50;
-      color: white;
-      border: none;
-      cursor: pointer;
-    }
