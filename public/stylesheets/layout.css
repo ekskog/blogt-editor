@@ -1,59 +1,30 @@
-@media (max-width: 768px) {
-  .main-content, .top-nav, .nav-content {
-    max-width: 100%;
-    padding-left: 5px;
-    padding-right: 5px;
-  }
-
-  .nav-links {
-    flex-direction: column;
-    align-items: flex-start;
-  }
-
-  .nav-links a {
-    margin-left: 0;
-    margin-bottom: 0.5rem;
-  }
-
-  .hamburger-menu {
-    display: block;
-  }
-
-  .menu-logo-container {
-    width: 100%;
-    justify-content: space-between;
-  }
-}
 /* layout.css - Layout components and structure */
+
+/* Main content container */
 .main-content {
   width: 100%;
   max-width: 600px;
   margin: 0 auto;
-  padding: 0;
+  padding: 0 10px;
   display: flex; 
   flex: 1;
-  margin-left: auto;
-  margin-right: auto;
-  padding-left: 10px;
-  padding-right: 10px;
   border: 1px solid black;
   justify-content: center;
-  align-items: center
+  align-items: center;
 }
 
-
+/* Top navigation */
 .top-nav {
   width: 100%;
   max-width: 600px;
   padding: 1rem 0;
-  margin-bottom: 2rem;
+  margin: 0 auto 2rem auto;
   border: 1px solid black;
-  margin-left: auto;
-  margin-right: auto;
   padding-left: 10px;
   padding-right: 10px;
 }
 
+/* Navigation content container */
 .nav-content {
   width: 100%;
   max-width: 600px;
@@ -63,23 +34,21 @@
   justify-content: space-between;
   align-items: center;
   box-sizing: border-box;
-  margin-left: auto;
-  margin-right: auto;
-  padding-left: 10px;
-  padding-right: 10px;
-  justify-content: space-between;
 }
 
+/* Menu and logo container */
 .menu-logo-container {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
   width: auto;
-  flex-grow: 0;
 }
 
+/* Navigation links */
 .nav-links {
   display: flex;
   align-items: center;
   justify-content: flex-end;
-  flex-grow: 1;
 }
 
 .nav-links a {
@@ -89,6 +58,7 @@
   margin-left: 1rem;
 }
 
+/* Logo styles */
 .logo {
   display: flex;
   align-items: center;
@@ -100,12 +70,7 @@
   margin-left: 0.5rem;
 }
 
-.menu-logo-container {
-  display: flex;
-  align-items: center;
-  justify-content: flex-start;
-}
-
+/* Hamburger menu button */
 .hamburger-menu {
   display: none;
   background: none;
@@ -113,12 +78,94 @@
   font-size: 24px;
   cursor: pointer;
   padding: 10px;
-  order: 0;
+  margin-right: 10px;
 }
 
+/* Footer styles */
 footer {
   width: 100%;
   text-align: center;
   padding: 80px 0;
   margin-top: auto;
+}
+
+/* Mobile responsive styles */
+@media (max-width: 768px) {
+  body {
+    margin: 0 20px; /* Add margin to entire body on mobile */
+    padding-top: 15px; /* Add padding to the top of the body */
+  }
+
+  .main-content, 
+  .top-nav {
+    max-width: 100%;
+    margin-left: 0;
+    margin-right: 0;
+    box-sizing: border-box;
+  }
+
+  .top-nav {
+    padding-top: 15px; /* Add padding to the top of the navbar */
+  }
+
+  .nav-content {
+    max-width: 100%;
+    flex-wrap: wrap;
+    position: relative; /* For positioning the dropdown */
+  }
+
+  .menu-logo-container {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+  }
+
+  .hamburger-menu {
+    display: block;
+  }
+
+  /* Mobile menu links container */
+  .nav-links {
+    display: none;
+    flex-direction: column !important;
+    align-items: flex-start !important;
+    
+    /* Position the box */
+    position: absolute;
+    top: 100%;
+    left: 0;
+    
+    /* Size the box to content */
+    width: auto !important;
+    min-width: 150px; /* Minimum width for the menu box */
+    
+    /* Styling */
+    margin-top: 10px;
+    border: 1px solid black;
+    padding: 10px;
+    background-color: white; /* Add background to prevent see-through */
+    box-sizing: border-box;
+    z-index: 100; /* Ensure it appears above other content */
+  }
+
+  .nav-links.active {
+    display: flex;
+  }
+
+  /* Individual menu items */
+  .nav-links a,
+  .nav-links .menu-item {
+    display: block !important;
+    width: 100% !important;
+    margin-left: 0 !important;
+    margin-bottom: 10px !important;
+    padding: 5px 0 !important;
+    white-space: nowrap; /* Prevent text wrapping */
+  }
+
+  /* Remove bottom margin from last menu item */
+  .nav-links a:last-child,
+  .nav-links .menu-item:last-child {
+    margin-bottom: 0 !important;
+  }
 }
