@@ -1,6 +1,5 @@
-
-const multer = require('multer');
 // Configure multer to store files in memory
+const multer = require('multer');
 const storage = multer.memoryStorage();
 const upload = multer({ storage });
 
@@ -78,7 +77,7 @@ try {
     debug("trace 1")
     const result = await commitPost(date, text, tags, title);
     if (result.res == 'ok')
-      res.render('post', result.post);
+      res.render('index', { result.res });
     else {
       let message = 'Error writing to disk';
       let error = result.error;
@@ -116,7 +115,7 @@ router.post('/edit/', async (req, res) => {
       const result = await commitPost(date, textNoMetadata, tags, title);
       console.log(result)
       if (result.res == 'ok')
-        res.render('post', result.post);
+        res.render('index', { result.res });
       else {
         let message = 'Error writing to disk';
         let error = result.error;
