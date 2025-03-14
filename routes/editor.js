@@ -77,7 +77,7 @@ try {
     debug("trace 1")
     const result = await commitPost(date, text, tags, title);
     if (result.res == 'ok')
-      res.render('index', { result.res });
+      res.render('index');
     else {
       let message = 'Error writing to disk';
       let error = result.error;
@@ -115,7 +115,7 @@ router.post('/edit/', async (req, res) => {
       const result = await commitPost(date, textNoMetadata, tags, title);
       console.log(result)
       if (result.res == 'ok')
-        res.render('index', { result.res });
+        res.render('index');
       else {
         let message = 'Error writing to disk';
         let error = result.error;
