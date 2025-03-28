@@ -18,5 +18,7 @@ block content
           label.editor-label(for="date") Select a date:
           input#dateField(type="date" name="dateField" required)
 
-
-      button.editor-submit(type="submit") Upload Image
+      button#uploadButton.editor-submit(type="submit")
+        span#buttonText Upload Image
+        span#spinner.hidden
+          i.fas.fa-spinner.fa-spin

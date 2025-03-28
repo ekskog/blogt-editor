@@ -21,7 +21,10 @@ block content
         textarea#text(name="text" rows="4" placeholder="Enter a few lines of text here..." required)
       
       .editor-submit
-        button.editor-submit(type="submit") Submit
+        button#uploadButton.editor-submit(type="submit")
+          span#buttonText Upload Image
+          span#spinner.hidden       
+          i.fas.fa-spinner.fa-spin          
 
   script.
     document.getElementById('date').addEventListener('focus', function() {

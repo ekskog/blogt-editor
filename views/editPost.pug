@@ -16,4 +16,7 @@ block content
           button.editor-submit(type="submit" name="action" value="submit") Submit
       else
         .editor-submit
-          button#loadBtn.editor-submit(type="submit" name="action" value="load") Load
+          button#uploadButton.editor-submit(type="submit")
+            span#buttonText Upload Image
+            span#spinner.hidden
+              i.fas.fa-spinner.fa-spin
