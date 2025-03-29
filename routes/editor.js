@@ -1,45 +1,46 @@
 // Configure multer to store files in memory
-const multer = require('multer');
+const multer = require("multer");
 const storage = multer.memoryStorage();
 const upload = multer({ storage });
 
-const path = require('path');
-const fs = require('fs').promises;
-var debug = require('debug')('blot-too:editor-route');
+const path = require("path");
+const fs = require("fs").promises;
+var debug = require("debug")("blot-too:editor-route");
 
 const {
   fetchBuckets,
   getUploadParams,
   uploadToMinio,
-  commitPost
-} = require('../utils/utils');
+  commitPost,
+  updateTagsDictionary,
+} = require("../utils/utils");
 
-var express = require('express');
+var express = require("express");
 var router = express.Router();
-const postsDir = path.join(__dirname, '..', 'posts');
+const postsDir = path.join(__dirname, "..", "posts");
 
 /* GET the editor land page listing. */
-router.get('/', async (req, res) => {
-  res.render('new', {});
+router.get("/", async (req, res) => {
+  res.render("new", {});
 });
 
-router.get('/imgupl', async (req, res) => {
+router.get("/imgupl", async (req, res) => {
   const buckets = await fetchBuckets();
-  res.render('imgup', { buckets });
+  res.render("imgup", { buckets });
 });
 
-router.post('/imgup', upload.single('file'), async (req, res) => {
+router.post("/imgup", upload.single("file"), async (req, res) => {
   try {
     const file = req.file;
 
     if (!file) {
-      return res.status(400).send('No file uploaded.');
+      return res.status(400).send("No file uploaded.");
     }
 
-    const [year, month, day] = req.body.dateField.split('-');
+    const [year, month, day] = req.body.dateField.split("-");
     var fileName = `${day}.jpeg` || file.originalname;
 
-    const bucketName = 'blotpix';
+    const bucketName = "blotpix";
     var folderPath = `${year}/${month}`;
 
     const calculatedParams = await getUploadParams();
@@ -49,32 +50,32 @@ router.post('/imgup', upload.single('file'), async (req, res) => {
       folderPath = calculatedParams.filePath;
     }
 
-    if (bucketName === 'blotpix' && !fileName) {
+    if (bucketName === "blotpix" && !fileName) {
       fileName = calculatedParams.fileName;
     }
 
     // Log the buffer to ensure it's present
-    debug('File buffer length:', file.buffer.length);
+    debug("File buffer length:", file.buffer.length);
 
     // Upload to MinIO (assuming the utility function works as expected)
     const result = await uploadToMinio(file, bucketName, folderPath, fileName);
-    debug('Upload result:', result);
+    debug("Upload result:", result);
 
-    res.render('index', { result });
+    res.render("index", { result });
   } catch (error) {
-    console.error('Error handling file upload:', error);
-    res.status(500).send('Error uploading file.');
+    console.error("Error handling file upload:", error);
+    res.status(500).send("Error uploading file.");
   }
 });
 
 // CREATE a new blog post
+/*
 router.post('/', async (req, res) => {
 
   // Extract date and text from the request body
   const { date, text, tags, title } = req.body;
 
 try {
-    debug("trace 1")
     const result = await commitPost(date, text, tags, title);
     if (result.res == 'ok')
       res.render('index');
@@ -89,56 +90,90 @@ try {
     res.render('error', { error, message });
   }
 });
+*/
 
+router.post("/", async (req, res) => {
+  // Extract date and text from the request body
+  const { date, text, tags, title } = req.body;
+
+  try {
+    // First commit the post to the filesystem
+    const postResult = await commitPost(date, text, tags, title);
+
+    if (postResult.res !== "ok") {
+      let message = "Error writing post to disk";
+      let error = postResult.error;
+      return res.render("error", { error, message });
+    }
+
+    // Then update the tags dictionary
+    const tagsResult = await updateTagsDictionary(date, title, tags);
+
+    if (tagsResult.status !== "ok") {
+      debug(
+        "Warning: Post was saved but tags dictionary update failed:",
+        tagsResult.error
+      );
+      // You might want to log this error but still consider the post creation successful
+    }
+
+    res.render("index");
+  } catch (error) {
+    debug(error);
+    let message = "Error processing request";
+    res.render("error", { error, message });
+  }
+});
 
 // EDIT an existing blog post
-router.get('/edit/', async (req, res) => {
-  res.render('editPost', {
-    post: {}
+router.get("/edit/", async (req, res) => {
+  res.render("editPost", {
+    post: {},
   });
 });
 
-router.post('/edit/', async (req, res) => {
+router.post("/edit/", async (req, res) => {
   const { date, text, action, uploadImage } = req.body;
-  const [year, month, day] = date.split('-');
+  const [year, month, day] = date.split("-");
 
-  if (action === 'submit') {
+  if (action === "submit") {
     try {
       const tagsMatch = text.match(/^Tags:\s*(.+)$/m);
       const titleMatch = text.match(/^Title:\s*(.+)$/m);
-      
-      const tags = tagsMatch ? tagsMatch[1] : '';
-      const title = titleMatch ? titleMatch[1] : ''
 
-      const textNoMetadata = text.replace(/^(Date:|Tags:|Title:).*$/gm, '').trim();
+      const tags = tagsMatch ? tagsMatch[1] : "";
+      const title = titleMatch ? titleMatch[1] : "";
+
+      const textNoMetadata = text
+        .replace(/^(Date:|Tags:|Title:).*$/gm, "")
+        .trim();
 
       const result = await commitPost(date, textNoMetadata, tags, title);
-      console.log(result)
-      if (result.res == 'ok')
-        res.render('index');
+      console.log(result);
+      if (result.res == "ok") res.render("index");
       else {
-        let message = 'Error writing to disk';
+        let message = "Error writing to disk";
         let error = result.error;
-        res.render('error', { error, message });
+        res.render("error", { error, message });
       }
     } catch (error) {
-      let message = 'Error writing to disk';
-      res.render('error', { error, message });
+      let message = "Error writing to disk";
+      res.render("error", { error, message });
     }
-  } else if (action === 'load') {
+  } else if (action === "load") {
     try {
       const filePath = path.join(postsDir, year, month, `${day}.md`);
-      const fileContent = await fs.readFile(filePath, 'utf8');
+      const fileContent = await fs.readFile(filePath, "utf8");
       // Render edit page with existing content
-      res.render('editPost', {
+      res.render("editPost", {
         post: {
           date,
-          content: fileContent
-        }
+          content: fileContent,
+        },
       });
     } catch (error) {
-      console.error('Error reading post for editing:', error);
-      res.render('error', { error: 'Post not found' });
+      console.error("Error reading post for editing:", error);
+      res.render("error", { error: "Post not found" });
     }
   }
 });

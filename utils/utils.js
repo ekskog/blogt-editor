@@ -1,11 +1,13 @@
 const path = require("path");
 require("dotenv").config();
 const fs = require("fs").promises;
-const postsDir = path.join(__dirname, "..", "posts");
+const POSTS_PATH = path.join(__dirname, "..", "posts");
+const TAGS_FILE_PATH = path.join(__dirname, '../data/tags.json');
+
 const sharp = require("sharp");
 const crypto = require("crypto");
 const { marked } = require("marked");
-var debug = require("debug");
+const debug = require('debug')('blog:tags');
 
 const Minio = require("minio");
 var buckets = ["bollox"];
@@ -64,15 +66,15 @@ const findLatestPost = async () => {
   let latestPostPath = null;
 
   try {
-    const years = await fs.readdir(postsDir);
+    const years = await fs.readdir(POSTS_PATH);
     for (const year of years) {
       // Only proceed if it's a directory
-      const yearPath = path.join(postsDir, year);
+      const yearPath = path.join(POSTS_PATH, year);
       if (!(await fs.stat(yearPath)).isDirectory()) {
         continue;
       }
 
-      const monthsDir = path.join(postsDir, year);
+      const monthsDir = path.join(POSTS_PATH, year);
       const months = await fs.readdir(monthsDir);
 
       for (const month of months) {
@@ -129,7 +131,7 @@ async function getNext(dateString) {
     const nextYear = date.getFullYear().toString();
     const nextMonth = (date.getMonth() + 1).toString().padStart(2, "0");
     const nextDay = date.getDate().toString().padStart(2, "0");
-    const filePath = path.join(postsDir, nextYear, nextMonth, `${nextDay}.md`);
+    const filePath = path.join(POSTS_PATH, nextYear, nextMonth, `${nextDay}.md`);
 
     try {
       await fs.access(filePath);
@@ -155,7 +157,7 @@ async function getPrev(dateString) {
     const prevYear = date.getFullYear().toString();
     const prevMonth = (date.getMonth() + 1).toString().padStart(2, "0");
     const prevDay = date.getDate().toString().padStart(2, "0");
-    const filePath = path.join(postsDir, prevYear, prevMonth, `${prevDay}.md`);
+    const filePath = path.join(POSTS_PATH, prevYear, prevMonth, `${prevDay}.md`);
 
     try {
       await fs.access(filePath);
@@ -187,7 +189,7 @@ const commitPost = async (date, text, tags, title) => {
 
   try {
     // Define the file path
-    let dirPath = path.join(postsDir, year, month);
+    let dirPath = path.join(POSTS_PATH, year, month);
     let filePath = path.join(dirPath, `${day}.md`);
 
     // Ensure the directory exists
@@ -223,6 +225,60 @@ const commitPost = async (date, text, tags, title) => {
   }
 };
 
+async function updateTagsDictionary(date, title, tagsString) {
+  try {
+    // 1. Read existing tags file
+    let tagsDict = {};
+    try {
+      const data = await fs.readFile(TAGS_FILE_PATH, 'utf8');
+      tagsDict = JSON.parse(data);
+    } catch (error) {
+      if (error.code !== 'ENOENT') {
+        throw error;
+      }
+      // File doesn't exist, we'll create a new one
+      debug('Tags file not found, creating new dictionary');
+    }
+
+    // 2. Parse tags from the input string
+    const tagsList = tagsString
+      .split(',')
+      .map(tag => tag.trim().toLowerCase())
+      .filter(tag => tag.length > 0);
+
+    // 3. Update the dictionary with new post information
+    const postInfo = {
+      date,
+      title
+    };
+
+    tagsList.forEach(tag => {
+      if (!tagsDict[tag]) {
+        tagsDict[tag] = [];
+      }
+      
+      // Check if this post is already listed under this tag
+      const isDuplicate = tagsDict[tag].some(post => 
+        post.date === date && post.title === title
+      );
+      
+      if (!isDuplicate) {
+        tagsDict[tag].push(postInfo);
+      }
+    });
+
+    // 4. Save the updated dictionary back to the file
+    await fs.writeFile(TAGS_FILE_PATH, JSON.stringify(tagsDict, null, 2), 'utf8');
+    
+    return { status: 'ok' };
+  } catch (error) {
+    debug('Error updating tags dictionary:', error);
+    return { 
+      status: 'error', 
+      error: error.message 
+    };
+  }
+}
 async function main() {
   try {
     bucketsList = await minioClient.listBuckets();
@@ -249,4 +305,5 @@ module.exports = {
   getUploadParams,
   uploadToMinio,
   commitPost,
+  updateTagsDictionary
 };
