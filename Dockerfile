@@ -1,5 +1,5 @@
 # Use an official Node.js runtime as the base image
-FROM node:lts-apline
+FROM node:lts-alpine
 
 # Set working directory
 WORKDIR /app
