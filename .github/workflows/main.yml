@@ -34,7 +34,7 @@ jobs:
                     
       - name: Deploy to Kubernetes
         run: |
-          IMAGE_NAME=ghcr.io/ekskog/blogteditor
+          IMAGE_NAME=ghcr.io/ekskog/blogt-editor
           IMAGE_TAG=$IMAGE_NAME:${{ env.TIMESTAMP }}
           echo "Resolved IMAGE_TAG: $IMAGE_TAG"
           kubectl set image deployment/blogt-editor blogt-editor=$IMAGE_TAG --namespace=webapps --kubeconfig=$PWD/kubeconfig.yaml
