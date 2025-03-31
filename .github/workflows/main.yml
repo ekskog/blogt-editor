@@ -37,5 +37,5 @@ jobs:
           IMAGE_NAME=ghcr.io/ekskog/blogteditor
           IMAGE_TAG=$IMAGE_NAME:${{ env.TIMESTAMP }}
           echo "Resolved IMAGE_TAG: $IMAGE_TAG"
-          kubectl set image deployment/blogt-editor blogt-frontend=$IMAGE_TAG --namespace=webapps --kubeconfig=$PWD/kubeconfig.yaml
+          kubectl set image deployment/blogt-editor blogt-editor=$IMAGE_TAG --namespace=webapps --kubeconfig=$PWD/kubeconfig.yaml
           kubectl rollout restart deployment/blogt-editor --namespace=webapps --kubeconfig=$PWD/kubeconfig.yaml
