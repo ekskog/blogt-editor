@@ -4,7 +4,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   if (sunbatheBtn && form) {
     sunbatheBtn.addEventListener("click", () => {
-      alert("The form is now sunbathed! 🌞");
+      alert("The form is now sunbathed!");
       form.style.backgroundColor = "#fdf6e3"; // Simulate sunbathing by changing form background color.
     });
   } else {
