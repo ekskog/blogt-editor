@@ -18,7 +18,6 @@ const minioParams = {
   accessKey: process.env.MINIO_ACCESS_KEY,
   secretKey: process.env.MINIO_SECRET_KEY,
 };
-console.log(minioParams);
 
 const minioClient = new Minio.Client(minioParams);
 
@@ -286,7 +285,7 @@ async function main() {
     console.log("Buckets:", buckets);
   } catch (err) {
     console.log("Error fetching buckets:", err);
-    throw new Error("Could not retrieve post files");
+    throw new Error("Could not buckets");
   }
 }
 

@@ -149,7 +149,6 @@ router.post("/edit/", async (req, res) => {
         .trim();
 
       const result = await commitPost(date, textNoMetadata, tags, title);
-      console.log(result);
       if (result.res == "ok") res.render("index");
       else {
         let message = "Error writing to disk";
