@@ -11,7 +11,12 @@ COPY package*.json ./
 RUN npm ci --only=production
 
 # Copy app source code
-COPY . .
+COPY app.js .
+COPY public/ ./public
+COPY routes ./routes
+COPY utils ./utils
+COPY views ./views
+COPY bin ./bin
 
 # Set environment variables
 ENV NODE_ENV=production
