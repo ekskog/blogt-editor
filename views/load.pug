@@ -1,0 +1,12 @@
+extends layout
+
+block content
+  .editor-container
+    h2 Edit Blog Post
+    
+    form#editorForm(action="/editor/load" method="POST")
+      .editor-form-group
+        label.editor-label(for="date") Editing the post for
+        input#date(type="date" name="date" value=post.date required)
+      .editor-submit
+        button.editor-submit(type="submit") Load Post

@@ -68,33 +68,10 @@ router.post("/imgup", upload.single("file"), async (req, res) => {
   }
 });
 
-// CREATE a new blog post
-/*
-router.post('/', async (req, res) => {
-
-  // Extract date and text from the request body
-  const { date, text, tags, title } = req.body;
-
-try {
-    const result = await commitPost(date, text, tags, title);
-    if (result.res == 'ok')
-      res.render('index');
-    else {
-      let message = 'Error writing to disk';
-      let error = result.error;
-      res.render('error', { error, message });
-    }
-  } catch (error) {
-    debug(error)
-    let message = 'Error writing to disk';
-    res.render('error', { error, message });
-  }
-});
-*/
-
 router.post("/", async (req, res) => {
   // Extract date and text from the request body
   const { date, text, tags, title } = req.body;
+  console.log(req.body);
 
   try {
     // First commit the post to the filesystem
@@ -127,53 +104,56 @@ router.post("/", async (req, res) => {
 
 // EDIT an existing blog post
 router.get("/edit/", async (req, res) => {
-  res.render("editPost", {
+  res.render("load", {
     post: {},
   });
 });
 
-router.post("/edit/", async (req, res) => {
-  const { date, text, action, uploadImage } = req.body;
+router.post("/load/", async (req, res) => {
+  const { date } = req.body;
   const [year, month, day] = date.split("-");
 
-  if (action === "submit") {
-    try {
-      const tagsMatch = text.match(/^Tags:\s*(.+)$/m);
-      const titleMatch = text.match(/^Title:\s*(.+)$/m);
+  try {
+    const filePath = path.join(postsDir, year, month, `${day}.md`);
+    const fileContent = await fs.readFile(filePath, "utf8");
+    // Render edit page with existing content
+    res.render("edit", {
+      post: {
+        date,
+        content: fileContent,
+      },
+    });
+  } catch (error) {
+    console.error("Error reading post for editing:", error);
+    res.render("error", { error: "Post not found" });
+  }
+});
 
-      const tags = tagsMatch ? tagsMatch[1] : "";
-      const title = titleMatch ? titleMatch[1] : "";
+router.post("/edit/", async (req, res) => {
+  const { date, text } = req.body;
 
-      const textNoMetadata = text
-        .replace(/^(Date:|Tags:|Title:).*$/gm, "")
-        .trim();
+  try {
+    const tagsMatch = text.match(/^Tags:\s*(.+)$/m);
+    const titleMatch = text.match(/^Title:\s*(.+)$/m);
 
-      const result = await commitPost(date, textNoMetadata, tags, title);
-      if (result.res == "ok") res.render("index");
-      else {
-        let message = "Error writing to disk";
-        let error = result.error;
-        res.render("error", { error, message });
-      }
-    } catch (error) {
+    const tags = tagsMatch ? tagsMatch[1] : "";
+    const title = titleMatch ? titleMatch[1] : "";
+
+    const textNoMetadata = text
+      .replace(/^(Date:|Tags:|Title:).*$/gm, "")
+      .trim();
+
+    const result = await commitPost(date, textNoMetadata, tags, title);
+    
+    if (result.res == "ok") res.render("index");
+    else {
       let message = "Error writing to disk";
+      let error = result.error;
       res.render("error", { error, message });
     }
-  } else if (action === "load") {
-    try {
-      const filePath = path.join(postsDir, year, month, `${day}.md`);
-      const fileContent = await fs.readFile(filePath, "utf8");
-      // Render edit page with existing content
-      res.render("editPost", {
-        post: {
-          date,
-          content: fileContent,
-        },
-      });
-    } catch (error) {
-      console.error("Error reading post for editing:", error);
-      res.render("error", { error: "Post not found" });
-    }
+  } catch (error) {
+    let message = "Error writing to disk";
+    res.render("error", { error, message });
   }
 });
 

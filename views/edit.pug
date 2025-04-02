@@ -3,20 +3,21 @@ extends layout
 block content
   .editor-container
     h2 Edit Blog Post
+    
     form#editorForm(action="/editor/edit" method="POST")
       .editor-form-group
         label.editor-label(for="date") Editing the post for
-        input#date(type="date" name="date" value=post.date)
+        input#date(type="date" name="date" value=post.date required)
       
       if post.date 
+        //- Only show content editor when a date has been selected and content loaded
         .editor-form-group
           label.editor-label(for="text") Post Content
           textarea#text(name="text" rows="15")= post.content          
         .editor-submit
-          button.editor-submit(type="submit" name="action" value="submit") Submit
+          input(type="hidden" name="action" value="submit")
+          button.editor-submit(type="submit") Submit
       else
+        //- First step - just date selection and load button
         .editor-submit
-          button#uploadButton.editor-submit(type="submit")
-            span#buttonText Upload
-            span#spinner.hidden
-              i.fas.fa-spinner.fa-spin
+          button.editor-submit(type="submit") Load Post
