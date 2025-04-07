@@ -15,11 +15,11 @@
     box-shadow: 0 4px 6px rgba(0,0,0,0.1);
   }
   
-  .form-group {
+  .editor-form-group {
     margin-bottom: 20px;
   }
   
-  .form-control {
+  .editor-form-control {
     width: 90%;
     padding: 10px;
     border: 1px solid #ced4da;
@@ -27,7 +27,7 @@
     font-size: 16px;
   }
   
-  .form-actions {
+  .editor-form-actions {
     display: flex;
     justify-content: space-between;
     margin-top: 20px;
@@ -80,9 +80,6 @@
     min-height: 300px;
   }
 
-  .editor-form-group {
-    margin-bottom: 15px;
-  }
   editor-label {
     display: block;
     margin-bottom: 5px;

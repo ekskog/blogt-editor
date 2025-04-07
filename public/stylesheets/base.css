@@ -1,30 +1,331 @@
 /* base.css - Basic styles and typography */
 body {
-    font: 12px/1.8 'Roboto', Arial, sans-serif;
-    color: #111;
-    word-wrap: break-word;
-    position: relative;
-    margin: 7em auto;
-    min-height: 100vh;
-    display: flex;
-    flex-direction: column;
+  font: 12px/1.8 'Roboto', Arial, sans-serif;
+  color: #111;
+  word-wrap: break-word;
+  position: relative;
+  margin: 7em auto;
+  flex-direction: column;
+}
+
+h2 {
+  font-size: 14px;
+  text-transform: uppercase;
+  letter-spacing: 1.7325px;
+  font-weight: 400;
+  margin-bottom: 1em;
+}
+
+a {
+  color: #700170;
+  text-decoration: none;
+}
+
+img {
+  max-width: 100%;
+  height: auto;
+}
+
+.main-content {
+  width: 100%;
+  max-width: 600px;
+  height: auto;
+  margin: 0 auto;
+  padding: 0 10px;
+  display: flex;
+  flex: 1;
+  border: 1px solid black;
+  justify-content: center;
+  align-items: center;
+}
+
+.error-content h2 {
+  font-size: 14px;
+  text-transform: uppercase;
+  letter-spacing: 1.7325px;
+  font-weight: 400;
+  margin-bottom: 1em;
+  text-align: center;
+  min-height: 0;
+  height: auto;
+}
+/* Edit Post Styles */
+
+.editor-container {
+  width: 100%;
+  max-width: 600px;
+  height: auto;
+  margin: 0 auto;
+  box-sizing: border-box;
+}
+
+.edit-post-form {
+  background-color: #f8f9fa;
+  padding: 30px;
+  border-radius: 8px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.editor-form-group {
+  margin-bottom: 20px;
+}
+
+.editor-form-control {
+  width: 90%;
+  padding: 10px;
+  border: 1px solid #ced4da;
+  border-radius: 4px;
+  font-size: 16px;
+}
+
+.editor-form-actions {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 20px;
+  padding-bottom: 20px; /* Add padding below the button */
+}
+
+.btn {
+  padding: 10px 20px;
+  border-radius: 4px;
+  text-decoration: none;
+  transition: background-color 0.3s ease;
+}
+
+.btn-primary {
+  background-color: #007bff;
+  color: white;
+  border: none;
+}
+
+.btn-primary:hover {
+  background-color: #0056b3;
+}
+
+.btn-secondary {
+  height: 100%;
+  background-color: #6c757d;
+  color: white;
+  border: none;
+}
+
+.btn-secondary:hover {
+  background-color: #545b62;
+}
+
+.help-text {
+  color: #6c757d;
+  font-size: 0.9em;
+  margin-bottom: 10px;
+}
+
+.format-example {
+  background-color: #e9ecef;
+  padding: 15px;
+  border-radius: 4px;
+  margin-bottom: 15px;
+  font-family: monospace;
+}
+
+textarea {
+  resize: vertical;
+  min-height: 300px;
+}
+
+editor-label {
+  display: block;
+  margin-bottom: 5px;
+}
+
+input[type="date"],
+textarea {
+  width: 100%;
+  padding: 8px;
+  box-sizing: border-box;
+}
+
+input[type="tags"],
+input {
+  width: 100%;
+  padding: 8px;
+  box-sizing: border-box;
+}
+
+input[type="title"],
+input {
+  width: 100%;
+  padding: 8px;
+  box-sizing: border-box;
+}
+
+.editor-submit {
+  display: flex;
+  justify-content: flex-end;
+}
+
+editor-button[type="submit"] {
+  padding: 10px 20px;
+  color: white;
+  border: none;
+}
+
+
+/* Top navigation */
+.top-nav {
+  width: 100%;
+  max-width: 600px;
+  padding: 1rem 0;
+  margin: 0 auto 2rem auto;
+  border: 1px solid black;
+  padding-left: 10px;
+  padding-right: 10px;
+}
+
+.nav-content {
+  width: 100%;
+  max-width: 600px;
+  margin: 0 auto;
+  padding: 0 1rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  box-sizing: border-box;
+}
+
+.menu-logo-container {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  width: auto;
+}
+
+.nav-links {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+}
+
+.nav-links a {
+  text-decoration: none;
+  color: inherit;
+  padding: 0.25rem;
+  margin-left: 1rem;
+}
+
+.logo {
+  display: flex;
+  align-items: center;
+  text-decoration: none;
+  color: inherit;
+}
+
+.logo span {
+  margin-left: 0.5rem;
+}
+
+.hamburger-menu {
+  display: none;
+  background: none;
+  border: none;
+  font-size: 24px;
+  cursor: pointer;
+  padding: 10px;
+  margin-right: 10px;
+}
+
+/* Footer styles */
+footer {
+  width: 100%;
+  text-align: center;
+  padding: 80px 0;
+  margin-top: auto;
+}
+
+/* Mobile responsive styles */
+@media (max-width: 768px) {
+  body {
+    margin: 0 20px;
+    /* Add margin to entire body on mobile */
+    padding-top: 15px;
+    /* Add padding to the top of the body */
   }
-  
-  h2 {
-    font-size: 14px;
-    text-transform: uppercase;
-    letter-spacing: 1.7325px;
-    font-weight: 400;
-    margin-bottom: 1em;
-    font-family: 'Gill Sans MT', 'Gill Sans', 'Gill Sans Std', Verdana, 'Bitstream Vera Sans', sans-serif;
-  }
-  
-  a {
-    color: #700170;
-    text-decoration: none;
-  }
-  
-  img {
+
+  .main-content,
+  .top-nav {
     max-width: 100%;
-    height: auto;
+    margin-left: 0;
+    margin-right: 0;
+    box-sizing: border-box;
   }
+
+  .top-nav {
+    padding-top: 15px;
+    /* Add padding to the top of the navbar */
+  }
+
+  .nav-content {
+    max-width: 100%;
+    flex-wrap: wrap;
+    position: relative;
+    /* For positioning the dropdown */
+  }
+
+  .menu-logo-container {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+  }
+
+  .hamburger-menu {
+    display: block;
+  }
+
+  /* Mobile menu links container */
+  .nav-links {
+    display: none;
+    flex-direction: column !important;
+    align-items: flex-start !important;
+
+    /* Position the box */
+    position: absolute;
+    top: 100%;
+    left: 0;
+
+    /* Size the box to content */
+    width: auto !important;
+    min-width: 150px;
+    /* Minimum width for the menu box */
+
+    /* Styling */
+    margin-top: 10px;
+    border: 1px solid black;
+    padding: 10px;
+    background-color: white;
+    /* Add background to prevent see-through */
+    box-sizing: border-box;
+    z-index: 100;
+    /* Ensure it appears above other content */
+  }
+
+  .nav-links.active {
+    display: flex;
+  }
+
+  /* Individual menu items */
+  .nav-links a,
+  .nav-links .menu-item {
+    display: block !important;
+    width: 100% !important;
+    margin-left: 0 !important;
+    margin-bottom: 10px !important;
+    padding: 5px 0 !important;
+    white-space: nowrap;
+    /* Prevent text wrapping */
+  }
+
+  /* Remove bottom margin from last menu item */
+  .nav-links a:last-child,
+  .nav-links .menu-item:last-child {
+    margin-bottom: 0 !important;
+  }
+}

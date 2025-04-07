@@ -124,8 +124,7 @@ router.post("/load/", async (req, res) => {
       },
     });
   } catch (error) {
-    console.error("Error reading post for editing:", error);
-    res.render("error", { error: "Post not found" });
+    res.render("error", { message: error.code });
   }
 });
 

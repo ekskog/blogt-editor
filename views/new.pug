@@ -20,10 +20,10 @@ block content
         label.editor-label(for="text") Enter your text:
         textarea#text(name="text" rows="4" placeholder="Enter a few lines of text here..." required)
       
-      .editor-submit
-        button#uploadButton.editor-submit(type="submit")
-          span#buttonText Submit
-          span#spinner.hidden       
+      
+      .editor-form-actions
+        button.submit-btn(type="submit") Submit
+
 
   script.
     document.getElementById('date').addEventListener('focus', function() {

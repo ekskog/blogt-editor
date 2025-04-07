@@ -1,6 +1,7 @@
 extends layout
 
 block content
+  .editor-container
     form.login-form(action="/login" method="POST")
       h2 Login to Editor
       
@@ -9,7 +10,7 @@ block content
       
       input(type="hidden" name="returnTo" value=returnTo)
       
-      .form-group
+      .editor-form-group
         label(for="username") Username
         input#username.form-control(
           type="text" 
@@ -18,7 +19,7 @@ block content
           placeholder="Enter your username"
         )
       
-      .form-group
+      .editor-form-group
         label(for="password") Password
         input#password.form-control(
           type="password" 
@@ -27,5 +28,5 @@ block content
           placeholder="Enter your password"
         )
       
-      .form-actions
+      .editor-form-actions
         button.submit-btn(type="submit") Login
