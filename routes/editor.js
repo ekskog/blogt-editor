@@ -5,7 +5,7 @@ const upload = multer({ storage });
 
 const path = require("path");
 const fs = require("fs").promises;
-var debug = require("debug")("blot-too:editor-route");
+const debug = require("debug")("blogt-editor:editor-route");
 
 const {
   fetchBuckets,
@@ -71,7 +71,6 @@ router.post("/imgup", upload.single("file"), async (req, res) => {
 router.post("/", async (req, res) => {
   // Extract date and text from the request body
   const { date, text, tags, title } = req.body;
-  console.log(req.body);
 
   try {
     // First commit the post to the filesystem
@@ -85,6 +84,7 @@ router.post("/", async (req, res) => {
 
     // Then update the tags dictionary
     const tagsResult = await updateTagsDictionary(date, title, tags);
+    debug("Tags result:", tagsResult);
 
     if (tagsResult.status !== "ok") {
       debug(

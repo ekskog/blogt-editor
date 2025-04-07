@@ -4,8 +4,7 @@
   "private": true,
   "scripts": {
     "build": "pkg . --out-path dist",
-    "start": "node ./bin/www",
-    "debug": "DEBUG=blot-too,-express:* ./bin/www"
+    "start": "node ./bin/www"
   },
   "bin": {
     "blot-too": "./bin/www"

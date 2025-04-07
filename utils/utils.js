@@ -7,7 +7,7 @@ const TAGS_FILE_PATH = path.join(__dirname, '../data/tags.json');
 const sharp = require("sharp");
 const crypto = require("crypto");
 const { marked } = require("marked");
-const debug = require('debug')('blog:tags');
+const debug = require("debug")("blogt-editor:utils");
 
 const Minio = require("minio");
 var buckets = ["bollox"];
@@ -251,9 +251,12 @@ async function updateTagsDictionary(date, title, tagsString) {
       title
     };
 
+    debug('Post info:', postInfo);
+
     tagsList.forEach(tag => {
       if (!tagsDict[tag]) {
         tagsDict[tag] = [];
+        debug(`Creating new tag entry for: ${tag}`);
       }
       
       // Check if this post is already listed under this tag
@@ -263,6 +266,7 @@ async function updateTagsDictionary(date, title, tagsString) {
       
       if (!isDuplicate) {
         tagsDict[tag].push(postInfo);
+        debug(`Adding post to tag: ${tag}`);
       }
     });
 
@@ -282,9 +286,9 @@ async function main() {
   try {
     bucketsList = await minioClient.listBuckets();
     buckets = bucketsList.map((bucket) => bucket.name);
-    console.log("Buckets:", buckets);
+    debug("Buckets:", buckets);
   } catch (err) {
-    console.log("Error fetching buckets:", err);
+    console.error("Error fetching buckets:", err);
     throw new Error("Could not buckets");
   }
 }

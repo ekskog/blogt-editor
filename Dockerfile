@@ -21,10 +21,10 @@ COPY bin ./bin
 # Set environment variables
 ENV NODE_ENV=production
 # ENV PORT=3000
-ENV DEBUG="*:,-express"
+ENV DEBUG="blogt-editor*"
 
 # Expose the port the app runs on
 EXPOSE 3000
 
 # Start the app
-CMD ["npm", "run", "debug"]
+CMD ["npm", "start"]

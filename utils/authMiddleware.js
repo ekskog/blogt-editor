@@ -1,5 +1,6 @@
 const session = require('express-session');
 require('dotenv').config();
+const debug = require("debug")("blogt-editor:authMW");
 
 function requireLogin(req, res, next) {
     if (req.session && req.session.isAuthenticated) {
