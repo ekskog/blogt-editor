@@ -1,0 +1,56 @@
+/* Mobile-specific styles - UI improvements only */
+@media (max-width: 768px) {
+  /* Fix date input fields extending outside containers */
+  input[type="date"] {
+    width: 100%;
+    max-width: 100%;
+    padding: 8px;
+    font-size: 16px; /* Prevent iOS zoom */
+    box-sizing: border-box;
+    min-height: 44px; /* Better touch target */
+  }
+
+  /* Improve form layout on mobile */
+  .editor-container {
+    padding: 0.5rem;
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
+  }
+
+  .edit-post-form {
+    padding: 15px;
+  }
+
+  /* Better text inputs on mobile */
+  input, textarea, select {
+    font-size: 16px; /* Prevent iOS zoom */
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
+  }
+
+  /* Improve textarea on mobile */
+  textarea {
+    min-height: 200px;
+    font-size: 16px;
+    line-height: 1.5;
+  }
+
+  /* Better form actions layout */
+  .editor-form-actions {
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .editor-form-actions button,
+  .editor-form-actions a,
+  .editor-form-actions .btn {
+    width: 100%;
+    margin-bottom: 10px;
+    text-align: center;
+    min-height: 44px; /* Better touch target */
+    padding: 12px 20px;
+    box-sizing: border-box;
+  }
+}

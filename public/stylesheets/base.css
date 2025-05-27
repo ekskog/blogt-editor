@@ -90,12 +90,16 @@ img {
   border-radius: 4px;
   text-decoration: none;
   transition: background-color 0.3s ease;
+  border: none;
+  cursor: pointer;
+  display: inline-block;
+  text-align: center;
+  font-size: 16px;
 }
 
 .btn-primary {
   background-color: #007bff;
   color: white;
-  border: none;
 }
 
 .btn-primary:hover {
@@ -103,14 +107,33 @@ img {
 }
 
 .btn-secondary {
-  height: 100%;
   background-color: #6c757d;
   color: white;
-  border: none;
+  text-decoration: none;
 }
 
 .btn-secondary:hover {
   background-color: #545b62;
+}
+
+.submit-btn {
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  padding: 10px 20px;
+  font-size: 16px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.submit-btn:hover {
+  background-color: #0056b3;
+}
+
+.submit-btn:disabled {
+  background-color: #6c757d;
+  cursor: not-allowed;
 }
 
 .help-text {
@@ -127,35 +150,40 @@ img {
   font-family: monospace;
 }
 
-textarea {
-  resize: vertical;
-  min-height: 300px;
-}
-
 editor-label {
   display: block;
   margin-bottom: 5px;
 }
 
-input[type="date"],
+input[type="date"] {
+  width: 100%;
+  padding: 8px;
+  box-sizing: border-box;
+  max-width: 100%;
+}
+
 textarea {
   width: 100%;
   padding: 8px;
   box-sizing: border-box;
+  border: 1px solid #ced4da;
+  border-radius: 4px;
+  font-size: 16px;
+  resize: vertical;
+  min-height: 300px;
 }
 
-input[type="tags"],
+/* General input styling for text inputs, title, tags, etc. */
+input[type="text"],
+input[name="tags"],
+input[name="title"],
 input {
   width: 100%;
   padding: 8px;
   box-sizing: border-box;
-}
-
-input[type="title"],
-input {
-  width: 100%;
-  padding: 8px;
-  box-sizing: border-box;
+  border: 1px solid #ced4da;
+  border-radius: 4px;
+  font-size: 16px;
 }
 
 .editor-submit {
@@ -241,13 +269,22 @@ footer {
   margin-top: auto;
 }
 
+/* Date display for edit mode */
+.date-display {
+  background-color: #f8f9fa;
+  padding: 8px 12px;
+  border: 1px solid #e9ecef;
+  border-radius: 4px;
+  margin: 0;
+  font-size: 16px;
+  color: #495057;
+}
+
 /* Mobile responsive styles */
 @media (max-width: 768px) {
   body {
-    margin: 0 20px;
-    /* Add margin to entire body on mobile */
-    padding-top: 15px;
-    /* Add padding to the top of the body */
+    margin: 2em auto;
+    padding: 0 15px;
   }
 
   .main-content,

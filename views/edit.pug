@@ -6,12 +6,14 @@ block content
     
     form#editorForm(action="/editor/edit" method="POST")
       .editor-form-group
-        label.editor-label(for="date") Editing the post for
-        input#date(type="date" name="date" value=post.date required)
+        label.editor-label Editing the post for
+        p.date-display= post.date
+        input(type="hidden" name="date" value=post.date)
       .editor-form-group
         label.editor-label(for="text") Post Content
         textarea#text(name="text" rows="15")= post.content          
       
       .editor-form-actions
+        a.btn.btn-secondary(href="/editor/edit") Cancel
         button.submit-btn(type="submit") Save Changes
         
