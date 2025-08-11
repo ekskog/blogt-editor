@@ -14,7 +14,10 @@ jobs:
         uses: actions/checkout@v2
 
       - name: Define Environment Variables
-        run: echo "TIMESTAMP=$(date +%Y%m%d%H%M%S)" >> $GITHUB_ENV
+        run: |
+          TIMESTAMP=$(date +%Y%m%d%H%M%S)
+          echo "TIMESTAMP=$TIMESTAMP" >> $GITHUB_ENV
+          export TIMESTAMP
 
       - name: Login to GitHub Container Registry
         run: docker login ghcr.io -u $GITHUB_ACTOR --password ${{ secrets.EK_GITHUB_PAT }}
@@ -22,9 +25,11 @@ jobs:
       - name: Build and Push Docker Image
         run: |
           IMAGE_NAME=ghcr.io/ekskog/blogt-editor
-          IMAGE_TAG=$IMAGE_NAME:${{ env.TIMESTAMP }}
+          IMAGE_TAG=$IMAGE_NAME:$TIMESTAMP
+          LATEST_TAG=$IMAGE_NAME:latest
           echo "Resolved IMAGE_TAG: $IMAGE_TAG"
-          docker buildx build --platform linux/amd64 -t $IMAGE_TAG --push .
+          echo "Resolved LATEST_TAG: $LATEST_TAG"
+          docker buildx build --platform linux/amd64 -t $IMAGE_TAG -t $LATEST_TAG --push .
       
       - name: Set Up KUBECONFIG
         run: |
@@ -37,5 +42,5 @@ jobs:
           IMAGE_NAME=ghcr.io/ekskog/blogt-editor
           IMAGE_TAG=$IMAGE_NAME:${{ env.TIMESTAMP }}
           echo "Resolved IMAGE_TAG: $IMAGE_TAG"
-          kubectl set image deployment/blogt-editor blogt-editor=$IMAGE_TAG --namespace=webapps --kubeconfig=$PWD/kubeconfig.yaml
-          kubectl rollout restart deployment/blogt-editor --namespace=webapps --kubeconfig=$PWD/kubeconfig.yaml
+          kubectl set image deployment/blogt-editor blogt-editor=$IMAGE_TAG --namespace=blogt --kubeconfig=$PWD/kubeconfig.yaml
+          kubectl rollout restart deployment/blogt-editor --namespace=blogt --kubeconfig=$PWD/kubeconfig.yaml

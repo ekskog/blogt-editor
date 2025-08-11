@@ -65,6 +65,11 @@ app.use(robots({
 
 app.use(logger('dev'));
 
+// Add a health endpoint for Kubernetes probes
+app.get('/health', (req, res) => {
+  res.status(200).send('OK');
+});
+
 // Catch 404 and forward to error handler
 app.use((req, res, next) => {
   next(createError(404));

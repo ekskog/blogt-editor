@@ -1,0 +1,100 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  namespace: blogt
+  name: blogt-editor
+  labels:
+    app: blogt-editor
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: blogt-editor
+  template:
+    metadata:
+      labels:
+        app: blogt-editor
+    spec:
+      hostAliases:
+      - ip: "192.168.1.8"
+        hostnames:
+        - "mjolnir"
+      - ip: "192.168.1.10"   
+        hostnames:
+        - "ubumac"         
+      containers:
+        - name: blogt-editor
+          image: ghcr.io/ekskog/blogt-editor:latest
+          imagePullPolicy: Always
+          resources:
+            requests:
+              memory: "256Mi"
+              cpu: "100m"
+            limits:
+              memory: "512Mi" 
+              cpu: "500m" 
+          ports:
+            - containerPort: 80
+              name: blogt
+          env:
+            - name: EDITOR_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: editor-credentials
+                  key: accessKey
+            - name: EDITOR_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: editor-credentials
+                  key: secretKey
+            - name: SESSION_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: editor-credentials
+                  key: sessionSecret      
+            - name: MINIO_ACCESS_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: minio-credentials
+                  key: accessKey                              
+            - name: MINIO_SECRET_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: minio-credentials
+                  key: secretKey
+            - name: MINIO_ENDPOINT
+              valueFrom:
+                secretKeyRef:
+                  name: minio-credentials
+                  key: endpoint
+            - name: MINIO_SERVICE_URL
+              valueFrom:
+                configMapKeyRef:
+                  name: app-config
+                  key: minioServiceURL
+            - name: BLOGT_EDITOR_SERVICE_NAME
+              valueFrom:
+                configMapKeyRef:
+                  name: app-config
+                  key: blogtEditorServiceName
+          volumeMounts:
+            - name: blogposts
+              mountPath: /app/posts
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: 3000
+            initialDelaySeconds: 10
+            periodSeconds: 30
+            failureThreshold: 3
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: 3000
+            initialDelaySeconds: 5
+            periodSeconds: 15
+            failureThreshold: 3
+      volumes:
+        - name: blogposts
+          persistentVolumeClaim:
+            claimName: blog-nfspvc
