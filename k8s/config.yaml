@@ -28,4 +28,4 @@ metadata:
 data:
   minioServiceURL: 192.168.1.8
   blogtEditorServiceName: blogt-editor
-  DEBUG: "false"
+  DEBUG: "*"
