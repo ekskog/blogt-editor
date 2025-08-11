@@ -71,6 +71,7 @@ router.post("/imgup", upload.single("file"), async (req, res) => {
 router.post("/", async (req, res) => {
   // Extract date and text from the request body
   const { date, text, tags, title } = req.body;
+  console.log("NEW POST RECEiVEd")
   debug("Received data:", { date, text, tags, title });
 
   try {
