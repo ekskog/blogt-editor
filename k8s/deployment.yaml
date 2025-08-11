@@ -77,6 +77,11 @@ spec:
                 configMapKeyRef:
                   name: app-config
                   key: blogtEditorServiceName
+            - name: DEBUG
+              valueFrom:
+                configMapKeyRef:
+                  name: debug-config
+                  key: DEBUG
           volumeMounts:
             - name: blogposts
               mountPath: /app/posts

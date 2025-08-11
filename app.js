@@ -83,5 +83,10 @@ app.use((err, req, res, next) => {
   res.render('error');
 });
 
+// Enable debug in production if DEBUG environment variable is set
+if (process.env.DEBUG) {
+  const debug = require('debug');
+  debug.enable(process.env.DEBUG);
+}
 
 module.exports = app;

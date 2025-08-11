@@ -26,5 +26,5 @@ ENV DEBUG="blogt-editor*"
 # Expose the port the app runs on
 EXPOSE 3000
 
-# Start the app
+# Start the app using npm start
 CMD ["npm", "start"]
