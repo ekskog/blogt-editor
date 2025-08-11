@@ -70,17 +70,17 @@ spec:
             - name: MINIO_SERVICE_URL
               valueFrom:
                 configMapKeyRef:
-                  name: app-config
+                  name: editor-config
                   key: minioServiceURL
             - name: BLOGT_EDITOR_SERVICE_NAME
               valueFrom:
                 configMapKeyRef:
-                  name: app-config
+                  name: editor-config
                   key: blogtEditorServiceName
             - name: DEBUG
               valueFrom:
                 configMapKeyRef:
-                  name: debug-config
+                  name: editor-config
                   key: DEBUG
           volumeMounts:
             - name: blogposts

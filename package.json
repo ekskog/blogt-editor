@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "build": "pkg . --out-path dist",
-    "start": "if [ \"$DEBUG\" = \"true\" ]; then DEBUG=* node ./bin/www; else node ./bin/www; fi"
+    "start": "node -e \"if (process.env.DEBUG === 'true') { process.env.DEBUG = '*'; } require('./bin/www');\""
   },
   "bin": {
     "blot-too": "./bin/www"
