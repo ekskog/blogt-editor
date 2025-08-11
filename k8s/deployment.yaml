@@ -97,4 +97,4 @@ spec:
       volumes:
         - name: blogposts
           persistentVolumeClaim:
-            claimName: blog-nfspvc
+            claimName: blogt-nfspvc
