@@ -191,6 +191,8 @@ const commitPost = async (date, text, tags, title) => {
     let dirPath = path.join(POSTS_PATH, year, month);
     let filePath = path.join(dirPath, `${day}.md`);
 
+    debug(`Committing post to: ${filePath}`);
+
     // Ensure the directory exists
     await fs.mkdir(dirPath, { recursive: true });
     // Write the text content to the file
