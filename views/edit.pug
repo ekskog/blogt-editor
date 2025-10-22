@@ -13,6 +13,8 @@ block content
         label.editor-label(for="text") Post Content
         textarea#text(name="text" rows="15")= post.content          
       
+      .cf-turnstile(data-sitekey=turnstileSiteKey)
+      
       .editor-form-actions
         a.btn.btn-secondary(href="/editor/edit") Cancel
         button.submit-btn(type="submit") Save Changes

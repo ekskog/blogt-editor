@@ -13,6 +13,7 @@ const {
   uploadToMinio,
   commitPost,
   updateTagsDictionary,
+  verifyTurnstile
 } = require("../utils/utils");
 
 var express = require("express");
@@ -21,15 +22,28 @@ const postsDir = path.join(__dirname, "..", "posts");
 
 /* GET the editor land page listing. */
 router.get("/", async (req, res) => {
-  res.render("new", {});
+  res.render("new", {
+    turnstileSiteKey: process.env.TURNSTILE_SITE_KEY
+  });
 });
 
 router.get("/imgupl", async (req, res) => {
   const buckets = await fetchBuckets();
-  res.render("imgup", { buckets });
+  res.render("imgup", { 
+    buckets,
+    turnstileSiteKey: process.env.TURNSTILE_SITE_KEY
+  });
 });
 
 router.post("/imgup", upload.single("file"), async (req, res) => {
+  const { 'cf-turnstile-response': token } = req.body;
+
+  // Verify Turnstile token
+  const isValid = await verifyTurnstile(token);
+  if (!isValid) {
+    return res.status(400).send("Verification failed. Please try again.");
+  }
+
   try {
     const file = req.file;
 
@@ -70,7 +84,14 @@ router.post("/imgup", upload.single("file"), async (req, res) => {
 
 router.post("/", async (req, res) => {
   // Extract date and text from the request body
-  const { date, text, tags, title } = req.body;
+  const { date, text, tags, title, 'cf-turnstile-response': token } = req.body;
+
+  // Verify Turnstile token
+  const isValid = await verifyTurnstile(token);
+  if (!isValid) {
+    return res.render("error", { error: "Verification failed", message: "Please try again" });
+  }
+
   console.log("NEW POST RECEiVEd")
   debug("Received data:", { date, text, tags, title });
 
@@ -108,6 +129,7 @@ router.post("/", async (req, res) => {
 router.get("/edit/", async (req, res) => {
   res.render("load", {
     post: {},
+    turnstileSiteKey: process.env.TURNSTILE_SITE_KEY
   });
 });
 
@@ -124,6 +146,7 @@ router.post("/load/", async (req, res) => {
         date,
         content: fileContent,
       },
+      turnstileSiteKey: process.env.TURNSTILE_SITE_KEY
     });
   } catch (error) {
     res.render("error", { message: error.code });
@@ -131,7 +154,13 @@ router.post("/load/", async (req, res) => {
 });
 
 router.post("/edit/", async (req, res) => {
-  const { date, text } = req.body;
+  const { date, text, 'cf-turnstile-response': token } = req.body;
+
+  // Verify Turnstile token
+  const isValid = await verifyTurnstile(token);
+  if (!isValid) {
+    return res.render("error", { error: "Verification failed", message: "Please try again" });
+  }
 
   try {
     const tagsMatch = text.match(/^Tags:\s*(.+)$/m);

@@ -1,6 +1,7 @@
 const session = require('express-session');
 require('dotenv').config();
 const debug = require("debug")("blogt-editor:authMW");
+const { verifyTurnstile } = require('./utils');
 
 function requireLogin(req, res, next) {
     if (req.session && req.session.isAuthenticated) {
@@ -26,13 +27,24 @@ function setupAuthRoutes(app) {
 
     res.render('login', { 
       error: null, 
-      returnTo 
+      returnTo,
+      turnstileSiteKey: process.env.TURNSTILE_SITE_KEY
     });
   });
 
   // Login form submission route
-  app.post('/login', (req, res) => {
-    const { username, password, returnTo } = req.body;
+  app.post('/login', async (req, res) => {
+    const { username, password, returnTo, 'cf-turnstile-response': token } = req.body;
+
+    // Verify Turnstile token
+    const isValid = await verifyTurnstile(token);
+    if (!isValid) {
+      return res.render('login', { 
+        error: 'Verification failed. Please try again.', 
+        returnTo,
+        turnstileSiteKey: process.env.TURNSTILE_SITE_KEY
+      });
+    }
 
     const validUsername = process.env.EDITOR_USERNAME;
     const validPassword = process.env.EDITOR_PASSWORD;
@@ -62,7 +74,8 @@ function setupAuthRoutes(app) {
     } else {
       res.render('login', { 
         error: 'Invalid username or password', 
-        returnTo 
+        returnTo,
+        turnstileSiteKey: process.env.TURNSTILE_SITE_KEY
       });
     }
   });

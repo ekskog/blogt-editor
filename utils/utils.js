@@ -310,5 +310,6 @@ module.exports = {
   getUploadParams,
   uploadToMinio,
   commitPost,
-  updateTagsDictionary
+  updateTagsDictionary,
+  verifyTurnstile
 };

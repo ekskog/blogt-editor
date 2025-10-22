@@ -52,6 +52,16 @@ spec:
                 secretKeyRef:
                   name: editor-credentials
                   key: sessionSecret      
+            - name: TURNSTILE_SITE_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: editor-credentials
+                  key: turnstileSiteKey
+            - name: TURNSTILE_SECRET_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: editor-credentials
+                  key: turnstileSecretKey      
             - name: MINIO_ACCESS_KEY
               valueFrom:
                 secretKeyRef:
