@@ -12,7 +12,7 @@ const debug = require("debug")("blogt-editor:utils");
 const Minio = require("minio");
 var buckets = ["bollox"];
 const minioParams = {
-  endPoint: "objects.hbvu.su",
+  endPoint: "objects.ekskog.xyz",
   port: 443,
   useSSL: true,
   accessKey: process.env.MINIO_ACCESS_KEY,
