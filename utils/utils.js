@@ -8,6 +8,7 @@ const sharp = require("sharp");
 const crypto = require("crypto");
 const { marked } = require("marked");
 const debug = require("debug")("blogt-editor:utils");
+const https = require("https");
 
 const Minio = require("minio");
 var buckets = ["bollox"];
@@ -284,6 +285,56 @@ async function updateTagsDictionary(date, title, tagsString) {
     };
   }
 }
+
+const verifyTurnstile = async (token) => {
+  return new Promise((resolve, reject) => {
+    const secret = process.env.TURNSTILE_SECRET_KEY;
+    if (!secret) {
+      debug('TURNSTILE_SECRET_KEY not set');
+      return resolve(false);
+    }
+
+    const postData = `secret=${encodeURIComponent(secret)}&response=${encodeURIComponent(token)}`;
+
+    const options = {
+      hostname: 'challenges.cloudflare.com',
+      port: 443,
+      path: '/turnstile/v0/siteverify',
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded',
+        'Content-Length': Buffer.byteLength(postData)
+      }
+    };
+
+    const req = https.request(options, (res) => {
+      let data = '';
+
+      res.on('data', (chunk) => {
+        data += chunk;
+      });
+
+      res.on('end', () => {
+        try {
+          const response = JSON.parse(data);
+          resolve(response.success === true);
+        } catch (error) {
+          debug('Error parsing Turnstile response:', error);
+          resolve(false);
+        }
+      });
+    });
+
+    req.on('error', (error) => {
+      debug('Error verifying Turnstile:', error);
+      resolve(false);
+    });
+
+    req.write(postData);
+    req.end();
+  });
+};
+
 async function main() {
   try {
     bucketsList = await minioClient.listBuckets();
