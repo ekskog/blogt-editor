@@ -289,6 +289,7 @@ async function updateTagsDictionary(date, title, tagsString) {
 const verifyTurnstile = async (token) => {
   return new Promise((resolve, reject) => {
     const secret = process.env.TURNSTILE_SECRET_KEY;
+    debug(('secret:', secret));
     if (!secret) {
       debug('TURNSTILE_SECRET_KEY not set');
       return resolve(false);

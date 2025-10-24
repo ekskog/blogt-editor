@@ -34,6 +34,7 @@ block content
         button.submit-btn(type="submit") Login
 
 block head
+  script(src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer)
   script.
     document.addEventListener('DOMContentLoaded', function() {
       if (typeof turnstile !== 'undefined') {
