@@ -32,3 +32,18 @@ block content
       
       .editor-form-actions
         button.submit-btn(type="submit") Login
+
+block head
+  script.
+    document.addEventListener('DOMContentLoaded', function() {
+      if (typeof turnstile !== 'undefined') {
+        turnstile.render('.cf-turnstile', {
+          sitekey: '#{turnstileSiteKey}',
+          callback: function(token) {
+            console.log('Turnstile token:', token);
+          }
+        });
+      } else {
+        console.error('Turnstile script not loaded');
+      }
+    });

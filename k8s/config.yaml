@@ -19,8 +19,8 @@ stringData:
   accessKey: lucarv
   secretKey: lucaPWD$b10gt
   sessionSecret: YV92ZXJ5X2xvbmdfcmFuZG9tX3N0cmluZ191c2VkX3RvX3Byb3RlY3RfYmxvZ3RfZWRpdG9y
-  turnstileSiteKey: 0x4AAAAAAB8Fa35CXwiaBJH9
-  turnstileSecretKey: 0x4AAAAAAB8Fa-3K9bDTqdLgyAG0AGV2LEg
+  turnstileSiteKey: 0x4AAAAAAB8a9NFuZq2UiiUf
+  turnstileSecretKey: 0x4AAAAAAB8a9FoyZZ7MglmgWGgQnI9sVJE
 ---
 apiVersion: v1
 kind: ConfigMap

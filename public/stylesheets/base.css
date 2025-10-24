@@ -269,6 +269,47 @@ footer {
   margin-top: auto;
 }
 
+/* Login form styles */
+.login-form {
+  background-color: #f8f9fa;
+  padding: 30px;
+  border-radius: 8px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  width: 100%;
+  max-width: 400px;
+}
+
+.login-form h2 {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.error-message {
+  background-color: #f8d7da;
+  color: #721c24;
+  padding: 10px;
+  border-radius: 4px;
+  margin-bottom: 15px;
+  text-align: center;
+}
+
+.form-control {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ced4da;
+  border-radius: 4px;
+  font-size: 16px;
+  box-sizing: border-box;
+  margin-bottom: 15px;
+}
+
+.cf-turnstile {
+  margin: 20px 0;
+  display: flex;
+  justify-content: center;
+  min-height: 65px; /* Ensure space for the widget */
+}
+
 /* Date display for edit mode */
 .date-display {
   background-color: #f8f9fa;
