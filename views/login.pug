@@ -23,13 +23,14 @@ block content
           placeholder="Enter your password"
         )
       
-      //- Add Turnstile widget here
+      //- ADD THIS: Turnstile widget
       .editor-form-group
         div.cf-turnstile(
-          data-sitekey=process.env.TURNSTILE_SITE_KEY
+          data-sitekey=turnstileSiteKey
         )
       
+      //- Your existing button stays as-is
       button.btn.btn-primary(type="submit") Login
 
-  //- Add Turnstile script
+  //- ADD THIS: Turnstile script
   script(src='https://challenges.cloudflare.com/turnstile/v0/api.js' async defer)
