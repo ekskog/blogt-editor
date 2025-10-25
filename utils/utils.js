@@ -288,49 +288,6 @@ async function updateTagsDictionary(date, title, tagsString) {
 
 
 
-// Turnstile verification function
-const verifyTurnstile = async (token) => {
-  return new Promise((resolve, reject) => {
-    const secret = process.env.TURNSTILE_SECRET_KEY;
-    const postData = `secret=${encodeURIComponent(secret)}&response=${encodeURIComponent(token)}`;
-
-    const options = {
-      hostname: 'challenges.cloudflare.com',
-      port: 443,
-      path: '/turnstile/v0/siteverify',
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/x-www-form-urlencoded',
-        'Content-Length': Buffer.byteLength(postData),
-      },
-    };
-
-    const req = https.request(options, (res) => {
-      let data = '';
-
-      res.on('data', (chunk) => {
-        data += chunk;
-      });
-
-      res.on('end', () => {
-        try {
-          const response = JSON.parse(data);
-          resolve(response);
-        } catch (err) {
-          reject(err);
-        }
-      });
-    });
-
-    req.on('error', (err) => {
-      reject(err);
-    });
-
-    req.write(postData);
-    req.end();
-  });
-};
-
 async function main() {
   try {
     bucketsList = await minioClient.listBuckets();
@@ -357,6 +314,5 @@ module.exports = {
   getUploadParams,
   uploadToMinio,
   commitPost,
-  updateTagsDictionary,
-  verifyTurnstile
+  updateTagsDictionary
 };
