@@ -286,6 +286,35 @@ async function updateTagsDictionary(date, title, tagsString) {
   }
 }
 
+const verifyTurnstile = async (token) => {
+  const secretKey = process.env.TURNSTILE_SECRET_KEY;
+  
+  if (!token) {
+    debug('No Turnstile token provided');
+    return false;
+  }
+
+  const formData = new URLSearchParams();
+  formData.append('secret', secretKey);
+  formData.append('response', token);
+  
+  try {
+    const response = await fetch('https://challenges.cloudflare.com/turnstile/v0/siteverify', {
+      method: 'POST',
+      body: formData,
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded',
+      },
+    });
+    
+    const data = await response.json();
+    debug('Turnstile verification result:', data);
+    return data.success;
+  } catch (error) {
+    debug('Turnstile verification error:', error);
+    return false;
+  }
+};
 
 
 async function main() {
@@ -314,5 +343,6 @@ module.exports = {
   getUploadParams,
   uploadToMinio,
   commitPost,
-  updateTagsDictionary
+  updateTagsDictionary,
+  verifyTurnstile
 };

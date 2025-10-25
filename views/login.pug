@@ -1,15 +1,11 @@
 extends layout
-
 block content
   .login-container
     form.login-form(action="/login" method="POST")
       h2 Login to Editor
-
       if error
         .error-message= error
-
       input(type="hidden" name="returnTo" value=returnTo)
-
       .editor-form-group
         label(for="username") Username
         input#username.form-control(
@@ -18,7 +14,6 @@ block content
           required
           placeholder="Enter your username"
         )
-
       .editor-form-group
         label(for="password") Password
         input#password.form-control(
@@ -27,16 +22,14 @@ block content
           required
           placeholder="Enter your password"
         )
-
+      
+      //- Add Turnstile widget here
       .editor-form-group
-        #turnstile-widget
+        div.cf-turnstile(
+          data-sitekey=process.env.TURNSTILE_SITE_KEY
+        )
+      
+      button.btn.btn-primary(type="submit") Login
 
-      .editor-form-actions
-        button.submit-btn(type="submit") Login
-
-    script(src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer)
-    script.
-      var turnstileSiteKey = #{turnstileSiteKey ? `'${turnstileSiteKey}'` : 'null'};
-      turnstile.render('#turnstile-widget', {
-        sitekey: turnstileSiteKey
-      });
+  //- Add Turnstile script
+  script(src='https://challenges.cloudflare.com/turnstile/v0/api.js' async defer)
