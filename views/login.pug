@@ -4,47 +4,29 @@ block content
   .editor-container
     form.login-form(action="/login" method="POST")
       h2 Login to Editor
-      
+
       if error
         .error-message= error
-      
+
       input(type="hidden" name="returnTo" value=returnTo)
-      
+
       .editor-form-group
         label(for="username") Username
         input#username.form-control(
-          type="text" 
-          name="username" 
-          required 
+          type="text"
+          name="username"
+          required
           placeholder="Enter your username"
         )
-      
+
       .editor-form-group
         label(for="password") Password
         input#password.form-control(
-          type="password" 
-          name="password" 
-          required 
+          type="password"
+          name="password"
+          required
           placeholder="Enter your password"
         )
-      
-      .cf-turnstile(data-sitekey=turnstileSiteKey)
-      
+
       .editor-form-actions
         button.submit-btn(type="submit") Login
-
-block head
-  script(src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer)
-  script.
-    document.addEventListener('DOMContentLoaded', function() {
-      if (typeof turnstile !== 'undefined') {
-        turnstile.render('.cf-turnstile', {
-          sitekey: '#{turnstileSiteKey}',
-          callback: function(token) {
-            console.log('Turnstile token:', token);
-          }
-        });
-      } else {
-        console.error('Turnstile script not loaded');
-      }
-    });

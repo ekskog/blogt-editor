@@ -303,12 +303,7 @@ footer {
   margin-bottom: 15px;
 }
 
-.cf-turnstile {
-  margin: 20px 0;
-  display: flex;
-  justify-content: center;
-  min-height: 65px; /* Ensure space for the widget */
-}
+
 
 /* Date display for edit mode */
 .date-display {

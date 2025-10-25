@@ -21,12 +21,12 @@ function requireLogin(req, res, next) {
 function setupAuthRoutes(app) {
   // Login page route
   app.get('/login', (req, res) => {
-    const returnTo = req.session && req.session.returnTo 
-      ? req.session.returnTo 
+    const returnTo = req.session && req.session.returnTo
+      ? req.session.returnTo
       : '/editor';
 
-    res.render('login', { 
-      error: null, 
+    res.render('login', {
+      error: null,
       returnTo,
       turnstileSiteKey: process.env.TURNSTILE_SITE_KEY
     });
@@ -34,13 +34,35 @@ function setupAuthRoutes(app) {
 
   // Login form submission route
   app.post('/login', async (req, res) => {
-    const { username, password, returnTo, 'cf-turnstile-response': token } = req.body;
+    const { username, password, returnTo, 'cf-turnstile-response': turnstileToken } = req.body;
 
     // Verify Turnstile token
-    const isValid = await verifyTurnstile(token);
-    if (!isValid) {
-      return res.render('login', { 
-        error: 'Verification failed. Please try again.', 
+    if (!turnstileToken) {
+      debug('Turnstile token missing');
+      return res.render('login', {
+        error: 'Verification token is required',
+        returnTo,
+        turnstileSiteKey: process.env.TURNSTILE_SITE_KEY
+      });
+    }
+
+    try {
+      const verificationResult = await verifyTurnstile(turnstileToken);
+
+      if (!verificationResult.success) {
+        debug('Turnstile verification failed:', verificationResult);
+        return res.render('login', {
+          error: 'Verification failed. Please try again.',
+          returnTo,
+          turnstileSiteKey: process.env.TURNSTILE_SITE_KEY
+        });
+      }
+
+      debug('Turnstile verification successful');
+    } catch (error) {
+      debug('Error verifying Turnstile token:', error);
+      return res.render('login', {
+        error: 'Verification service temporarily unavailable. Please try again later.',
         returnTo,
         turnstileSiteKey: process.env.TURNSTILE_SITE_KEY
       });
@@ -72,10 +94,9 @@ function setupAuthRoutes(app) {
         res.redirect(redirectUrl);
       });
     } else {
-      res.render('login', { 
-        error: 'Invalid username or password', 
-        returnTo,
-        turnstileSiteKey: process.env.TURNSTILE_SITE_KEY
+      res.render('login', {
+        error: 'Invalid username or password',
+        returnTo
       });
     }
   });
