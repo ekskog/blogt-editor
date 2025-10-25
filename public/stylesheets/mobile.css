@@ -53,4 +53,11 @@
     padding: 12px 20px;
     box-sizing: border-box;
   }
+
+  @media (max-width: 768px) {
+    .login-form {
+      padding: 1rem;
+      max-width: 100%;
+    }
+  }
 }

@@ -270,7 +270,50 @@ footer {
 }
 
 
+/* Login form styles */
+.login-form {
+  width: 100%;
+  max-width: 400px;
+  padding: 2rem;
+  box-sizing: border-box;
+}
 
+.login-form h2 {
+  margin-top: 0;
+  margin-bottom: 1.5rem;
+  text-align: center;
+}
+
+.login-form .error-message {
+  color: #d32f2f;
+  margin-bottom: 1rem;
+  padding: 0.5rem;
+  background-color: #ffebee;
+  border: 1px solid #d32f2f;
+  border-radius: 4px;
+}
+
+.login-form .editor-form-group {
+  margin-bottom: 1.5rem;
+}
+
+.login-form label {
+  display: block;
+  margin-bottom: 0.5rem;
+}
+
+.login-form .form-control {
+  width: 100%;
+  padding: 10px;
+  box-sizing: border-box;
+  border: 1px solid #ced4da;
+  border-radius: 4px;
+  font-size: 16px;
+}
+
+.login-form .btn-primary {
+  width: 100%;
+}
 
 
 /* Date display for edit mode */
