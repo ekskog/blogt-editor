@@ -1,7 +1,7 @@
 extends layout
 
 block content
-  .editor-container
+  .login-container
     form.login-form(action="/login" method="POST")
       h2 Login to Editor
 
@@ -28,5 +28,15 @@ block content
           placeholder="Enter your password"
         )
 
+      .editor-form-group
+        #turnstile-widget
+
       .editor-form-actions
         button.submit-btn(type="submit") Login
+
+    script(src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer)
+    script.
+      var turnstileSiteKey = #{turnstileSiteKey ? `'${turnstileSiteKey}'` : 'null'};
+      turnstile.render('#turnstile-widget', {
+        sitekey: turnstileSiteKey
+      });

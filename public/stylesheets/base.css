@@ -32,11 +32,6 @@ img {
   height: auto;
   margin: 0 auto;
   padding: 0 10px;
-  display: flex;
-  flex: 1;
-  border: 1px solid black;
-  justify-content: center;
-  align-items: center;
 }
 
 .error-content h2 {
@@ -269,6 +264,19 @@ footer {
   margin-top: auto;
 }
 
+/* Login container for proper centering */
+.login-container {
+  width: 100%;
+  max-width: 600px;
+  height: auto;
+  margin: 0 auto;
+  padding: 50px 10px;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  min-height: 400px;
+}
+
 /* Login form styles */
 .login-form {
   background-color: #f8f9fa;
@@ -300,6 +308,13 @@ footer {
   border-radius: 4px;
   font-size: 16px;
   box-sizing: border-box;
+  margin-bottom: 15px;
+}
+
+/* Turnstile widget styles */
+#turnstile-widget {
+  display: flex;
+  justify-content: center;
   margin-bottom: 15px;
 }
 
@@ -400,5 +415,21 @@ footer {
   .nav-links a:last-child,
   .nav-links .menu-item:last-child {
     margin-bottom: 0 !important;
+  }
+
+  /* Mobile login form styles */
+  .login-container {
+    padding: 20px 10px;
+    min-height: 300px;
+  }
+
+  .login-form {
+    padding: 20px;
+    max-width: 100%;
+  }
+
+  /* Ensure Turnstile widget is responsive */
+  #turnstile-widget iframe {
+    max-width: 100% !important;
   }
 }
