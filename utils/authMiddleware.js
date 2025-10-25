@@ -1,18 +1,17 @@
 const session = require('express-session');
 require('dotenv').config();
 const debug = require("debug")("blogt-editor:authMW");
-const { verifyTurnstile } = require('./utils');
 
 function requireLogin(req, res, next) {
     if (req.session && req.session.isAuthenticated) {
       return next();
     }
-  
+
     if (req.xhr) {
       // Send JSON response for AJAX requests
       return res.status(401).json({ error: 'You need to log in to access this feature.' });
     }
-  
+
     // Redirect for standard requests
     req.session.returnTo = req.originalUrl || '/editor';
     res.redirect('/login');
@@ -27,46 +26,13 @@ function setupAuthRoutes(app) {
 
     res.render('login', {
       error: null,
-      returnTo,
-      turnstileSiteKey: process.env.TURNSTILE_SITE_KEY
+      returnTo
     });
   });
 
   // Login form submission route
   app.post('/login', async (req, res) => {
-    const { username, password, returnTo, 'cf-turnstile-response': turnstileToken } = req.body;
-
-    // Verify Turnstile token
-    if (!turnstileToken) {
-      debug('Turnstile token missing');
-      return res.render('login', {
-        error: 'Verification token is required',
-        returnTo,
-        turnstileSiteKey: process.env.TURNSTILE_SITE_KEY
-      });
-    }
-
-    try {
-      const verificationResult = await verifyTurnstile(turnstileToken);
-
-      if (!verificationResult.success) {
-        debug('Turnstile verification failed:', verificationResult);
-        return res.render('login', {
-          error: 'Verification failed. Please try again.',
-          returnTo,
-          turnstileSiteKey: process.env.TURNSTILE_SITE_KEY
-        });
-      }
-
-      debug('Turnstile verification successful');
-    } catch (error) {
-      debug('Error verifying Turnstile token:', error);
-      return res.render('login', {
-        error: 'Verification service temporarily unavailable. Please try again later.',
-        returnTo,
-        turnstileSiteKey: process.env.TURNSTILE_SITE_KEY
-      });
-    }
+    const { username, password, returnTo } = req.body;
 
     const validUsername = process.env.EDITOR_USERNAME;
     const validPassword = process.env.EDITOR_PASSWORD;
