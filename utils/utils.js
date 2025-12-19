@@ -12,6 +12,9 @@ const https = require("https");
 
 const Minio = require("minio");
 var buckets = ["bollox"];
+console.log(process.env.MINIO_ACCESS_KEY);
+console.log(process.env.MINIO_SECRET_KEY);
+
 const minioParams = {
   endPoint: "objects.ekskog.xyz",
   port: 443,
@@ -287,6 +290,16 @@ async function updateTagsDictionary(date, title, tagsString) {
 }
 
 const verifyTurnstile = async (token) => {
+  // Bypass in local/dev when explicitly enabled
+  const bypass =
+    process.env.TURNSTILE_BYPASS === "true" ||
+    process.env.NODE_ENV === "development";
+
+  if (bypass) {
+    debug("Turnstile bypass enabled; skipping verification");
+    return true;
+  }
+
   const secretKey = process.env.TURNSTILE_SECRET_KEY;
   
   if (!token) {

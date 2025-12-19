@@ -19,6 +19,9 @@ var express = require("express");
 var router = express.Router();
 const postsDir = path.join(__dirname, "..", "posts");
 
+// Base URL for the blogt API. In k8s this should be http://blogt-api:3000
+const API_BASE_URL = process.env.BLOGT_API_BASE_URL || "http://localhost:3000";
+
 /* GET the editor land page listing. */
 router.get("/", async (req, res) => {
   res.render("new");
@@ -32,7 +35,6 @@ router.get("/imgupl", async (req, res) => {
 });
 
 router.post("/imgup", upload.single("file"), async (req, res) => {
-
   try {
     const file = req.file;
 
@@ -41,32 +43,42 @@ router.post("/imgup", upload.single("file"), async (req, res) => {
     }
 
     const [year, month, day] = req.body.dateField.split("-");
-    var fileName = `${day}.jpeg` || file.originalname;
+    const date = `${year}-${month}-${day}`;
 
-    const bucketName = "blotpix";
-    var folderPath = `${year}/${month}`;
-
-    const calculatedParams = await getUploadParams();
-
-    // Fallback to calculated values if necessary
-    if (!folderPath) {
-      folderPath = calculatedParams.filePath;
+     if (!date || !/^\d{4}-\d{2}-\d{2}$/.test(date)) {
+      return res.status(400).send("Invalid or missing date");
     }
 
-    if (bucketName === "blotpix" && !fileName) {
-      fileName = calculatedParams.fileName;
+    // Prefer uploading via API so the editor is a client of blogt-api
+    const apiUrl = `${API_BASE_URL}/media/images`;
+    debug("Uploading image via API:", apiUrl);
+
+    const formData = new FormData();
+    formData.append("file", new Blob([file.buffer]), file.originalname);
+    formData.append("date", date);
+
+    const response = await fetch(apiUrl, {
+      method: "POST",
+      body: formData,
+    });
+
+    if (!response.ok) {
+      const errText = await response.text().catch(() => "");
+      console.error(
+        "[editor] API image upload failed",
+        response.status,
+        response.statusText,
+        errText
+      );
+      throw new Error(`API responded with status ${response.status}`);
     }
 
-    // Log the buffer to ensure it's present
-    debug("File buffer length:", file.buffer.length);
+    const data = await response.json();
+    debug("Upload result via API:", data);
 
-    // Upload to MinIO (assuming the utility function works as expected)
-    const result = await uploadToMinio(file, bucketName, folderPath, fileName);
-    debug("Upload result:", result);
-
-    res.render("index", { result });
+    res.render("index", { result: `Image uploaded: ${data.url}` });
   } catch (error) {
-    console.error("Error handling file upload:", error);
+    console.error("Error handling file upload via API:", error);
     res.status(500).send("Error uploading file.");
   }
 });
@@ -79,32 +91,73 @@ router.post("/", async (req, res) => {
   debug("Received data:", { date, text, tags, title });
 
   try {
-    // First commit the post to the filesystem
-    const postResult = await commitPost(date, text, tags, title);
+    // Normalize tags from comma-separated string to array
+    const tagsArray = typeof tags === "string"
+      ? tags.split(",").map((t) => t.trim()).filter((t) => t.length > 0)
+      : Array.isArray(tags)
+        ? tags
+        : [];
 
-    if (postResult.res !== "ok") {
-      let message = "Error writing post to disk";
-      let error = postResult.error;
-      return res.render("error", { error, message });
-    }
+    // First try to create the post via the API
+    const apiUrl = `${API_BASE_URL}/posts`;
+    debug("Creating post via API:", apiUrl);
+    console.log("[editor] Creating post via API", apiUrl, {
+      date,
+      title,
+      tagsCount: tagsArray.length,
+      contentLength: text ? text.length : 0,
+    });
 
-    // Then update the tags dictionary
-    const tagsResult = await updateTagsDictionary(date, title, tags);
-    debug("Tags result:", tagsResult);
+    const response = await fetch(apiUrl, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        date,          // YYYY-MM-DD; API accepts both this and DDMMYYYY
+        title,
+        tags: tagsArray,
+        content: text,
+      }),
+    });
 
-    if (tagsResult.status !== "ok") {
-      debug(
-        "Warning: Post was saved but tags dictionary update failed:",
-        tagsResult.error
+    if (!response.ok) {
+      const errText = await response.text().catch(() => "");
+      console.error(
+        "[editor] API create post failed",
+        response.status,
+        response.statusText,
+        errText
       );
-      // You might want to log this error but still consider the post creation successful
+      throw new Error(`API responded with status ${response.status}`);
     }
 
-    res.render("index");
+    // On success, render index
+    return res.render("index");
   } catch (error) {
-    debug(error);
-    let message = "Error processing request";
-    res.render("error", { error, message });
+    debug("Error creating post via API, falling back to filesystem:", error.message);
+    console.error("[editor] Error in API create flow, using filesystem fallback:", error);
+
+    // Fallback: use legacy filesystem commit + tags dictionary
+    try {
+      const tagsHeader = typeof tags === "string" ? tags : (Array.isArray(tags) ? tags.join(", ") : "");
+      const postResult = await commitPost(date, text, tagsHeader, title);
+
+      if (postResult.res !== "ok") {
+        let message = "Error writing post to disk";
+        let fsError = postResult.error;
+        return res.render("error", { error: fsError, message });
+      }
+
+      const tagsResult = await updateTagsDictionary(date, title, tagsHeader);
+      debug("Tags result (fallback):", tagsResult);
+
+      return res.render("index");
+    } catch (fsError) {
+      debug("Fallback filesystem write failed:", fsError);
+      let message = "Error processing request";
+      return res.render("error", { error: fsError, message });
+    }
   }
 });
 
@@ -117,20 +170,48 @@ router.get("/edit/", async (req, res) => {
 
 router.post("/load/", async (req, res) => {
   const { date } = req.body;
-  const [year, month, day] = date.split("-");
-
   try {
-    const filePath = path.join(postsDir, year, month, `${day}.md`);
-    const fileContent = await fs.readFile(filePath, "utf8");
-    // Render edit page with existing content
+    // Prefer loading via API so the editor is a client of blogt-api
+    const apiUrl = `${API_BASE_URL}/posts/details/${date}`;
+    debug("Loading post from API:", apiUrl);
+
+    const response = await fetch(apiUrl);
+
+    if (!response.ok) {
+      throw new Error(`API responded with status ${response.status}`);
+    }
+
+    const post = await response.json();
+
     res.render("edit", {
       post: {
-        date,
-        content: fileContent,
+        date: post.date,
+        content: [
+          `Tags: ${post.tags.join(", ")}`,
+          `Title: ${post.title}`,
+          "",
+          post.content || ""
+        ].join("\n")
       }
     });
   } catch (error) {
-    res.render("error", { message: error.code });
+    debug("Error loading post via API:", error.message);
+
+    // Fallback: try legacy filesystem load (useful in local dev if API is down)
+    try {
+      const [year, month, day] = date.split("-");
+      const filePath = path.join(postsDir, year, month, `${day}.md`);
+      const fileContent = await fs.readFile(filePath, "utf8");
+
+      res.render("edit", {
+        post: {
+          date,
+          content: fileContent,
+        }
+      });
+    } catch (fsError) {
+      res.render("error", { message: error.code || fsError.code || "LOAD_FAILED" });
+    }
   }
 });
 
@@ -138,27 +219,59 @@ router.post("/edit/", async (req, res) => {
   const { date, text } = req.body;
 
   try {
+    // Extract metadata from the editor text
     const tagsMatch = text.match(/^Tags:\s*(.+)$/m);
     const titleMatch = text.match(/^Title:\s*(.+)$/m);
 
-    const tags = tagsMatch ? tagsMatch[1] : "";
+    const tagsString = tagsMatch ? tagsMatch[1] : "";
     const title = titleMatch ? titleMatch[1] : "";
 
-    const textNoMetadata = text
+    const tags = tagsString
+      .split(",")
+      .map((t) => t.trim())
+      .filter((t) => t.length > 0);
+
+    const content = text
       .replace(/^(Date:|Tags:|Title:).*$/gm, "")
       .trim();
 
-    const result = await commitPost(date, textNoMetadata, tags, title);
-    
-    if (result.res == "ok") res.render("index");
-    else {
-      let message = "Error writing to disk";
-      let error = result.error;
-      res.render("error", { error, message });
+    // First try to save via the API so that blogt-api owns the posts
+    const apiUrl = `${API_BASE_URL}/posts/${date}`;
+    debug("Saving post via API:", apiUrl);
+
+    const response = await fetch(apiUrl, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ title, tags, content }),
+    });
+
+    if (!response.ok) {
+      throw new Error(`API responded with status ${response.status}`);
     }
+
+    // If API save succeeded, render index
+    return res.render("index");
   } catch (error) {
-    let message = "Error writing to disk";
-    res.render("error", { error, message });
+    debug("Error saving post via API, falling back to filesystem:", error.message);
+
+    // Fallback to legacy filesystem commit if API save fails
+    try {
+      const tagsHeader = tagsString || "";
+      const result = await commitPost(date, content, tagsHeader, title);
+
+      if (result.res == "ok") {
+        return res.render("index");
+      } else {
+        let message = "Error writing to disk";
+        let fsError = result.error;
+        return res.render("error", { error: fsError, message });
+      }
+    } catch (fsError) {
+      let message = "Error writing to disk";
+      return res.render("error", { error: fsError, message });
+    }
   }
 });
 

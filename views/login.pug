@@ -23,12 +23,14 @@ block content
           placeholder="Enter your password"
         )
       
-      .editor-form-group
-        div.cf-turnstile(
-          data-sitekey=turnstileSiteKey
-        )
+      if turnstileEnabled
+        .editor-form-group
+          div.cf-turnstile(
+            data-sitekey=turnstileSiteKey
+          )
       
       .editor-form-group
         button.btn.btn-primary(type="submit") Login
 
-  script(src='https://challenges.cloudflare.com/turnstile/v0/api.js' async defer)
+  if turnstileEnabled
+    script(src='https://challenges.cloudflare.com/turnstile/v0/api.js' async defer)

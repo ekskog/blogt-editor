@@ -3,6 +3,11 @@ require('dotenv').config();
 const debug = require("debug")("blogt-editor:authMW");
 const { verifyTurnstile } = require('./utils');
 
+const turnstileBypass =
+  process.env.TURNSTILE_BYPASS === 'true' ||
+  process.env.NODE_ENV === 'development';
+const turnstileEnabled = !turnstileBypass;
+
 function requireLogin(req, res, next) {
   if (req.session && req.session.isAuthenticated) {
     return next();
@@ -25,7 +30,8 @@ function setupAuthRoutes(app) {
     res.render('login', {
       error: null,
       returnTo,
-      turnstileSiteKey: process.env.TURNSTILE_SITE_KEY
+      turnstileSiteKey: turnstileEnabled ? process.env.TURNSTILE_SITE_KEY : null,
+      turnstileEnabled
     });
   });
 
@@ -33,14 +39,17 @@ function setupAuthRoutes(app) {
   app.post('/login', async (req, res) => {
     const { username, password, returnTo, 'cf-turnstile-response': turnstileToken } = req.body;
     
-    // Verify Turnstile first
-    const isTurnstileValid = await verifyTurnstile(turnstileToken);
+    // Verify Turnstile first (or bypass in dev)
+    const isTurnstileValid = turnstileEnabled
+      ? await verifyTurnstile(turnstileToken)
+      : true;
     
     if (!isTurnstileValid) {
       return res.render('login', {
         error: 'Captcha verification failed. Please try again.',
         returnTo,
-        turnstileSiteKey: process.env.TURNSTILE_SITE_KEY
+        turnstileSiteKey: turnstileEnabled ? process.env.TURNSTILE_SITE_KEY : null,
+        turnstileEnabled
       });
     }
     
@@ -73,7 +82,8 @@ function setupAuthRoutes(app) {
       res.render('login', {
         error: 'Invalid username or password',
         returnTo,
-        turnstileSiteKey: process.env.TURNSTILE_SITE_KEY
+        turnstileSiteKey: turnstileEnabled ? process.env.TURNSTILE_SITE_KEY : null,
+        turnstileEnabled
       });
     }
   });
