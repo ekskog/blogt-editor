@@ -32,3 +32,4 @@ data:
   minioServiceURL: 192.168.1.8
   blogtEditorServiceName: blogt-editor
   DEBUG: "blogt-editor:*"
+  BLOGT_API_BASE_URL: http://blogt-api:3000

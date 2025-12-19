@@ -21,7 +21,10 @@ app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'pug');
 
 // Logging
-//app.use(logger('dev'));
+// Use logger but skip health checks
+app.use(logger('dev', {
+  skip: (req, res) => req.path === '/health'
+}));
 
 // Middleware for parsing requests
 app.use(express.json());
@@ -62,8 +65,6 @@ app.use(robots({
   UserAgent: '*',
   Disallow: '/'
 }));
-
-app.use(logger('dev'));
 
 // Add a health endpoint for Kubernetes probes
 app.get('/health', (req, res) => {
