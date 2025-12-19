@@ -10,7 +10,6 @@ const debug = require("debug")("blogt-editor:editor-route");
 const {
   fetchBuckets,
   getUploadParams,
-  uploadToMinio,
   commitPost,
   updateTagsDictionary
 } = require("../utils/utils");

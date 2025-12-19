@@ -4,48 +4,11 @@ const fs = require("fs").promises;
 const POSTS_PATH = path.join(__dirname, "..", "posts");
 const TAGS_FILE_PATH = path.join(__dirname, '../data/tags.json');
 
-const sharp = require("sharp");
 const crypto = require("crypto");
 const { marked } = require("marked");
 const debug = require("debug")("blogt-editor:utils");
 const https = require("https");
 
-const Minio = require("minio");
-var buckets = ["bollox"];
-
-
-const minioParams = {
-  endPoint: "objects.ekskog.xyz",
-  port: 443,
-  useSSL: true,
-  accessKey: process.env.MINIO_ACCESS_KEY,
-  secretKey: process.env.MINIO_SECRET_KEY,
-};
-
-debug(minioParams);
-
-const minioClient = new Minio.Client(minioParams);
-
-const uploadToMinio = async (file, bucketName, folderPath, fileName) => {
-  try {
-    // Resize the image to 1920x1920 pixels using sharp
-    const resizedImageBuffer = await sharp(file.buffer)
-      .resize(1920, 1920, { fit: "inside" })
-      .withMetadata() // This is the key line to preserve EXIF data
-      .toBuffer();
-
-    // Construct the full object name using the folder path and file name
-    const objectName = `${folderPath}/${fileName}`;
-
-    debug(`Uploading to bucket: ${bucketName}, object: ${objectName}`); // Log for debugging
-
-    // Upload the resized image buffer to MinIO
-    await minioClient.putObject(bucketName, objectName, resizedImageBuffer);
-    return `File uploaded successfully to ${bucketName}/${objectName}.`;
-  } catch (err) {
-    return err;
-  }
-};
 
 const fetchBuckets = async () => {
   return buckets;
@@ -355,7 +318,6 @@ module.exports = {
   formatDate,
   fetchBuckets,
   getUploadParams,
-  uploadToMinio,
   commitPost,
   updateTagsDictionary,
   verifyTurnstile
