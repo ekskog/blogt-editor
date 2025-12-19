@@ -9,7 +9,6 @@ const debug = require("debug")("blogt-editor:editor-route");
 
 const {
   fetchBuckets,
-  getUploadParams,
   commitPost,
   updateTagsDictionary
 } = require("../utils/utils");
