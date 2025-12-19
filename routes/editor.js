@@ -87,6 +87,7 @@ router.post("/", async (req, res) => {
   // Extract date and text from the request body
   const { date, text, tags, title } = req.body;
 
+  console.log("NEW POST RECEiVEd")
   debug("Received data:", { date, text, tags, title });
 
   try {
@@ -100,7 +101,7 @@ router.post("/", async (req, res) => {
     // First try to create the post via the API
     const apiUrl = `${API_BASE_URL}/posts`;
     debug("Creating post via API:", apiUrl);
-    debug("[editor] Creating post via API", apiUrl, {
+    console.log("[editor] Creating post via API", apiUrl, {
       date,
       title,
       tagsCount: tagsArray.length,

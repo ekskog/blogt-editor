@@ -18,10 +18,7 @@ spec:
       hostAliases:
       - ip: "192.168.1.8"
         hostnames:
-        - "mjolnir"
-      - ip: "192.168.1.10"   
-        hostnames:
-        - "ubumac"         
+        - "mjolnir"       
       containers:
         - name: blogt-editor
           image: ghcr.io/ekskog/blogt-editor:latest

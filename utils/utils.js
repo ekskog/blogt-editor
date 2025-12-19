@@ -1,14 +1,13 @@
 const path = require("path");
 require("dotenv").config();
-const fs = require("fs").promises;
-const POSTS_PATH = path.join(__dirname, "..", "posts");
-const TAGS_FILE_PATH = path.join(__dirname, '../data/tags.json');
+const API_BASE_URL = process.env.BLOGT_API_BASE_URL || "http://blogt-api:3000";
 
 const crypto = require("crypto");
 const { marked } = require("marked");
 const debug = require("debug")("blogt-editor:utils");
 const https = require("https");
 
+var buckets = [];
 
 const fetchBuckets = async () => {
   return buckets;
@@ -98,7 +97,12 @@ async function getNext(dateString) {
     const nextYear = date.getFullYear().toString();
     const nextMonth = (date.getMonth() + 1).toString().padStart(2, "0");
     const nextDay = date.getDate().toString().padStart(2, "0");
-    const filePath = path.join(POSTS_PATH, nextYear, nextMonth, `${nextDay}.md`);
+    const filePath = path.join(
+      POSTS_PATH,
+      nextYear,
+      nextMonth,
+      `${nextDay}.md`
+    );
 
     try {
       await fs.access(filePath);
@@ -124,7 +128,12 @@ async function getPrev(dateString) {
     const prevYear = date.getFullYear().toString();
     const prevMonth = (date.getMonth() + 1).toString().padStart(2, "0");
     const prevDay = date.getDate().toString().padStart(2, "0");
-    const filePath = path.join(POSTS_PATH, prevYear, prevMonth, `${prevDay}.md`);
+    const filePath = path.join(
+      POSTS_PATH,
+      prevYear,
+      prevMonth,
+      `${prevDay}.md`
+    );
 
     try {
       await fs.access(filePath);
@@ -149,7 +158,6 @@ const formatDate = async (dateString) => {
 };
 
 const commitPost = async (date, text, tags, title) => {
-
   const [year, month, day] = date.split("-");
   const formattedDate = `${day}${month}${year}`;
   const textWithMetadata = `Date: ${formattedDate}\nTags: ${tags} \nTitle: ${title}\n${text}`;
@@ -176,7 +184,7 @@ const commitPost = async (date, text, tags, title) => {
     const prev = await getPrev(date.replace(/-/g, ""));
     const next = await getNext(date.replace(/-/g, ""));
 
-    // display the Post    
+    // display the Post
 
     let post = {
       tags,
@@ -199,41 +207,41 @@ async function updateTagsDictionary(date, title, tagsString) {
     // 1. Read existing tags file
     let tagsDict = {};
     try {
-      const data = await fs.readFile(TAGS_FILE_PATH, 'utf8');
+      const data = await fs.readFile(TAGS_FILE_PATH, "utf8");
       tagsDict = JSON.parse(data);
     } catch (error) {
-      if (error.code !== 'ENOENT') {
+      if (error.code !== "ENOENT") {
         throw error;
       }
       // File doesn't exist, we'll create a new one
-      debug('Tags file not found, creating new dictionary');
+      debug("Tags file not found, creating new dictionary");
     }
 
     // 2. Parse tags from the input string
     const tagsList = tagsString
-      .split(',')
-      .map(tag => tag.trim().toLowerCase())
-      .filter(tag => tag.length > 0);
+      .split(",")
+      .map((tag) => tag.trim().toLowerCase())
+      .filter((tag) => tag.length > 0);
 
     // 3. Update the dictionary with new post information
     const postInfo = {
       date,
-      title
+      title,
     };
 
-    debug('Post info:', postInfo);
+    debug("Post info:", postInfo);
 
-    tagsList.forEach(tag => {
+    tagsList.forEach((tag) => {
       if (!tagsDict[tag]) {
         tagsDict[tag] = [];
         debug(`Creating new tag entry for: ${tag}`);
       }
-      
+
       // Check if this post is already listed under this tag
-      const isDuplicate = tagsDict[tag].some(post => 
-        post.date === date && post.title === title
+      const isDuplicate = tagsDict[tag].some(
+        (post) => post.date === date && post.title === title
       );
-      
+
       if (!isDuplicate) {
         tagsDict[tag].push(postInfo);
         debug(`Adding post to tag: ${tag}`);
@@ -241,14 +249,18 @@ async function updateTagsDictionary(date, title, tagsString) {
     });
 
     // 4. Save the updated dictionary back to the file
-    await fs.writeFile(TAGS_FILE_PATH, JSON.stringify(tagsDict, null, 2), 'utf8');
-    
-    return { status: 'ok' };
+    await fs.writeFile(
+      TAGS_FILE_PATH,
+      JSON.stringify(tagsDict, null, 2),
+      "utf8"
+    );
+
+    return { status: "ok" };
   } catch (error) {
-    debug('Error updating tags dictionary:', error);
-    return { 
-      status: 'error', 
-      error: error.message 
+    debug("Error updating tags dictionary:", error);
+    return {
+      status: "error",
+      error: error.message,
     };
   }
 }
@@ -265,51 +277,43 @@ const verifyTurnstile = async (token) => {
   }
 
   const secretKey = process.env.TURNSTILE_SECRET_KEY;
-  
+
   if (!token) {
-    debug('No Turnstile token provided');
+    debug("No Turnstile token provided");
     return false;
   }
 
   const formData = new URLSearchParams();
-  formData.append('secret', secretKey);
-  formData.append('response', token);
-  
+  formData.append("secret", secretKey);
+  formData.append("response", token);
+
   try {
-    const response = await fetch('https://challenges.cloudflare.com/turnstile/v0/siteverify', {
-      method: 'POST',
-      body: formData,
-      headers: {
-        'Content-Type': 'application/x-www-form-urlencoded',
-      },
-    });
-    
+    const response = await fetch(
+      "https://challenges.cloudflare.com/turnstile/v0/siteverify",
+      {
+        method: "POST",
+        body: formData,
+        headers: {
+          "Content-Type": "application/x-www-form-urlencoded",
+        },
+      }
+    );
+
     const data = await response.json();
-    debug('Turnstile verification result:', data);
+    debug("Turnstile verification result:", data);
     return data.success;
   } catch (error) {
-    debug('Turnstile verification error:', error);
+    debug("Turnstile verification error:", error);
     return false;
   }
 };
 
-
 async function main() {
-  try {
-    bucketsList = await minioClient.listBuckets();
-    buckets = bucketsList.map((bucket) => bucket.name);
-    debug("Buckets:", buckets);
-  } catch (err) {
-    console.error("Error fetching buckets:", err);
-    throw new Error("Could not buckets");
-  }
+  const apiUrl = `${API_BASE_URL}`;
+  const response = await fetch(apiUrl);
+  buckets = await response.json();
+  debug("Buckets:", buckets);
 }
-
-// Invoke the main function
-main().catch((error) => {
-  console.error(error);
-  process.exit(1);
-});
 
 module.exports = {
   findLatestPost,
@@ -320,5 +324,5 @@ module.exports = {
   getUploadParams,
   commitPost,
   updateTagsDictionary,
-  verifyTurnstile
+  verifyTurnstile,
 };
