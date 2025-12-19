@@ -12,8 +12,7 @@ const https = require("https");
 
 const Minio = require("minio");
 var buckets = ["bollox"];
-console.log(process.env.MINIO_ACCESS_KEY);
-console.log(process.env.MINIO_SECRET_KEY);
+
 
 const minioParams = {
   endPoint: "objects.ekskog.xyz",
@@ -22,6 +21,8 @@ const minioParams = {
   accessKey: process.env.MINIO_ACCESS_KEY,
   secretKey: process.env.MINIO_SECRET_KEY,
 };
+
+debug(minioParams);
 
 const minioClient = new Minio.Client(minioParams);
 
