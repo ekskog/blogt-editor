@@ -85,9 +85,10 @@ const findLatestPost = async () => {
 };
 
 async function getNext(dateString) {
-  const year = parseInt(dateString.slice(0, 4));
-  const month = parseInt(dateString.slice(4, 6)) - 1; // JS months are 0-indexed
-  const day = parseInt(dateString.slice(6));
+  // Expect dateString in DDMMYYYY
+  const day = parseInt(dateString.slice(0, 2));
+  const month = parseInt(dateString.slice(2, 4)) - 1; // JS months are 0-indexed
+  const year = parseInt(dateString.slice(4, 8));
   let date = new Date(year, month, day);
 
   let iterations = 0;
@@ -106,7 +107,8 @@ async function getNext(dateString) {
 
     try {
       await fs.access(filePath);
-      return `${nextYear}${nextMonth}${nextDay}`;
+        // return DDMMYYYY
+        return `${nextDay}${nextMonth}${nextYear}`;
     } catch (error) {
       // Log the missing entry
       // debug(`No entry found for ${nextYear}-${nextMonth}-${nextDay}. Checking next date...`);
@@ -116,9 +118,10 @@ async function getNext(dateString) {
 }
 
 async function getPrev(dateString) {
-  const year = parseInt(dateString.slice(0, 4));
-  const month = parseInt(dateString.slice(4, 6)) - 1; // JS months are 0-indexed
-  const day = parseInt(dateString.slice(6));
+  // Expect dateString in DDMMYYYY
+  const day = parseInt(dateString.slice(0, 2));
+  const month = parseInt(dateString.slice(2, 4)) - 1; // JS months are 0-indexed
+  const year = parseInt(dateString.slice(4, 8));
   let date = new Date(year, month, day);
 
   let iterations = 0;
@@ -137,7 +140,8 @@ async function getPrev(dateString) {
 
     try {
       await fs.access(filePath);
-      return `${prevYear}${prevMonth}${prevDay}`;
+      // return DDMMYYYY
+      return `${prevDay}${prevMonth}${prevYear}`;
     } catch (error) {
       // Log the missing entry
       // console.err(`No entry found for ${prevYear}-${prevMonth}-${prevDay}. Checking previous date...`);
@@ -158,8 +162,11 @@ const formatDate = async (dateString) => {
 };
 
 const commitPost = async (date, text, tags, title) => {
-  const [year, month, day] = date.split("-");
-  const formattedDate = `${day}${month}${year}`;
+  // date expected as DDMMYYYY
+  const day = date.slice(0,2);
+  const month = date.slice(2,4);
+  const year = date.slice(4,8);
+  const formattedDate = `${day}${month}${year}`; // Ensure format is DDMMYYYY
   const textWithMetadata = `Date: ${formattedDate}\nTags: ${tags} \nTitle: ${title}\n${text}`;
 
   try {
@@ -181,8 +188,9 @@ const commitPost = async (date, text, tags, title) => {
 
     const imageUrl = `https://objects.hbvu.su/blotpix/${year}/${month}/${day}.jpeg`;
 
-    const prev = await getPrev(date.replace(/-/g, ""));
-    const next = await getNext(date.replace(/-/g, ""));
+    // prev/next expect DDMMYYYY
+    const prev = await getPrev(date);
+    const next = await getNext(date);
 
     // display the Post
 
@@ -308,6 +316,11 @@ const verifyTurnstile = async (token) => {
   }
 };
 
+async function parseBlogEntry(blob) {
+  debug(blob)
+};
+
+
 async function main() {
   const apiUrl = `${API_BASE_URL}`;
   const response = await fetch(apiUrl);
@@ -325,4 +338,5 @@ module.exports = {
   commitPost,
   updateTagsDictionary,
   verifyTurnstile,
+  parseBlogEntry,
 };

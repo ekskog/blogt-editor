@@ -27,7 +27,9 @@ html
             if session.isAuthenticated
               a.menu-item(href='/logout') LOGOUT
             else
-              a.menu-item(href='/login?returnTo=/editor') LOGOUT           
+              a.menu-item(href='/login?returnTo=/editor') LOGOUT      
+            a.menu-item(href='/help') HELP
+
     .main-content
       block content
     footer

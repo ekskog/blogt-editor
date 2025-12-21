@@ -1,19 +1,22 @@
 extends layout
-
 block content
   .editor-container
     h2 Edit Blog Post
-    
     form#editorForm(action="/editor/edit" method="POST")
       .editor-form-group
         label.editor-label Editing the post for
-        p.date-display= post.date
+        - var formattedDate = post.date.slice(0,2) + '/' + post.date.slice(2,4) + '/' + post.date.slice(4,8)
+        input.date-input(type="text" value=formattedDate disabled)
         input(type="hidden" name="date" value=post.date)
       .editor-form-group
-        label.editor-label(for="text") Post Content
-        textarea#text(name="text" rows="15")= post.content          
-            
+        label.editor-label NEW TITLE
+        input#title(name="title" value=post.title)
+      .editor-form-group
+        label.editor-label NEW TAGS
+        input#tags(name="tags" value=post.tags.join(', '))
+      .editor-form-group
+        label.editor-label(for="content") Post Content
+        textarea#content(name="content" rows="15")= post.content
       .editor-form-actions
         a.btn.btn-secondary(href="/editor/edit") Cancel
         button.submit-btn(type="submit") Save Changes
-        

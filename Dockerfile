@@ -20,8 +20,9 @@ COPY bin ./bin
 
 # Set environment variables
 ENV NODE_ENV=production
-# ENV PORT=3000
 ENV DEBUG="blogt-editor*"
+# Indicate we are running inside the container so the app picks the container port
+ENV IN_CONTAINER=1
 
 # Expose the port the app runs on
 EXPOSE 3000

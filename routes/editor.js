@@ -10,26 +10,120 @@ const debug = require("debug")("blogt-editor:editor-route");
 const {
   fetchBuckets,
   commitPost,
-  updateTagsDictionary
+  updateTagsDictionary,
+  parseBlogEntry,
 } = require("../utils/utils");
 
 var express = require("express");
 var router = express.Router();
 const postsDir = path.join(__dirname, "..", "posts");
 
-// Base URL for the blogt API. In k8s this should be http://blogt-api:3000
 const API_BASE_URL = process.env.BLOGT_API_BASE_URL || "http://blogt-api:3000";
 debug("API Base URL:", API_BASE_URL);
 
-/* GET the editor land page listing. */
+/* HANDLE NEW POSTS */
 router.get("/", async (req, res) => {
   res.render("new");
 });
 
+router.post("/", async (req, res) => {
+  // Extract date and text from the request body
+  let { date, text, tags, title } = req.body;
+
+  // Normalize incoming date (editor UI may send YYYY-MM-DD); convert to DDMMYYYY
+  date = date.split("-").reverse().join("");
+
+  debug("Received data:", { date, text, tags, title });
+  console.log("\n");
+
+  try {
+    // Normalize tags from comma-separated string to array
+    const tagsArray =
+      typeof tags === "string"
+        ? tags
+            .split(",")
+            .map((t) => t.trim())
+            .filter((t) => t.length > 0)
+        : Array.isArray(tags)
+        ? tags
+        : [];
+
+    // First try to create the post via the API
+    const apiUrl = `${API_BASE_URL}/posts`;
+    debug("Creating post via API:", apiUrl);
+    console.log("[editor] Creating post via API", apiUrl, {
+      date,
+      title,
+      tagsCount: tagsArray.length,
+      contentLength: text ? text.length : 0,
+    });
+
+    const response = await fetch(apiUrl, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        date, // DDMMYYYY normalized
+        title,
+        tags: tagsArray,
+        content: text,
+      }),
+    });
+
+    if (!response.ok) {
+      const errText = await response.text().catch(() => "");
+      console.error(
+        "[editor] API create post failed",
+        response.status,
+        response.statusText,
+        errText
+      );
+      throw new Error(`API responded with status ${response.status}`);
+    }
+
+    // On success, render index
+    return res.render("index");
+  } catch (error) {
+    debug("Error creating post via API", error.message);
+    console.error(
+      "[editor] Error in API create flow, using filesystem fallback:",
+      error
+    );
+
+    // Fallback: use legacy filesystem commit + tags dictionary
+    try {
+      const tagsHeader =
+        typeof tags === "string"
+          ? tags
+          : Array.isArray(tags)
+          ? tags.join(", ")
+          : "";
+      const postResult = await commitPost(date, text, tagsHeader, title);
+
+      if (postResult.res !== "ok") {
+        let message = "Error writing post to disk";
+        let fsError = postResult.error;
+        return res.render("error", { error: fsError, message });
+      }
+
+      const tagsResult = await updateTagsDictionary(date, title, tagsHeader);
+      debug("Tags result (fallback):", tagsResult);
+
+      return res.render("index");
+    } catch (fsError) {
+      debug("Fallback filesystem write failed:", fsError);
+      let message = "Error processing request";
+      return res.render("error", { error: fsError, message });
+    }
+  }
+});
+
+/* HANDLE IMAGES */
 router.get("/imgupl", async (req, res) => {
   const buckets = await fetchBuckets();
-  res.render("imgup", { 
-    buckets
+  res.render("imgup", {
+    buckets,
   });
 });
 
@@ -41,10 +135,10 @@ router.post("/imgup", upload.single("file"), async (req, res) => {
       return res.status(400).send("No file uploaded.");
     }
 
-    const [year, month, day] = req.body.dateField.split("-");
-    const date = `${year}-${month}-${day}`;
+    const dateField = req.body.dateField;
+    const date = normalizeToDDMMYYYY(dateField);
 
-     if (!date || !/^\d{4}-\d{2}-\d{2}$/.test(date)) {
+    if (!date || !/^\d{8}$/.test(date)) {
       return res.status(400).send("Invalid or missing date");
     }
 
@@ -82,96 +176,20 @@ router.post("/imgup", upload.single("file"), async (req, res) => {
   }
 });
 
-router.post("/", async (req, res) => {
-  // Extract date and text from the request body
-  const { date, text, tags, title } = req.body;
-
-  console.log("NEW POST RECEiVEd")
-  debug("Received data:", { date, text, tags, title });
-
-  try {
-    // Normalize tags from comma-separated string to array
-    const tagsArray = typeof tags === "string"
-      ? tags.split(",").map((t) => t.trim()).filter((t) => t.length > 0)
-      : Array.isArray(tags)
-        ? tags
-        : [];
-
-    // First try to create the post via the API
-    const apiUrl = `${API_BASE_URL}/posts`;
-    debug("Creating post via API:", apiUrl);
-    console.log("[editor] Creating post via API", apiUrl, {
-      date,
-      title,
-      tagsCount: tagsArray.length,
-      contentLength: text ? text.length : 0,
-    });
-
-    const response = await fetch(apiUrl, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        date,          // YYYY-MM-DD; API accepts both this and DDMMYYYY
-        title,
-        tags: tagsArray,
-        content: text,
-      }),
-    });
-
-    if (!response.ok) {
-      const errText = await response.text().catch(() => "");
-      console.error(
-        "[editor] API create post failed",
-        response.status,
-        response.statusText,
-        errText
-      );
-      throw new Error(`API responded with status ${response.status}`);
-    }
-
-    // On success, render index
-    return res.render("index");
-  } catch (error) {
-    debug("Error creating post via API, falling back to filesystem:", error.message);
-    console.error("[editor] Error in API create flow, using filesystem fallback:", error);
-
-    // Fallback: use legacy filesystem commit + tags dictionary
-    try {
-      const tagsHeader = typeof tags === "string" ? tags : (Array.isArray(tags) ? tags.join(", ") : "");
-      const postResult = await commitPost(date, text, tagsHeader, title);
-
-      if (postResult.res !== "ok") {
-        let message = "Error writing post to disk";
-        let fsError = postResult.error;
-        return res.render("error", { error: fsError, message });
-      }
-
-      const tagsResult = await updateTagsDictionary(date, title, tagsHeader);
-      debug("Tags result (fallback):", tagsResult);
-
-      return res.render("index");
-    } catch (fsError) {
-      debug("Fallback filesystem write failed:", fsError);
-      let message = "Error processing request";
-      return res.render("error", { error: fsError, message });
-    }
-  }
-});
-
 // EDIT an existing blog post
 router.get("/edit/", async (req, res) => {
   res.render("load", {
-    post: {}
+    post: {},
   });
 });
 
 router.post("/load/", async (req, res) => {
-  const { date } = req.body;
+  let { date } = req.body;
+
   try {
     // Prefer loading via API so the editor is a client of blogt-api
     const apiUrl = `${API_BASE_URL}/posts/details/${date}`;
+    console.log("[editor] Loading post via API:", apiUrl);
     debug("Loading post from API:", apiUrl);
 
     const response = await fetch(apiUrl);
@@ -182,60 +200,25 @@ router.post("/load/", async (req, res) => {
 
     const post = await response.json();
 
+    console.log(post)
+
     res.render("edit", {
-      post: {
-        date: post.date,
-        content: [
-          `Tags: ${post.tags.join(", ")}`,
-          `Title: ${post.title}`,
-          "",
-          post.content || ""
-        ].join("\n")
-      }
+      post,
     });
   } catch (error) {
     debug("Error loading post via API:", error.message);
-
-    // Fallback: try legacy filesystem load (useful in local dev if API is down)
-    try {
-      const [year, month, day] = date.split("-");
-      const filePath = path.join(postsDir, year, month, `${day}.md`);
-      const fileContent = await fs.readFile(filePath, "utf8");
-
-      res.render("edit", {
-        post: {
-          date,
-          content: fileContent,
-        }
-      });
-    } catch (fsError) {
-      res.render("error", { message: error.code || fsError.code || "LOAD_FAILED" });
-    }
   }
 });
 
 router.post("/edit/", async (req, res) => {
-  const { date, text } = req.body;
+
+  let { date, title, tags, content } = req.body;
+  console.log("[editor] Saving edited post:", { date });
+  let editedPost = JSON.stringify({ title, tags, content });
 
   try {
-    // Extract metadata from the editor text
-    const tagsMatch = text.match(/^Tags:\s*(.+)$/m);
-    const titleMatch = text.match(/^Title:\s*(.+)$/m);
-
-    const tagsString = tagsMatch ? tagsMatch[1] : "";
-    const title = titleMatch ? titleMatch[1] : "";
-
-    const tags = tagsString
-      .split(",")
-      .map((t) => t.trim())
-      .filter((t) => t.length > 0);
-
-    const content = text
-      .replace(/^(Date:|Tags:|Title:).*$/gm, "")
-      .trim();
-
     // First try to save via the API so that blogt-api owns the posts
-    const apiUrl = `${API_BASE_URL}/posts/${date}`;
+    const apiUrl = `${API_BASE_URL}/posts/${date}`; // date is DDMMYYYY
     debug("Saving post via API:", apiUrl);
 
     const response = await fetch(apiUrl, {
@@ -243,7 +226,7 @@ router.post("/edit/", async (req, res) => {
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({ title, tags, content }),
+      body: editedPost,
     });
 
     if (!response.ok) {
@@ -253,7 +236,10 @@ router.post("/edit/", async (req, res) => {
     // If API save succeeded, render index
     return res.render("index");
   } catch (error) {
-    debug("Error saving post via API, falling back to filesystem:", error.message);
+    debug(
+      "Error saving post via API, falling back to filesystem:",
+      error.message
+    );
 
     // Fallback to legacy filesystem commit if API save fails
     try {
@@ -271,6 +257,23 @@ router.post("/edit/", async (req, res) => {
       let message = "Error writing to disk";
       return res.render("error", { error: fsError, message });
     }
+  }
+});
+
+// Help endpoint: proxy the API root (GET /) so the editor can show API overview
+router.get("/help", async (req, res) => {
+  try {
+    const apiUrl = `${API_BASE_URL}/`;
+    debug("Fetching API root for help:", apiUrl);
+
+    const response = await fetch(apiUrl);
+    const text = await response.text();
+
+    // Return the API root response as HTML/plain text
+    res.type("html").send(text);
+  } catch (err) {
+    debug("Error fetching API root:", err.message);
+    res.status(502).send("Failed to fetch API help content");
   }
 });
 
