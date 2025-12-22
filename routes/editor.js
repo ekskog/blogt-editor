@@ -185,7 +185,11 @@ router.get("/edit/", async (req, res) => {
 
 router.post("/load/", async (req, res) => {
   let { date } = req.body;
- date = date.toISOString().slice(8,10) + date.toISOString().slice(5,7) + date.toISOString().slice(0,4);
+
+  // Convert incoming YYYY-MM-DD string to DDMMYYYY
+  if (typeof date === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(date)) {
+    date = date.slice(8, 10) + date.slice(5, 7) + date.slice(0, 4);
+  }
 
   try {
     // Prefer loading via API so the editor is a client of blogt-api
