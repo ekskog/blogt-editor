@@ -136,7 +136,7 @@ router.post("/imgup", upload.single("file"), async (req, res) => {
     }
 
     const dateField = req.body.dateField;
-    const date = normalizeToDDMMYYYY(dateField);
+    const date = dateField.split("-").reverse().join("");
 
     if (!date || !/^\d{8}$/.test(date)) {
       return res.status(400).send("Invalid or missing date");
@@ -185,6 +185,7 @@ router.get("/edit/", async (req, res) => {
 
 router.post("/load/", async (req, res) => {
   let { date } = req.body;
+ date = date.toISOString().slice(8,10) + date.toISOString().slice(5,7) + date.toISOString().slice(0,4);
 
   try {
     // Prefer loading via API so the editor is a client of blogt-api
@@ -200,7 +201,7 @@ router.post("/load/", async (req, res) => {
 
     const post = await response.json();
 
-    console.log(post)
+    console.log(post);
 
     res.render("edit", {
       post,
@@ -211,7 +212,6 @@ router.post("/load/", async (req, res) => {
 });
 
 router.post("/edit/", async (req, res) => {
-
   let { date, title, tags, content } = req.body;
   console.log("[editor] Saving edited post:", { date });
   let editedPost = JSON.stringify({ title, tags, content });
