@@ -12,7 +12,8 @@ const logger = require('morgan');
 const methodOverride = require('method-override');
 
 const indexRouter = require('./routes/index');
-const editRouter = require('./routes/editor');
+const textRouter = require('./routes/text');
+const imagesRouter = require('./routes/images');
 
 const app = express();
 
@@ -55,9 +56,11 @@ setupAuthRoutes(app);
 
 // Define application routes
 app.use('/', indexRouter);
-// Protect editor-related routes
-app.use('/editor', requireLogin, editRouter);
+// Protect editor-related routes (text editing)
+app.use('/editor', requireLogin, textRouter);
 app.use('/editor/edit', requireLogin);
+// Image upload routes (also protected)
+app.use('/editor', requireLogin, imagesRouter);
 app.use('/editor/imgupl', requireLogin);
 
 // Robots.txt configuration

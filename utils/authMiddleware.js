@@ -1,7 +1,7 @@
 const session = require('express-session');
 require('dotenv').config();
 const debug = require("debug")("blogt-editor:authMW");
-const { verifyTurnstile } = require('./utils');
+// verifyTurnstile will be implemented below and used by the login flow
 
 const turnstileBypass =
   process.env.TURNSTILE_BYPASS === 'true' ||
@@ -107,4 +107,44 @@ function setupAuthRoutes(app) {
 module.exports = {
   requireLogin,
   setupAuthRoutes
+};
+
+// Turnstile verification helper (moved from utils.js)
+const verifyTurnstile = async (token) => {
+  const debug = require('debug')('blogt-editor:authMW');
+  // Bypass in local/dev when explicitly enabled
+  const bypass =
+    process.env.TURNSTILE_BYPASS === 'true' ||
+    process.env.NODE_ENV === 'development';
+
+  if (bypass) {
+    debug('Turnstile bypass enabled; skipping verification');
+    return true;
+  }
+
+  const secretKey = process.env.TURNSTILE_SECRET_KEY;
+
+  if (!token) {
+    debug('No Turnstile token provided');
+    return false;
+  }
+
+  const formData = new URLSearchParams();
+  formData.append('secret', secretKey);
+  formData.append('response', token);
+
+  try {
+    const response = await fetch('https://challenges.cloudflare.com/turnstile/v0/siteverify', {
+      method: 'POST',
+      body: formData,
+      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+    });
+
+    const data = await response.json();
+    debug('Turnstile verification result:', data);
+    return data.success;
+  } catch (error) {
+    debug('Turnstile verification error:', error);
+    return false;
+  }
 };

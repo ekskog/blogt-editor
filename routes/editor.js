@@ -7,12 +7,14 @@ const path = require("path");
 const fs = require("fs").promises;
 const debug = require("debug")("blogt-editor:editor-route");
 
+/*
 const {
   fetchBuckets,
   commitPost,
   updateTagsDictionary,
   parseBlogEntry,
 } = require("../utils/utils");
+*/
 
 var express = require("express");
 var router = express.Router();
@@ -30,11 +32,9 @@ router.post("/", async (req, res) => {
   // Extract date and text from the request body
   let { date, text, tags, title } = req.body;
 
-  // Normalize incoming date (editor UI may send YYYY-MM-DD); convert to DDMMYYYY
-  date = date.split("-").reverse().join("");
-
-  debug("Received data:", { date, text, tags, title });
-  console.log("\n");
+  // Normalize incoming date (editor UI send YYYY-MM-DD); convert to DDMMYYYY
+  const [year, month, day] = date.split('-');
+  date = `${day}${month}${year}`;
 
   try {
     // Normalize tags from comma-separated string to array
@@ -48,8 +48,7 @@ router.post("/", async (req, res) => {
         ? tags
         : [];
 
-    // First try to create the post via the API
-    const apiUrl = `${API_BASE_URL}/posts`;
+    const apiUrl = `${API_BASE_URL}/posts/${date}`;
     debug("Creating post via API:", apiUrl);
     console.log("[editor] Creating post via API", apiUrl, {
       date,
@@ -64,7 +63,7 @@ router.post("/", async (req, res) => {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        date, // DDMMYYYY normalized
+        date, 
         title,
         tags: tagsArray,
         content: text,
@@ -130,19 +129,13 @@ router.get("/imgupl", async (req, res) => {
 router.post("/imgup", upload.single("file"), async (req, res) => {
   try {
     const file = req.file;
+      // Extract date and text from the request body
+  const { date } = req.body;
 
-    if (!file) {
-      return res.status(400).send("No file uploaded.");
-    }
+  // Normalize incoming date (editor UI send YYYY-MM-DD); convert to DDMMYYYY
+  const [year, month, day] = date.split('-');
+  date = `${day}${month}${year}`;
 
-    const dateField = req.body.dateField;
-    const date = dateField.split("-").reverse().join("");
-
-    if (!date || !/^\d{8}$/.test(date)) {
-      return res.status(400).send("Invalid or missing date");
-    }
-
-    // Prefer uploading via API so the editor is a client of blogt-api
     const apiUrl = `${API_BASE_URL}/media/images`;
     debug("Uploading image via API:", apiUrl);
 
@@ -186,13 +179,11 @@ router.get("/edit/", async (req, res) => {
 router.post("/load/", async (req, res) => {
   let { date } = req.body;
 
-  // Convert incoming YYYY-MM-DD string to DDMMYYYY
-  if (typeof date === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(date)) {
-    date = date.slice(8, 10) + date.slice(5, 7) + date.slice(0, 4);
-  }
+  // Normalize incoming date (editor UI send YYYY-MM-DD); convert to DDMMYYYY
+  const [year, month, day] = date.split('-');
+  date = `${day}${month}${year}`;
 
   try {
-    // Prefer loading via API so the editor is a client of blogt-api
     const apiUrl = `${API_BASE_URL}/posts/details/${date}`;
     console.log("[editor] Loading post via API:", apiUrl);
     debug("Loading post from API:", apiUrl);
@@ -205,8 +196,6 @@ router.post("/load/", async (req, res) => {
 
     const post = await response.json();
 
-    console.log(post);
-
     res.render("edit", {
       post,
     });
@@ -217,12 +206,11 @@ router.post("/load/", async (req, res) => {
 
 router.post("/edit/", async (req, res) => {
   let { date, title, tags, content } = req.body;
-  console.log("[editor] Saving edited post:", { date });
+  debug("[editor] Saving edited post:", { date });
   let editedPost = JSON.stringify({ title, tags, content });
 
   try {
-    // First try to save via the API so that blogt-api owns the posts
-    const apiUrl = `${API_BASE_URL}/posts/${date}`; // date is DDMMYYYY
+    const apiUrl = `${API_BASE_URL}/posts/${date}`;
     debug("Saving post via API:", apiUrl);
 
     const response = await fetch(apiUrl, {
@@ -237,48 +225,15 @@ router.post("/edit/", async (req, res) => {
       throw new Error(`API responded with status ${response.status}`);
     }
 
-    // If API save succeeded, render index
     return res.render("index");
   } catch (error) {
     debug(
       "Error saving post via API, falling back to filesystem:",
       error.message
     );
-
-    // Fallback to legacy filesystem commit if API save fails
-    try {
-      const tagsHeader = tagsString || "";
-      const result = await commitPost(date, content, tagsHeader, title);
-
-      if (result.res == "ok") {
-        return res.render("index");
-      } else {
-        let message = "Error writing to disk";
-        let fsError = result.error;
-        return res.render("error", { error: fsError, message });
-      }
-    } catch (fsError) {
-      let message = "Error writing to disk";
-      return res.render("error", { error: fsError, message });
-    }
   }
 });
 
-// Help endpoint: proxy the API root (GET /) so the editor can show API overview
-router.get("/help", async (req, res) => {
-  try {
-    const apiUrl = `${API_BASE_URL}/`;
-    debug("Fetching API root for help:", apiUrl);
-
-    const response = await fetch(apiUrl);
-    const text = await response.text();
-
-    // Return the API root response as HTML/plain text
-    res.type("html").send(text);
-  } catch (err) {
-    debug("Error fetching API root:", err.message);
-    res.status(502).send("Failed to fetch API help content");
-  }
-});
+// Note: Help is handled at top-level in routes/index.js
 
 module.exports = router;
