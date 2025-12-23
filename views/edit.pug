@@ -2,7 +2,7 @@ extends layout
 block content
   .editor-container
     h2 Edit Blog Post
-    form#editorForm(action="/editor/edit" method="POST")
+    form#editorForm(action="/text/edit" method="POST")
       .editor-form-group
         label.editor-label Editing the post for
         - var formattedDate = post.date.slice(0,2) + '/' + post.date.slice(2,4) + '/' + post.date.slice(4,8)
@@ -18,5 +18,5 @@ block content
         label.editor-label(for="content") Post Content
         textarea#content(name="content" rows="15")= post.content
       .editor-form-actions
-        a.btn.btn-secondary(href="/editor/edit") Cancel
+        a.btn.btn-secondary(href="/text/edit") Cancel
         button.submit-btn(type="submit") Save Changes

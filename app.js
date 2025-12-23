@@ -7,7 +7,6 @@ const { requireLogin, setupAuthRoutes } = require('./utils/authMiddleware');
 const robots = require('express-robots-txt');
 const path = require('path');
 const cookieParser = require('cookie-parser');
-//const bodyParser = require('body-parser');
 const logger = require('morgan');
 const methodOverride = require('method-override');
 
@@ -31,8 +30,6 @@ app.use(logger('dev', {
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
-//app.use(bodyParser.urlencoded({ extended: true }));
-//app.use(bodyParser.json());
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(methodOverride('_method'));
 
@@ -57,11 +54,11 @@ setupAuthRoutes(app);
 // Define application routes
 app.use('/', indexRouter);
 // Protect editor-related routes (text editing)
-app.use('/editor', requireLogin, textRouter);
-app.use('/editor/edit', requireLogin);
+app.use('/text', requireLogin, textRouter);
+app.use('/text/edit', requireLogin);
 // Image upload routes (also protected)
-app.use('/editor', requireLogin, imagesRouter);
-app.use('/editor/imgupl', requireLogin);
+app.use('/images', requireLogin, imagesRouter);
+app.use('/images/imgupl', requireLogin);
 
 // Robots.txt configuration
 app.use(robots({

@@ -2,13 +2,6 @@ const path = require('path');
 const fs = require('fs').promises;
 const debug = require('debug')('blogt-editor:text-route');
 
-const {
-  fetchBuckets,
-  commitPost,
-  updateTagsDictionary,
-  parseBlogEntry,
-} = require('../utils/utils');
-
 const express = require('express');
 const router = express.Router();
 const postsDir = path.join(__dirname, '..', 'posts');

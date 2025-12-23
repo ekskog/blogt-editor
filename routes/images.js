@@ -6,8 +6,6 @@ const path = require('path');
 const fs = require('fs').promises;
 const debug = require('debug')('blogt-editor:images-route');
 
-const { fetchBuckets } = require('../utils/utils');
-
 const express = require('express');
 const router = express.Router();
 
@@ -16,7 +14,7 @@ debug('Images API Base URL:', API_BASE_URL);
 
 router.get('/imgupl', async (req, res) => {
   try {
-    const buckets = await fetchBuckets();
+    const buckets = ["blotpix" ];
     res.render('imgup', { buckets });
   } catch (err) {
     debug('Error fetching buckets for imgup:', err.message);

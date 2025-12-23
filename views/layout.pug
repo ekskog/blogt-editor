@@ -21,13 +21,13 @@ html
             img.avatar(width='30', height='30', src='/images/avatar.jpg')
         .nav-links
           .menu-item
-            a.menu-item(href='/editor') NEW
-            a.menu-item(href='/editor/edit') EDIT
-            a.menu-item(href='/editor/imgupl') IMG UPLOAD
+            a.menu-item(href='/text') NEW
+            a.menu-item(href='/text/edit') EDIT
+            a.menu-item(href='/images/imgupl') IMG UPLOAD
             if session.isAuthenticated
               a.menu-item(href='/logout') LOGOUT
             else
-              a.menu-item(href='/login?returnTo=/editor') LOGOUT      
+              a.menu-item(href='/login?returnTo=/text') LOGOUT      
             a.menu-item(href='/help') HELP
 
     .main-content
