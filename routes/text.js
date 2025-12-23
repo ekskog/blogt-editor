@@ -23,7 +23,7 @@ router.post('/', async (req, res) => {
       ? tags.split(',').map(t => t.trim()).filter(Boolean)
       : Array.isArray(tags) ? tags : [];
 
-    const apiUrl = `${API_BASE_URL}/posts/${date}`;
+    const apiUrl = `${API_BASE_URL}/post/${date}`;
     debug('Creating post via API:', apiUrl);
 
     const response = await fetch(apiUrl, {
@@ -62,7 +62,7 @@ router.post('/load/', async (req, res) => {
   date = `${day}${month}${year}`;
 
   try {
-    const apiUrl = `${API_BASE_URL}/posts/details/${date}`;
+    const apiUrl = `${API_BASE_URL}/post/details/${date}`;
     const response = await fetch(apiUrl);
     if (!response.ok) throw new Error(`API responded with status ${response.status}`);
     const post = await response.json();
@@ -78,7 +78,7 @@ router.post('/edit/', async (req, res) => {
   const editedPost = JSON.stringify({ title, tags, content });
 
   try {
-    const apiUrl = `${API_BASE_URL}/posts/${date}`;
+    const apiUrl = `${API_BASE_URL}/post/${date}`;
     const response = await fetch(apiUrl, { method: 'PUT', headers: { 'Content-Type': 'application/json' }, body: editedPost });
     if (!response.ok) throw new Error(`API responded with status ${response.status}`);
     return res.render('index');
