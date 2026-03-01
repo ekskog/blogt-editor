@@ -89,6 +89,11 @@ spec:
                 configMapKeyRef:
                   name: editor-config
                   key: DEBUG
+            - name: BLOGT_API_BASE_URL
+              valueFrom:
+                configMapKeyRef:
+                  name: editor-config
+                  key: BLOGT_API_BASE_URL
           volumeMounts:
             - name: blogposts
               mountPath: /app/posts
